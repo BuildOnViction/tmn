@@ -15,6 +15,8 @@ jobs:
     script:
     - flake8 .
 
-  - stage: Test
+  - stage: Tests
     script:
-      - python -m pytest tests
+      - coverage run --source tmn -m pytest
+      - coverage report
+      - codecov
