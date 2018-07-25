@@ -9,6 +9,11 @@ def test_version():
     assert package.__version__ == '0.0.1'
 
 
+def test_command():
+    result = runner.invoke(tmn.main)
+    assert result.exit_code == 0
+
+
 def test_command_docs():
     result = runner.invoke(tmn.main, ['docs'])
     msg = 'You can find documentation on running a masternode here:'
