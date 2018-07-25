@@ -29,14 +29,13 @@ def docs(open):
         display.link('Opening documentation:', link)
         click.launch(link)
 
-
-@click.command(help='Initialize your masternode')
-def init():
-    """
-    Init
-    """
-    pass
+# @click.command(help='Initialize your masternode')
+# def init():
+#     """
+#     Init
+#     """
+#     pass
 
 
 main.add_command(docs)
-main.add_command(init)
+# main.add_command(init)
