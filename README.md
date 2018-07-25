@@ -1,2 +1,2 @@
 # masternode
-All you need to start your own masternode
+All you need to run your own masternode
