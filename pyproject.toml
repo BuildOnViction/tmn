@@ -6,6 +6,13 @@ authors = ["etienne-napoleone <etienne@tomochain.com>"]
 
 [tool.poetry.dependencies]
 python = "*"
+hues = "^0.2.2"
+click = "^6.7"
+docker = "^3.4"
 
 [tool.poetry.dev-dependencies]
 pytest = "^3.0"
+flake8 = "^3.5"
+
+[tool.poetry.scripts]
+tmn = 'tmn.tmn:main'
