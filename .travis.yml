@@ -7,16 +7,8 @@ before_install:
   - pip install poetry
 install:
   - poetry develop
-
-jobs:
-  include:
-
-  - stage: Lint
-    script:
-    - flake8 .
-
-  - stage: Tests
-    script:
-      - coverage run --source tmn -m pytest
-      - coverage report
-      - codecov
+script:
+  - flake8 .
+  - coverage run --source tmn -m pytest
+  - coverage report
+  - codecov
