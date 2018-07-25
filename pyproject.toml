@@ -2,10 +2,17 @@
 name = "tmn"
 version = "0.1.0"
 description = ""
-authors = ["etienne-napoleone <etienne@tomochain.com>"]
+readme = "README.md"
+homepage = "https://tomochain.com"
+repository = "https://github.com/tomochain/masternode"
+documentation = "https://github.com/tomochain/masternode/blob/master/README.md"
+keywords = ["tomochain", "blockchain", "masternode", "node"]
+authors = [
+  "Etienne Napoleone <etienne@tomochain.com>"
+]
 
 [tool.poetry.dependencies]
-python = "*"
+python = "^3.5"
 hues = "^0.2.2"
 click = "^6.7"
 docker = "^3.4"
@@ -15,4 +22,4 @@ pytest = "^3.0"
 flake8 = "^3.5"
 
 [tool.poetry.scripts]
-tmn = 'tmn.tmn:main'
+tmn = "tmn.tmn:main"
