@@ -1,6 +1,15 @@
 from tmn import display
 
 
+def test_decorator(capsys):
+    @display.style
+    def return_string(msg):
+        return f'{msg}'
+    return_string('test')
+    out, err = capsys.readouterr()
+    assert out == 'test\n'
+
+
 def test_link(capsys):
     display.link('message', 'https://link.com')
     out, err = capsys.readouterr()
@@ -16,4 +25,4 @@ def test_error(capsys):
 def test_warning(capsys):
     display.warning('message')
     out, err = capsys.readouterr()
-    assert out == '! warn: message\n\n'
+    assert out == '! warning: message\n\n'
