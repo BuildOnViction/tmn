@@ -11,12 +11,12 @@ class DockerManager:
 
     def ping(self):
         """
-        Try to ping the Docker deamon to see if it's accessible.
+        Try to ping the Docker deamon. Check if accessible.
 
         :returns: Is Docker running
         :rtype: bool
         """
         try:
             return self.client.ping()
-        except Exception as e:
+        except Exception:
             return False
