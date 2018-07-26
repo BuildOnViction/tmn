@@ -22,7 +22,7 @@ def style(function):
 @style
 def link(msg, url):
     """
-    Display a line formated for browser links
+    Return a pastel formated string for browser links
 
     :param msg: message
     :param url: website url
@@ -35,7 +35,7 @@ def link(msg, url):
 @style
 def warning(msg):
     """
-    Display a line formated for warnings
+    Return a pastel formated string for warnings
 
     :param msg: warning message
     :type msg: string
@@ -46,7 +46,7 @@ def warning(msg):
 @style
 def error(msg):
     """
-    Display a line formated for errors
+    Return a pastel formated string for errors
 
     :param msg: error message
     :type msg: string
