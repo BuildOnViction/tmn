@@ -6,7 +6,10 @@ runner = CliRunner()
 
 
 def test_version():
-    assert package.__version__ == '0.0.1'
+    version = '0.0.1'
+    result = runner.invoke(tmn.main, ['--version'])
+    assert result.output[-6:-1] == version
+    assert package.__version__ == version
 
 
 def test_command():

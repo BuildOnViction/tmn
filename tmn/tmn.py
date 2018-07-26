@@ -1,13 +1,20 @@
 import click
 from tmn import display
+from tmn.config import ConfigManager
+
+
+config = None
 
 
 @click.group()
-def main():
+@click.option('--config', default='~/.config/.tmn',
+              help='Optional path to the config file')
+@click.version_option()
+def main(config):
     """
     Tomo masternode (tmn) is a cli tool to help you run a Tomochain masternode.
     """
-    pass
+    config = ConfigManager(config)
 
 
 @click.command()
