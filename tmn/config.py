@@ -10,8 +10,8 @@ class ConfigManager:
     :type path: string
     """
 
-    def __init__(self, path):
+    def __init__(self, path='~/.config/.tmn'):
         self.path = path
 
     def init(self):
-        return False
+        return True

@@ -4,12 +4,11 @@ from tmn import display
 from tmn.config import ConfigManager
 
 
-config = None
+conf = None
 
 
 @click.group()
-@click.option('--config', default='~/.config/.tmn',
-              help='Optional path to the config file')
+@click.option('--config', help='Optional path to the config file')
 @click.version_option()
 def main(config):
     """
@@ -18,8 +17,11 @@ def main(config):
     :param config: path to the configuration file
     :type config: string
     """
-    config = ConfigManager(config)
-    if not config.init():
+    if config:
+        conf = ConfigManager(config)
+    else:
+        conf = ConfigManager()
+    if not conf.init():
         display.error('could not access configuration file')
         sys.exit()
 
