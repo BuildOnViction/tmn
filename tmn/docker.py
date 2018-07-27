@@ -13,7 +13,7 @@ class DockerManager:
         """
         Try to ping the Docker deamon. Check if accessible.
 
-        :returns: Is Docker running
+        :returns: is Docker running
         :rtype: bool
         """
         try:

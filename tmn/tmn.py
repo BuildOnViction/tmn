@@ -1,3 +1,4 @@
+import sys
 import click
 from tmn import display
 from tmn.config import ConfigManager
@@ -13,8 +14,14 @@ config = None
 def main(config):
     """
     Tomo masternode (tmn) is a cli tool to help you run a Tomochain masternode.
+
+    :param config: path to the configuration file
+    :type config: string
     """
     config = ConfigManager(config)
+    if not config.init():
+        display.error('could not access configuration file')
+        sys.exit()
 
 
 @click.command()
