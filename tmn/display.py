@@ -40,7 +40,7 @@ def warning(msg):
     :param msg: warning message
     :type msg: string
     """
-    return f'<warning>! warning: {msg}</warning>\n'
+    return f'<warning>! warning:</warning> {msg}\n'
 
 
 @style
@@ -51,4 +51,4 @@ def error(msg):
     :param msg: error message
     :type msg: string
     """
-    return f'<error>! error: {msg}</error>\n'
+    return f'<error>! error:</error> {msg}\n'
