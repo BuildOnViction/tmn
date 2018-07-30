@@ -17,8 +17,8 @@ def masternode_client_fail():
     return masternode
 
 
-def test_instance():
-    assert isinstance(Masternode(), Masternode)
+def test_instance(masternode_client):
+    assert isinstance(masternode_client, Masternode)
 
 
 def test_ping_success(masternode_client):
