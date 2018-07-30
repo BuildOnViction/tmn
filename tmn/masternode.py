@@ -1,9 +1,9 @@
 import docker as dockerpy
 
 
-class DockerManager:
+class Masternode:
     """
-    Manage interactions with the docker daemon.
+    Manage the docker masternode stack.
     """
 
     def __init__(self):
