@@ -21,7 +21,7 @@ def main(config):
         conf = ConfigManager(config)
     else:
         conf = ConfigManager()
-    if not conf.init():
+    if not conf.valid:
         display.error('could not access or create configuration file')
         sys.exit()
 

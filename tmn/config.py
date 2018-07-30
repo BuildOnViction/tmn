@@ -11,13 +11,9 @@ class ConfigManager:
     """
 
     def __init__(self, path='~/.config/tmn'):
-        self.path = path
-
-    def init(self):
-        p = pathlib.Path(self.path).expanduser()
-        if not p.is_file():
-            try:
-                p.touch()
-            except PermissionError:
-                return False
-        return True
+        self.path = pathlib.Path(path).expanduser()
+        try:
+            self.path.touch(exist_ok=True)
+            self.valid = True
+        except (PermissionError, FileNotFoundError):
+            self.valid = False
