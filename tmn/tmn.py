@@ -38,7 +38,7 @@ def docs(open):
     link = 'https://docs.tomochain.com/'
     if not open:
         display.link(
-            'You can find documentation on running a masternode here:',
+            'Documentation on running a masternode:',
             link
         )
     else:

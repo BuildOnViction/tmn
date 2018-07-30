@@ -19,7 +19,7 @@ def test_command():
 
 def test_command_docs():
     result = runner.invoke(tmn.main, ['docs'])
-    msg = 'You can find documentation on running a masternode here:'
+    msg = 'Documentation on running a masternode:'
     link = 'https://docs.tomochain.com/\n'
     assert result.output == "{} {}".format(msg, link)
 

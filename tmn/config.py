@@ -1,4 +1,4 @@
-# from pathlib import Path
+import pathlib
 # import toml
 
 
@@ -14,4 +14,10 @@ class ConfigManager:
         self.path = path
 
     def init(self):
+        p = pathlib.Path(self.path).expanduser()
+        if not p.is_file():
+            try:
+                p.touch()
+            except pathlib.PermissionError:
+                return False
         return True
