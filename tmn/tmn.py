@@ -22,7 +22,7 @@ def main(config):
     else:
         conf = ConfigManager()
     if not conf.init():
-        display.error('could not access configuration file')
+        display.error('could not access or create configuration file')
         sys.exit()
 
 

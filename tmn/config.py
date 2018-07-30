@@ -10,7 +10,7 @@ class ConfigManager:
     :type path: string
     """
 
-    def __init__(self, path='~/.config/.tmn'):
+    def __init__(self, path='~/.config/tmn'):
         self.path = path
 
     def init(self):
@@ -18,6 +18,6 @@ class ConfigManager:
         if not p.is_file():
             try:
                 p.touch()
-            except pathlib.PermissionError:
+            except PermissionError:
                 return False
         return True
