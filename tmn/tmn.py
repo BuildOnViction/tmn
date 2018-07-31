@@ -28,7 +28,7 @@ def main(config):
     if not conf.valid:
         display.error('could not access or create configuration file')
         sys.exit()
-    if not masternode.up:
+    if masternode.state is not masternode.states.DOCKER_OK:
         display.error('could not access the docker deamon')
         sys.exit()
 
@@ -56,6 +56,7 @@ def start():
     Start the containers needed to run a masternode
     """
     masternode.start()
+
 
 main.add_command(docs)
 main.add_command(start)
