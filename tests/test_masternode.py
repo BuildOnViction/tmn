@@ -1,29 +1,16 @@
 import pytest
 import docker as dockerpy
-from tmn.masternode import Masternode
+from tmn import masternode
 
 
 @pytest.fixture
-def masternode_client():
-    masternode = Masternode()
-    masternode.client = dockerpy.from_env()
-    return masternode
+def fail():
+    masternode._client = dockerpy.DockerClient(base_url='unix://wrong')
 
 
-@pytest.fixture
-def masternode_client_fail():
-    masternode = Masternode()
-    masternode.client = dockerpy.DockerClient(base_url='unix://wrong')
-    return masternode
+def test_ping_success():
+    assert masternode._ping()
 
 
-def test_instance(masternode_client):
-    assert isinstance(masternode_client, Masternode)
-
-
-def test_ping_success(masternode_client):
-    assert masternode_client.ping()
-
-
-def test_ping_fail(masternode_client_fail):
-    assert not masternode_client_fail.ping()
+def test_ping_fail(fail):
+    assert not masternode._ping()
