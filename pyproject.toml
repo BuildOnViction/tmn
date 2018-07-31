@@ -20,8 +20,9 @@ pastel = "^0.1.0"
 toml = "^0.9.4"
 
 [tool.poetry.dev-dependencies]
-flake8 = "^3.5"
+
 codecov = "^2.0"
+flake8 = "^3.5"
 
 [tool.poetry.scripts]
 tmn = "tmn.tmn:main"
