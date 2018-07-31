@@ -1,22 +1,25 @@
 import docker as dockerpy
 
+up = False
+_client = dockerpy.from_env()
 
-class Masternode:
+
+def _ping():
     """
-    Manage the docker masternode stack.
+    Try to ping the Docker deamon. Check if accessible.
+
+    :returns: is Docker running
+    :rtype: bool
     """
+    try:
+        return _client.ping()
+    except Exception:
+        return False
 
-    def __init__(self):
-        self.client = dockerpy.from_env()
 
-    def ping(self):
-        """
-        Try to ping the Docker deamon. Check if accessible.
+def start():
+    pass
 
-        :returns: is Docker running
-        :rtype: bool
-        """
-        try:
-            return self.client.ping()
-        except Exception:
-            return False
+
+if _ping():
+    up = True

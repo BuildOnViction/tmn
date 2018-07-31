@@ -2,10 +2,10 @@ import sys
 import click
 from tmn import display
 from tmn.config import ConfigManager
+from tmn import masternode
 
 
 conf = None
-masternode = None
 
 
 @click.group(help='Tomo MasterNode (tmn) is a cli tool to help you run a '
@@ -28,6 +28,9 @@ def main(config):
     if not conf.valid:
         display.error('could not access or create configuration file')
         sys.exit()
+    if not masternode.up:
+        display.error('could not access the docker deamon')
+        sys.exit()
 
 
 @click.command(help='Display Tomochain documentation link')
@@ -47,5 +50,12 @@ def docs(open):
         click.launch(link)
 
 
+@click.command(help='Start your Tomochain Masternode on Docker')
+def start():
+    """
+    Start the containers needed to run a masternode
+    """
+    masternode.start()
+
 main.add_command(docs)
-# main.add_command(init)
+main.add_command(start)
