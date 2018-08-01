@@ -7,14 +7,14 @@ pastel.add_style('warning', 'yellow')
 pastel.add_style('error', 'red')
 
 
-def newline(ammount=1):
+def newline(number=1):
     """
     Print newlines
 
-    :param ammount: the number of newlines to print
-    :type ammount: int
+    :param number: the number of newlines to print
+    :type number: int
     """
-    print('\n'*ammount, end='')
+    print('\n'*number, end='')
 
 
 def style(function):

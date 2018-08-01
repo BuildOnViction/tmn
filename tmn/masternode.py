@@ -92,6 +92,8 @@ def _create_containers():
             container = _client.containers.get(config['name'])
             display.step_close_exists()
         except dockerpy.errors.NotFound:
+            # temporary, see https://github.com/docker/docker-py/issues/2101
+            _client.images.pull(config['image'])
             container = _client.containers.create(**config)
             display.step_close_created()
         except dockerpy.errors.APIError:
