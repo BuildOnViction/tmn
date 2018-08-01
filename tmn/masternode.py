@@ -1,7 +1,7 @@
 import docker as dockerpy
 from tmn import display
 
-VOLUMES = ['mastenode']
+VOLUMES = ['blockchain_data']
 NETWORKS = ['masternode']
 CONTAINERS = {
     'telegraf': {
@@ -40,6 +40,7 @@ CONTAINERS = {
 
 _client = dockerpy.from_env()
 connected = False
+
 
 def _ping():
     """
