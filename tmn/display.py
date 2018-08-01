@@ -27,7 +27,7 @@ def style_no_new_line(function):
     :type function: function
     """
     def wrapper(*args):
-        print(pastel.colorize(function(*args)), end='')
+        print(pastel.colorize(function(*args)), end='', flush=True)
     return wrapper
 
 
@@ -96,7 +96,7 @@ def step(msg):
 
 def step_start_masternode_volume(volume):
     """
-    Custom step message for docker volumes verification
+    Custom step message for docker volumes creation
     """
     step('volume (<fg=yellow>{volume}</>)'.format(
         volume=volume
@@ -105,10 +105,19 @@ def step_start_masternode_volume(volume):
 
 def step_start_masternode_network(network):
     """
-    Custom step message for docker networks verification
+    Custom step message for docker networks creatin
     """
     step('network (<fg=yellow>{network}</>)'.format(
         network=network
+    ))
+
+
+def step_start_masternode_container(container):
+    """
+    Custom step message for docker container starting
+    """
+    step('container (<fg=yellow>{container}</>)'.format(
+        container=container
     ))
 
 
