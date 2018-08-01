@@ -69,7 +69,7 @@ def title(msg):
     :param msg: message
     :type msg: string
     """
-    return '\n<highlight_g>{msg}</highlight_g>\n'.format(
+    return '<highlight_g>{msg}</highlight_g>\n'.format(
         msg=msg
     )
 

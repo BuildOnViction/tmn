@@ -28,7 +28,7 @@ def main(config):
     if not conf.valid:
         display.error_config()
         sys.exit()
-    if masternode.is_docker is False:
+    if masternode.connected is False:
         display.error_docker()
         sys.exit()
 

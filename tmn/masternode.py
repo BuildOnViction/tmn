@@ -38,12 +38,8 @@ CONTAINERS = {
     },
 }
 
-# state
-is_docker = False
-
-# docker
 _client = dockerpy.from_env()
-
+connected = False
 
 def _ping():
     """
@@ -104,4 +100,4 @@ def start():
 
 
 if _ping():
-    is_docker = True
+    connected = True
