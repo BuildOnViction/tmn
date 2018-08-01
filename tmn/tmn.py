@@ -26,10 +26,10 @@ def main(config):
     else:
         conf = ConfigManager()
     if not conf.valid:
-        display.error('could not access or create configuration file')
+        display.error_config()
         sys.exit()
     if masternode.is_docker is False:
-        display.error('could not access the docker deamon')
+        display.error_docker()
         sys.exit()
 
 
@@ -42,12 +42,12 @@ def docs(open):
     :param open: open the link in your navigator
     :type open: bool
     """
-    link = 'https://docs.tomochain.com/'
+    url = 'https://docs.tomochain.com/'
     if not open:
-        display.link('Documentation on running a masternode:', link)
+        display.link_docs(url)
     else:
-        display.link('Opening documentation:', link)
-        click.launch(link)
+        display.link_docs_open(url)
+        click.launch(url)
 
 
 @click.command(help='Start your Tomochain Masternode on Docker')
@@ -55,6 +55,7 @@ def start():
     """
     Start the containers needed to run a masternode
     """
+    display.title_start_masternode()
     masternode.start()
 
 

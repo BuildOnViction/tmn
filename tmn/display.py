@@ -19,6 +19,18 @@ def style(function):
     return wrapper
 
 
+def style_no_new_line(function):
+    """
+    Print and colorize strings with `pastel`. Don't add a new line at the end.
+
+    :param function: the string returning function
+    :type function: function
+    """
+    def wrapper(*args):
+        print(pastel.colorize(function(*args)), end='')
+    return wrapper
+
+
 @style
 def link(msg, url):
     """
@@ -33,6 +45,106 @@ def link(msg, url):
         msg=msg,
         url=url
     )
+
+
+def link_docs(url):
+    """
+    Custom link message for documentation
+    """
+    link('Documentation on running a masternode:', url)
+
+
+def link_docs_open(url):
+    """
+    Custom link message for documentation, 'open in browser' version
+    """
+    link('Opening documentation:', url)
+
+
+@style
+def title(msg):
+    """
+    Return a pastel formated title string
+
+    :param msg: message
+    :type msg: string
+    """
+    return '\n<highlight_g>{msg}</highlight_g>\n'.format(
+        msg=msg
+    )
+
+
+def title_start_masternode():
+    """
+    Title when starting a masternode
+    """
+    title('Starting your masternode!')
+
+
+@style_no_new_line
+def step(msg):
+    """
+    Return a pastel formated step
+
+    :param msg: message
+    :type msg: string
+    """
+    return '    {msg}... '.format(
+        msg=msg
+    )
+
+
+def step_start_masternode_volume(volume):
+    """
+    Custom step message for docker volumes verification
+    """
+    step('volume (<fg=yellow>{volume}</>)'.format(
+        volume=volume
+    ))
+
+
+def step_start_masternode_network(network):
+    """
+    Custom step message for docker networks verification
+    """
+    step('network (<fg=yellow>{network}</>)'.format(
+        network=network
+    ))
+
+
+@style
+def step_close(msg, color='green'):
+    """
+    Return a pastel formated end of step
+
+    :param msg: message
+    :type msg: string
+    """
+    return '<fg={color}>{msg}</>'.format(
+        msg=msg,
+        color=color
+    )
+
+
+def step_close_created():
+    """
+    Custom 'created' closing step message
+    """
+    step_close('created')
+
+
+def step_close_exist():
+    """
+    Custom 'exist' closing step message
+    """
+    step_close('exist')
+
+
+def step_close_exists():
+    """
+    Custom 'exists' closing step message
+    """
+    step_close('exists')
 
 
 @style
@@ -59,3 +171,18 @@ def error(msg):
     return '<error>! error:</error> {msg}\n'.format(
         msg=msg
     )
+
+
+def error_docker():
+    """
+    Custom error when docker is not accessible
+    """
+    error('could not access the docker deamon')
+
+
+def error_config():
+    """
+    Custom error when configuration is not accessible or when you can't
+    create it
+    """
+    error('could not access or create configuration file')
