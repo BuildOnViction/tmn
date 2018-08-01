@@ -28,7 +28,7 @@ def main(config):
     if not conf.valid:
         display.error('could not access or create configuration file')
         sys.exit()
-    if masternode.state is not masternode.states.DOCKER_OK:
+    if masternode.is_docker is False:
         display.error('could not access the docker deamon')
         sys.exit()
 

@@ -1,10 +1,7 @@
-from collections import namedtuple
 import docker as dockerpy
 
 # state
-_State = namedtuple('State', 'NEW DOCKER_OK DOCKER_ERROR STARTING')
-states = _State('NEW', 'DOCKER_OK', 'DOCKER_ERROR', 'STARTING')
-state = states.NEW
+is_docker = False
 
 # docker
 _client = dockerpy.from_env()
@@ -28,4 +25,4 @@ def start():
 
 
 if _ping():
-    state = states.DOCKER_OK
+    is_docker = True
