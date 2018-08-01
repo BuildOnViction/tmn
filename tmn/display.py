@@ -29,7 +29,10 @@ def link(msg, url):
     :type msg: string
     :type url: string
     """
-    return f'<highlight_g>{msg}</highlight_g> <link>{url}</link>'
+    return '<highlight_g>{msg}</highlight_g> <link>{url}</link>'.format(
+        msg=msg,
+        url=url
+    )
 
 
 @style
@@ -40,7 +43,9 @@ def warning(msg):
     :param msg: warning message
     :type msg: string
     """
-    return f'<warning>! warning:</warning> {msg}\n'
+    return '<warning>! warning:</warning> {msg}\n'.format(
+        msg=msg
+    )
 
 
 @style
@@ -51,4 +56,6 @@ def error(msg):
     :param msg: error message
     :type msg: string
     """
-    return f'<error>! error:</error> {msg}\n'
+    return '<error>! error:</error> {msg}\n'.format(
+        msg=msg
+    )
