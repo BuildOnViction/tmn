@@ -1,10 +1,20 @@
 import pastel
 
-pastel.add_style('highlight_g', 'green')
-pastel.add_style('highlight_y', 'yellow')
+pastel.add_style('hg', 'green')
+pastel.add_style('hy', 'yellow')
 pastel.add_style('link', 'yellow', options=['underscore'])
 pastel.add_style('warning', 'yellow')
 pastel.add_style('error', 'red')
+
+
+def newline(ammount=1):
+    """
+    Print newlines
+
+    :param ammount: the number of newlines to print
+    :type ammount: int
+    """
+    print('\n'*ammount, end='')
 
 
 def style(function):
@@ -41,7 +51,7 @@ def link(msg, url):
     :type msg: string
     :type url: string
     """
-    return '<highlight_g>{msg}</highlight_g> <link>{url}</link>'.format(
+    return '<hg>{msg}</hg> <link>{url}</link>'.format(
         msg=msg,
         url=url
     )
@@ -69,7 +79,7 @@ def title(msg):
     :param msg: message
     :type msg: string
     """
-    return '<highlight_g>{msg}</highlight_g>\n'.format(
+    return '<hg>{msg}</hg>\n'.format(
         msg=msg
     )
 
@@ -98,7 +108,7 @@ def step_start_masternode_volume(volume):
     """
     Custom step message for docker volumes creation
     """
-    step('volume (<fg=yellow>{volume}</>)'.format(
+    step('volume (<hy>{volume}</hy>)'.format(
         volume=volume
     ))
 
@@ -107,8 +117,17 @@ def step_start_masternode_network(network):
     """
     Custom step message for docker networks creatin
     """
-    step('network (<fg=yellow>{network}</>)'.format(
+    step('network (<hy>{network}</hy>)'.format(
         network=network
+    ))
+
+
+def step_create_masternode_container(container):
+    """
+    Custom step message for docker container creation
+    """
+    step('container (<hy>{container}</hy>)'.format(
+        container=container
     ))
 
 
@@ -116,7 +135,7 @@ def step_start_masternode_container(container):
     """
     Custom step message for docker container starting
     """
-    step('container (<fg=yellow>{container}</>)'.format(
+    step('container (<hy>{container}</hy>)'.format(
         container=container
     ))
 
@@ -156,6 +175,13 @@ def step_close_exists():
     step_close('exists')
 
 
+def step_close_status(status):
+    """
+    Custom 'status' closing step message
+    """
+    step_close(status)
+
+
 @style
 def warning(msg):
     """
@@ -189,9 +215,31 @@ def error_docker():
     error('could not access the docker deamon')
 
 
+def error_docker_api():
+    """
+    Custom error when docker is not accessible
+    """
+    error('something went wrong while doing stuff with docker')
+
+
 def error_config():
     """
     Custom error when configuration is not accessible or when you can't
     create it
     """
     error('could not access or create configuration file')
+
+
+def error_docker_state(name, state):
+    """
+    Custom error when configuration is not accessible or when you can't
+    create it
+    """
+    error(
+        'your container <hy>{name}</hy>'.format(
+            name=name
+        ),
+        'was in unexpected state <hy>{state}</hy>'.format(
+            state=state
+        )
+    )
