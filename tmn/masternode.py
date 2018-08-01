@@ -109,18 +109,20 @@ def _start_containers(containers):
     for container in containers:
         display.step_start_masternode_container(container.name)
         try:
+            container.reload()
             # filtered status are:
             # created|restarting|running|removing|paused|exited|dead
             # might have to add all the status
-            if container.status is 'restarting' or 'running':
+            if container.status in ['restarting', 'running']:
                 pass
-            elif container.status is 'paused':
+            elif container.status in ['paused']:
                 container.unpause()
-            elif container.status is 'created' or 'exited' or 'dead':
+            elif container.status in ['created', 'exited', 'dead']:
                 container.start()
-            elif container.status is 'removing':
+            elif container.status in ['removing']:
                 display.error_docker_state(container.name, container.status)
                 sys.exit()
+            container.reload()
             display.step_close_status(container.status)
         except dockerpy.errors.APIError:
             display.error_docker_api()
