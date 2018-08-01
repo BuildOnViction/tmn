@@ -1,8 +1,11 @@
 import pastel
 
 pastel.add_style('hg', 'green')
+pastel.add_style('hgb', 'green', options=['bold'])
 pastel.add_style('hy', 'yellow')
+pastel.add_style('hyb', 'yellow', options=['bold'])
 pastel.add_style('link', 'yellow', options=['underscore'])
+pastel.add_style('und', options=['underscore'])
 pastel.add_style('warning', 'yellow')
 pastel.add_style('error', 'red')
 
@@ -91,33 +94,68 @@ def title_start_masternode():
     title('Starting your masternode!')
 
 
+@style
+def subtitle(msg):
+    """
+    Return a pastel formated subtitle string
+
+    :param msg: message
+    :type msg: string
+    """
+    return '<und>{msg}</und>\n'.format(
+        msg=msg
+    )
+
+
+def subtitle_create_volumes():
+    """
+    Subtitle when creating volumes
+    """
+    subtitle('Volumes')
+
+
+def subtitle_create_networks():
+    """
+    Subtitle when creating networks
+    """
+    subtitle('Networks')
+
+
+def subtitle_create_containers():
+    """
+    Subtitle when creating containers
+    """
+    subtitle('Containers')
+
+
 @style_no_new_line
-def step(msg):
+def step(msg, indent=1):
     """
     Return a pastel formated step
 
     :param msg: message
     :type msg: string
     """
-    return '    {msg}... '.format(
+    step = '  '*indent + '{msg}... '.format(
         msg=msg
     )
+    return step
 
 
-def step_start_masternode_volume(volume):
+def step_create_masternode_volume(volume):
     """
     Custom step message for docker volumes creation
     """
-    step('volume (<hy>{volume}</hy>)'.format(
+    step('- Creating <hy>{volume}</hy>'.format(
         volume=volume
     ))
 
 
-def step_start_masternode_network(network):
+def step_create_masternode_network(network):
     """
     Custom step message for docker networks creatin
     """
-    step('network (<hy>{network}</hy>)'.format(
+    step('- Creating <hy>{network}</hy>'.format(
         network=network
     ))
 
@@ -126,7 +164,7 @@ def step_create_masternode_container(container):
     """
     Custom step message for docker container creation
     """
-    step('container (<hy>{container}</hy>)'.format(
+    step('- Creating <hy>{container}</hy>'.format(
         container=container
     ))
 
@@ -135,7 +173,7 @@ def step_start_masternode_container(container):
     """
     Custom step message for docker container starting
     """
-    step('container (<hy>{container}</hy>)'.format(
+    step('- Starting <hy>{container}</hy>'.format(
         container=container
     ))
 

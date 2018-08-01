@@ -58,7 +58,7 @@ def _ping():
 
 def _create_volumes():
     for volume in VOLUMES:
-        display.step_start_masternode_volume(volume)
+        display.step_create_masternode_volume(volume)
         try:
             _client.volumes.get(volume)
             display.step_close_exists()
@@ -68,11 +68,12 @@ def _create_volumes():
         except dockerpy.errors.APIError:
             display.error_docker_api()
             sys.exit()
+    display.newline()
 
 
 def _create_network():
     for network in NETWORKS:
-        display.step_start_masternode_network(network)
+        display.step_create_masternode_network(network)
         try:
             _client.networks.get(network)
             display.step_close_exists()
@@ -82,6 +83,7 @@ def _create_network():
         except dockerpy.errors.APIError:
             display.error_docker_api()
             sys.exit()
+    display.newline()
 
 
 def _create_containers():
@@ -126,8 +128,11 @@ def _start_containers(containers):
 
 
 def start():
+    display.subtitle_create_volumes()
     _create_volumes()
+    display.subtitle_create_networks()
     _create_network()
+    display.subtitle_create_containers()
     containers = _create_containers()
     display.newline()
     _start_containers(containers)
