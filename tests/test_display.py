@@ -4,7 +4,7 @@ from tmn import display
 def test_decorator(capsys):
     @display.style
     def return_string(msg):
-        return f'{msg}'
+        return '{msg}'.format(msg=msg)
     return_string('test')
     out, err = capsys.readouterr()
     assert out == 'test\n'
