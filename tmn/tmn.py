@@ -12,9 +12,12 @@ conf = None
              + 'Tomochain masternode')
 @click.option('--config',
               metavar='PATH',
-              help='Optional path to the config file')
+              help='Path to the config file')
+@click.option('--dockerurl',
+              metavar='URL',
+              help='Url to the docker server')
 @click.version_option()
-def main(config):
+def main(config, dockerurl):
     """
     Cli entrypoint.
 
@@ -28,9 +31,10 @@ def main(config):
     if not conf.valid:
         display.error_config()
         sys.exit()
+    masternode.connect(dockerurl)
     if masternode.connected is False:
         display.error_docker()
-        sys.exit()
+        sys.exit(1)
 
 
 @click.command(help='Display Tomochain documentation link')

@@ -17,3 +17,5 @@ class ConfigManager:
             self.valid = True
         except (PermissionError, FileNotFoundError):
             self.valid = False
+        except IsADirectoryError:
+            self.valid = False

@@ -39,8 +39,19 @@ CONTAINERS = {
     },
 }
 
-_client = dockerpy.from_env()
+_client = None
 connected = False
+
+
+def connect(url):
+    global _client
+    global connected
+    if not url:
+        _client = dockerpy.from_env()
+    else:
+        _client = dockerpy.DockerClient(base_url=url)
+    if _ping():
+        connected = True
 
 
 def _ping():
@@ -138,7 +149,3 @@ def start():
     containers = _create_containers()
     display.newline()
     _start_containers(containers)
-
-
-if _ping():
-    connected = True
