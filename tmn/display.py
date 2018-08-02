@@ -250,7 +250,7 @@ def error_docker():
     """
     Custom error when docker is not accessible
     """
-    error('could not access the docker deamon')
+    error('could not access the docker daemon')
 
 
 def error_docker_api():

@@ -43,7 +43,7 @@ _client = None
 connected = False
 
 
-def connect(url):
+def connect(url=None):
     global _client
     global connected
     if not url:
@@ -56,7 +56,7 @@ def connect(url):
 
 def _ping():
     """
-    Try to ping the Docker deamon. Check if accessible.
+    Try to ping the Docker daemon. Check if accessible.
 
     :returns: is Docker running
     :rtype: bool
@@ -82,7 +82,7 @@ def _create_volumes():
     display.newline()
 
 
-def _create_network():
+def _create_networks():
     for network in NETWORKS:
         display.step_create_masternode_network(network)
         try:
@@ -144,7 +144,7 @@ def start():
     display.subtitle_create_volumes()
     _create_volumes()
     display.subtitle_create_networks()
-    _create_network()
+    _create_networks()
     display.subtitle_create_containers()
     containers = _create_containers()
     display.newline()

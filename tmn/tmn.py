@@ -31,10 +31,10 @@ def main(config, dockerurl):
     if not conf.valid:
         display.error_config()
         sys.exit()
-    masternode.connect(dockerurl)
+    masternode.connect(url=dockerurl)
     if masternode.connected is False:
         display.error_docker()
-        sys.exit(1)
+        sys.exit()
 
 
 @click.command(help='Display Tomochain documentation link')
