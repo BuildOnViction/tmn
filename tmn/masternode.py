@@ -186,3 +186,14 @@ def start():
     containers = _create_containers()
     display.newline()
     _start_containers(containers)
+
+
+# @apierror
+# def stop():
+#     """
+#     Stop a masternode. Includes:
+#     - stoping containers
+#     """
+#     display.subtitle_create_containers()
+#     containers = _get_containers()
+#     _stop_containers(containers)

@@ -109,6 +109,13 @@ def title_start_masternode():
     title('Starting your masternode!')
 
 
+def title_stop_masternode():
+    """
+    Title when stopping a masternode
+    """
+    title('Stopping your masternode!')
+
+
 @style
 def subtitle(msg):
     """

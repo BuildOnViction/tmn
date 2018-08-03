@@ -63,5 +63,15 @@ def start():
     masternode.start()
 
 
+@click.command(help='Stop your Tomochain masternode')
+def stop():
+    """
+    Stop the containers needed to run a masternode
+    """
+    display.title_stop_masternode()
+    # masternode.stop()
+
+
 main.add_command(docs)
 main.add_command(start)
+main.add_command(stop)
