@@ -136,7 +136,7 @@ def step(msg, indent=1):
     :param msg: message
     :type msg: string
     """
-    step = '  '*indent + '{msg}... '.format(
+    step = '  '*indent + '- {msg}... '.format(
         msg=msg
     )
     return step
@@ -146,7 +146,7 @@ def step_create_masternode_volume(volume):
     """
     Custom step message for docker volumes creation
     """
-    step('- Creating <hy>{volume}</hy>'.format(
+    step('Creating <hy>{volume}</hy>'.format(
         volume=volume
     ))
 
@@ -155,7 +155,7 @@ def step_create_masternode_network(network):
     """
     Custom step message for docker networks creatin
     """
-    step('- Creating <hy>{network}</hy>'.format(
+    step('Creating <hy>{network}</hy>'.format(
         network=network
     ))
 
@@ -164,7 +164,7 @@ def step_create_masternode_container(container):
     """
     Custom step message for docker container creation
     """
-    step('- Creating <hy>{container}</hy>'.format(
+    step('Creating <hy>{container}</hy>'.format(
         container=container
     ))
 
@@ -173,7 +173,7 @@ def step_start_masternode_container(container):
     """
     Custom step message for docker container starting
     """
-    step('- Starting <hy>{container}</hy>'.format(
+    step('Starting <hy>{container}</hy>'.format(
         container=container
     ))
 

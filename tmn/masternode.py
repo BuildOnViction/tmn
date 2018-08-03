@@ -43,6 +43,16 @@ _client = None
 connected = False
 
 
+def apierror(function):
+    def wrapper(*args, **kwargs):
+        try:
+            function(*args, **kwargs)
+        except dockerpy.errors.APIError:
+            display.error_docker_api()
+            sys.exit()
+    return wrapper
+
+
 def connect(url=None):
     global _client
     global connected
@@ -76,9 +86,6 @@ def _create_volumes():
         except dockerpy.errors.NotFound:
             _client.volumes.create(volume)
             display.step_close_created()
-        except dockerpy.errors.APIError:
-            display.error_docker_api()
-            sys.exit()
     display.newline()
 
 
@@ -91,9 +98,6 @@ def _create_networks():
         except dockerpy.errors.NotFound:
             _client.networks.create(network)
             display.step_close_created()
-        except dockerpy.errors.APIError:
-            display.error_docker_api()
-            sys.exit()
     display.newline()
 
 
@@ -109,9 +113,6 @@ def _create_containers():
             _client.images.pull(config['image'])
             container = _client.containers.create(**config)
             display.step_close_created()
-        except dockerpy.errors.APIError:
-            display.error_docker_api()
-            sys.exit()
         containers.append(container)
     return containers
 
@@ -119,27 +120,21 @@ def _create_containers():
 def _start_containers(containers):
     for container in containers:
         display.step_start_masternode_container(container.name)
-        try:
-            container.reload()
-            # filtered status are:
-            # created|restarting|running|removing|paused|exited|dead
-            # might have to add all the status
-            if container.status in ['restarting', 'running']:
-                pass
-            elif container.status in ['paused']:
-                container.unpause()
-            elif container.status in ['created', 'exited', 'dead']:
-                container.start()
-            elif container.status in ['removing']:
-                display.error_docker_state(container.name, container.status)
-                sys.exit()
-            container.reload()
-            display.step_close_status(container.status)
-        except dockerpy.errors.APIError:
-            display.error_docker_api()
-            sys.exit()
+        container.reload()
+        # filtered status are:
+        # created|restarting|running|removing|paused|exited|dead
+        # might have to add all the status
+        if container.status in ['restarting', 'running']:
+            pass
+        elif container.status in ['paused']:
+            container.unpause()
+        elif container.status in ['created', 'exited', 'dead']:
+            container.start()
+        container.reload()
+        display.step_close_status(container.status)
 
 
+@apierror
 def start():
     display.subtitle_create_volumes()
     _create_volumes()
