@@ -7,7 +7,7 @@ class ConfigManager:
     Manage the tmn configuration
 
     :param path: path to the config file
-    :type path: string
+    :type path: str
     """
 
     def __init__(self, path='~/.config/tmn'):
@@ -16,4 +16,6 @@ class ConfigManager:
             self.path.touch(exist_ok=True)
             self.valid = True
         except (PermissionError, FileNotFoundError):
+            self.valid = False
+        except IsADirectoryError:
             self.valid = False

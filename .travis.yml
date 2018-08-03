@@ -1,6 +1,8 @@
 language: python
 python:
-  - 3.6
+  - "3.5"
+  - "3.6"
+  - "3.7-dev"
 
 sudo: required
 services:
@@ -13,6 +15,6 @@ install:
 
 script:
   - flake8 .
-  - coverage run --source tmn -m pytest
+  - coverage run --source tmn -m pytest -v
   - coverage report
   - codecov
