@@ -199,11 +199,11 @@ def step_close_created():
     step_close('created')
 
 
-def step_close_exist():
-    """
-    Custom 'exist' closing step message
-    """
-    step_close('exist')
+# def step_close_exist():
+#     """
+#     Custom 'exist' closing step message
+#     """
+#     step_close('exist')
 
 
 def step_close_exists():
@@ -220,17 +220,17 @@ def step_close_status(status):
     step_close(status)
 
 
-@style
-def warning(msg):
-    """
-    Return a pastel formated string for warnings
-
-    :param msg: warning message
-    :type msg: string
-    """
-    return '<warning>! warning:</warning> {msg}\n'.format(
-        msg=msg
-    )
+# @style
+# def warning(msg):
+#     """
+#     Return a pastel formated string for warnings
+#
+#     :param msg: warning message
+#     :type msg: string
+#     """
+#     return '<warning>! warning:</warning> {msg}\n'.format(
+#         msg=msg
+#     )
 
 
 @style
@@ -268,16 +268,16 @@ def error_config():
     error('could not access or create configuration file')
 
 
-def error_docker_state(name, state):
-    """
-    Custom error when configuration is not accessible or when you can't
-    create it
-    """
-    error(
-        'your container <hy>{name}</hy>'.format(
-            name=name
-        ),
-        'was in unexpected state <hy>{state}</hy>'.format(
-            state=state
-        )
-    )
+# def error_docker_state(name, state):
+#     """
+#     Custom error when configuration is not accessible or when you can't
+#     create it
+#     """
+#     error(
+#         'your container <hy>{name}</hy>'.format(
+#             name=name
+#         ),
+#         'was in unexpected state <hy>{state}</hy>'.format(
+#             state=state
+#         )
+#     )
