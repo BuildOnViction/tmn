@@ -122,6 +122,23 @@ def _create_networks():
     display.newline()
 
 
+def _get_containers():
+    """
+    Get the containers defined in `CONTAINERS`.
+
+    :returns: The existing `docker.Container`
+    :rtype: list
+    """
+    containers = []
+    for container, config in CONTAINERS.items():
+        try:
+            container = _client.containers.get(config['name'])
+            containers.append(container)
+        except dockerpy.errors.NotFound:
+            pass
+    return containers
+
+
 def _create_containers():
     """
     Try to get the containers defined in `CONTAINERS`.
@@ -188,12 +205,11 @@ def start():
     _start_containers(containers)
 
 
-# @apierror
-# def stop():
-#     """
-#     Stop a masternode. Includes:
-#     - stoping containers
-#     """
-#     display.subtitle_create_containers()
-#     containers = _get_containers()
-#     _stop_containers(containers)
+@apierror
+def stop():
+    """
+    Stop a masternode. Includes:
+    - stoping containers
+    """
+    _get_containers()
+    # _stop_containers(containers)

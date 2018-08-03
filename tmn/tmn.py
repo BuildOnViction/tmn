@@ -69,7 +69,7 @@ def stop():
     Stop the containers needed to run a masternode
     """
     display.title_stop_masternode()
-    # masternode.stop()
+    masternode.stop()
 
 
 main.add_command(docs)

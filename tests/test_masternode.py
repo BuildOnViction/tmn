@@ -62,7 +62,7 @@ def test_create_volumes(capsys, test_data):
     v.remove(force=True)
 
 
-def test_create_volumes_exists(capsys, test_data):
+def test_create_volumes_exist(capsys, test_data):
     test_data._create_volumes()
     capsys.readouterr()
     test_data._create_volumes()
@@ -89,7 +89,7 @@ def test_create_networks(capsys, test_data):
     n.remove()
 
 
-def test_create_exists(capsys, test_data):
+def test_create_exist(capsys, test_data):
     test_data._create_networks()
     capsys.readouterr()
     test_data._create_networks()
@@ -117,7 +117,7 @@ def test_create_containers(capsys, test_data):
     c.remove(force=True)
 
 
-def test_create_containers_exists(capsys, test_data):
+def test_create_containers_exist(capsys, test_data):
     test_data._create_containers()
     capsys.readouterr()
     c_list = test_data._create_containers()
@@ -133,6 +133,28 @@ def test_create_containers_exists(capsys, test_data):
 def test_create_containers_docker_fail(docker_fail):
     with pytest.raises(Exception):
         docker_fail._create_containers()
+
+
+def test_get_containers(test_data):
+    test_data._create_containers()
+    c_list = test_data._get_containers()
+    c = test_data._client.containers.get(c_list[0].name)
+    assert c
+    c.remove(force=True)
+
+
+def test_get_containers_absent(test_data):
+    test_data._create_containers()
+    c_list = test_data._get_containers()
+    assert len(c_list) == 1
+    c_list[0].remove(force=True)
+    c_list = test_data._get_containers()
+    assert len(c_list) == 0
+
+
+def test_get_containers_docker_fail(docker_fail):
+    with pytest.raises(Exception):
+        docker_fail._get_containers()
 
 
 def test_start_containers(capsys, test_data):
