@@ -1,0 +1,20 @@
+language: python
+python:
+  - "3.5"
+  - "3.6"
+  - "3.7-dev"
+
+sudo: required
+services:
+  - docker
+
+before_install:
+  - pip install poetry
+install:
+  - poetry develop
+
+script:
+  - flake8 .
+  - coverage run --source tmn -m pytest -v
+  - coverage report
+  - codecov
