@@ -62,6 +62,18 @@ def test_create_volumes(capsys, test_data):
     v.remove(force=True)
 
 
+def test_create_volumes_exists(capsys, test_data):
+    test_data._create_volumes()
+    capsys.readouterr()
+    test_data._create_volumes()
+    captured = capsys.readouterr()
+    v = test_data._client.volumes.get(test_data.VOLUMES[0])
+    assert v
+    assert '- Creating {}... '.format(test_data.VOLUMES[0]) in captured.out
+    assert 'exists' in captured.out
+    v.remove(force=True)
+
+
 def test_create_volumes_docker_fail(docker_fail):
     with pytest.raises(Exception):
         docker_fail._create_volumes()
@@ -74,6 +86,18 @@ def test_create_networks(capsys, test_data):
     assert n
     assert '- Creating {}... '.format(test_data.NETWORKS[0]) in captured.out
     assert 'created' in captured.out
+    n.remove()
+
+
+def test_create_exists(capsys, test_data):
+    test_data._create_networks()
+    capsys.readouterr()
+    test_data._create_networks()
+    captured = capsys.readouterr()
+    n = test_data._client.networks.get(test_data.NETWORKS[0])
+    assert n
+    assert '- Creating {}... '.format(test_data.NETWORKS[0]) in captured.out
+    assert 'exists' in captured.out
     n.remove()
 
 
@@ -90,6 +114,19 @@ def test_create_containers(capsys, test_data):
     assert ('- Creating {}... '.format(test_data.CONTAINERS['alpine']['name'])
             in captured.out)
     assert 'created' in captured.out
+    c.remove(force=True)
+
+
+def test_create_containers_exists(capsys, test_data):
+    test_data._create_containers()
+    capsys.readouterr()
+    c_list = test_data._create_containers()
+    captured = capsys.readouterr()
+    c = test_data._client.containers.get(c_list[0].name)
+    assert c
+    assert ('- Creating {}... '.format(test_data.CONTAINERS['alpine']['name'])
+            in captured.out)
+    assert 'exists' in captured.out
     c.remove(force=True)
 
 
