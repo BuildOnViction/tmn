@@ -54,7 +54,7 @@ def docs(open):
         click.launch(url)
 
 
-@click.command(help='Start your Tomochain masternode on Docker')
+@click.command(help='Start your Tomochain masternode')
 def start():
     """
     Start the containers needed to run a masternode
