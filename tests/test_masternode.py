@@ -135,41 +135,44 @@ def test_create_containers_docker_fail(docker_fail):
         docker_fail._create_containers()
 
 
-def test_run_containers(capsys, test_data):
+def test_start_containers(capsys, test_data):
     c_list = test_data._create_containers()
     test_data._start_containers(c_list)
     captured = capsys.readouterr()
     c = test_data._client.containers.get(c_list[0].name)
-    assert c.status == "running"
+    assert c.status == 'running'
     assert ('- Starting {}... '.format(test_data.CONTAINERS['alpine']['name'])
             in captured.out)
     assert 'running' in captured.out
     c.remove(force=True)
 
 
-def test_run_containers_running(capsys, test_data):
+def test_start_containers_running(capsys, test_data):
     c_list = test_data._create_containers()
     test_data._start_containers(c_list)
     capsys.readouterr()
+    c_list[0].reload()
     test_data._start_containers(c_list)
     captured = capsys.readouterr()
     c = test_data._client.containers.get(c_list[0].name)
-    assert c.status == "running"
+    assert c.status == 'running'
     assert ('- Starting {}... '.format(test_data.CONTAINERS['alpine']['name'])
             in captured.out)
     assert 'running' in captured.out
     c.remove(force=True)
 
 
-def test_run_containers_paused(capsys, test_data):
+def test_start_containers_paused(capsys, test_data):
     c_list = test_data._create_containers()
     test_data._start_containers(c_list)
     capsys.readouterr()
     c_list[0].pause()
+    c_list[0].reload()
+    assert c_list[0].status == 'paused'
     test_data._start_containers(c_list)
     captured = capsys.readouterr()
     c = test_data._client.containers.get(c_list[0].name)
-    assert c.status == "running"
+    assert c.status == 'running'
     assert ('- Starting {}... '.format(test_data.CONTAINERS['alpine']['name'])
             in captured.out)
     assert 'running' in captured.out
