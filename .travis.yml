@@ -18,3 +18,20 @@ script:
   - coverage run --source tmn -m pytest -v
   - coverage report
   - coveralls
+
+before_deploy:
+  - poetry build
+deploy:
+  - provider: releases
+    api_key: $GITHUB_TOKEN
+    file_glob: true
+    file: dist/*
+    skip_cleanup: true
+    on:
+      tags: true
+  - provider: pypi
+    user: $PYPI_USERNAME
+    password: $PYPI_PASSWORD
+    skip_cleanup: true
+    on:
+      tags: true
