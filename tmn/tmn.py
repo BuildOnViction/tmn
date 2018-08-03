@@ -22,7 +22,7 @@ def main(config, dockerurl):
     Cli entrypoint.
 
     :param config: path to the configuration file
-    :type config: string
+    :type config: str
     """
     if config:
         conf = ConfigManager(config)

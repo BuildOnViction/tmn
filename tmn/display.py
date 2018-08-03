@@ -24,8 +24,10 @@ def style(function):
     """
     Print and colorize strings with `pastel`
 
-    :param function: the string returning function
+    :param function: function to decorate
     :type function: function
+    :returns: decorated function
+    :rtype: function
     """
     def wrapper(*args):
         print(pastel.colorize(function(*args)))
@@ -36,8 +38,13 @@ def style_no_new_line(function):
     """
     Print and colorize strings with `pastel`. Don't add a new line at the end.
 
-    :param function: the string returning function
+    Decorator to print and colorize strings with `pastel`.
+    Don't add a new line at the end.
+
+    :param function: function to decorate
     :type function: function
+    :returns: decorated function
+    :rtype: function
     """
     def wrapper(*args):
         print(pastel.colorize(function(*args)), end='', flush=True)
@@ -50,9 +57,9 @@ def link(msg, url):
     Return a pastel formated string for browser links
 
     :param msg: message
+    :type msg: str
     :param url: website url
-    :type msg: string
-    :type url: string
+    :type url: str
     """
     return '<hg>{msg}</hg> <link>{url}</link>'.format(
         msg=msg,
@@ -63,6 +70,9 @@ def link(msg, url):
 def link_docs(url):
     """
     Custom link message for documentation
+
+    :param url: url to display
+    :type url: str
     """
     link('Documentation on running a masternode:', url)
 
@@ -70,6 +80,9 @@ def link_docs(url):
 def link_docs_open(url):
     """
     Custom link message for documentation, 'open in browser' version
+
+    :param url: url to display
+    :type url: str
     """
     link('Opening documentation:', url)
 
@@ -79,8 +92,10 @@ def title(msg):
     """
     Return a pastel formated title string
 
-    :param msg: message
-    :type msg: string
+    :param msg: title message
+    :type msg: str
+    :returns: subtitle formated
+    :rtype: str
     """
     return '<hg>{msg}</hg>\n'.format(
         msg=msg
@@ -99,8 +114,10 @@ def subtitle(msg):
     """
     Return a pastel formated subtitle string
 
-    :param msg: message
-    :type msg: string
+    :param msg: subtitle message
+    :type msg: str
+    :returns: subtitle formated
+    :rtype: str
     """
     return '<und>{msg}</und>\n'.format(
         msg=msg
@@ -131,10 +148,15 @@ def subtitle_create_containers():
 @style_no_new_line
 def step(msg, indent=1):
     """
-    Return a pastel formated step
+    Return a pastel formated step with indentation.
+    One indent is two spaces.
 
-    :param msg: message
-    :type msg: string
+    :param msg: step message
+    :type msg: str
+    :param indent: number of idents
+    :type indent: int
+    :returns: `msg` formated
+    :rtype: str
     """
     step = '  '*indent + '- {msg}... '.format(
         msg=msg
@@ -183,8 +205,10 @@ def step_close(msg, color='green'):
     """
     Return a pastel formated end of step
 
-    :param msg: message
-    :type msg: string
+    :param msg: task status of the step
+    :type msg: str
+    :returns: `msg` formated
+    :rtype: str
     """
     return '<fg={color}>{msg}</>'.format(
         msg=msg,
@@ -226,7 +250,7 @@ def step_close_status(status):
 #     Return a pastel formated string for warnings
 #
 #     :param msg: warning message
-#     :type msg: string
+#     :type msg: str
 #     """
 #     return '<warning>! warning:</warning> {msg}\n'.format(
 #         msg=msg
@@ -239,7 +263,9 @@ def error(msg):
     Return a pastel formated string for errors
 
     :param msg: error message
-    :type msg: string
+    :type msg: str
+    :returns: `msg` formated
+    :rtype: str
     """
     return '<error>! error:</error> {msg}\n'.format(
         msg=msg

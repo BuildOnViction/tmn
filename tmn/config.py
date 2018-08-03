@@ -7,7 +7,7 @@ class ConfigManager:
     Manage the tmn configuration
 
     :param path: path to the config file
-    :type path: string
+    :type path: str
     """
 
     def __init__(self, path='~/.config/tmn'):

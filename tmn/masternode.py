@@ -44,6 +44,14 @@ connected = False
 
 
 def apierror(function):
+    """
+    Decorator to catch `docker.errors.APIerror` Exception
+
+    :param function: function to decorate
+    :type function: function
+    :returns: decorated function
+    :rtype: function
+    """
     def wrapper(*args, **kwargs):
         try:
             function(*args, **kwargs)
@@ -54,6 +62,13 @@ def apierror(function):
 
 
 def connect(url=None):
+    """
+    Create the docker client. Try to ping the docker server to establish if
+    the connexion in successful
+
+    :param url: url to the docker deamon
+    :type url: str
+    """
     global _client
     global connected
     if not url:
@@ -78,6 +93,9 @@ def _ping():
 
 
 def _create_volumes():
+    """
+    Try to get the volumes defined in `VOLUMES`. If it fails, create them.
+    """
     for volume in VOLUMES:
         display.step_create_masternode_volume(volume)
         try:
@@ -90,6 +108,9 @@ def _create_volumes():
 
 
 def _create_networks():
+    """
+    Try to get the networks defined in `NETWORKS`. If it fails, create them.
+    """
     for network in NETWORKS:
         display.step_create_masternode_network(network)
         try:
@@ -102,6 +123,13 @@ def _create_networks():
 
 
 def _create_containers():
+    """
+    Try to get the containers defined in `CONTAINERS`.
+    If it fails, create them.
+
+    :returns: The created or existing `docker.Container`
+    :rtype: list
+    """
     containers = []
     for container, config in CONTAINERS.items():
         display.step_create_masternode_container(config['name'])
@@ -118,6 +146,13 @@ def _create_containers():
 
 
 def _start_containers(containers):
+    """
+    Verify the container status. If it's not restarting or running,
+    start them.
+
+    :param containers: list of `docker.Container`
+    :type containers: list
+    """
     for container in containers:
         display.step_start_masternode_container(container.name)
         container.reload()
@@ -136,6 +171,13 @@ def _start_containers(containers):
 
 @apierror
 def start():
+    """
+    Start a masternode. Includes:
+    - creating volumes
+    - creating networks
+    - creating containers
+    - starting containers
+    """
     display.subtitle_create_volumes()
     _create_volumes()
     display.subtitle_create_networks()
