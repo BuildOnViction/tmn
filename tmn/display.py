@@ -207,6 +207,15 @@ def step_start_masternode_container(container):
     ))
 
 
+def step_stop_masternode_container(container):
+    """
+    Custom step message for docker container stopping
+    """
+    step('Stopping <hy>{container}</hy>'.format(
+        container=container
+    ))
+
+
 @style
 def step_close(msg, color='green'):
     """

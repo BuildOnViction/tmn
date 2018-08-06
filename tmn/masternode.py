@@ -186,6 +186,27 @@ def _start_containers(containers):
         display.step_close_status(container.status)
 
 
+def _stop_containers(containers):
+    """
+    Stop the given list of `docker.Container`
+
+    :param containers: list of `docker.Container`
+    :type containers: list
+    """
+    for container in containers:
+        display.step_stop_masternode_container(container.name)
+        container.reload()
+        # filtered status are:
+        # created|restarting|running|removing|paused|exited|dead
+        # might have to add all the status
+        if container.status in ['restarting', 'running', 'paused']:
+            container.stop()
+        elif container.status in ['created', 'exited', 'dead']:
+            pass
+        container.reload()
+        display.step_close_status(container.status)
+
+
 @apierror
 def start():
     """
@@ -211,5 +232,5 @@ def stop():
     Stop a masternode. Includes:
     - stoping containers
     """
-    _get_containers()
-    # _stop_containers(containers)
+    containers = _get_containers()
+    _stop_containers(containers)
