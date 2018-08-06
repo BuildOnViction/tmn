@@ -315,15 +315,6 @@ version = "1.11.0"
 
 [[package]]
 category = "main"
-description = "Python Library for Tom's Obvious, Minimal Language"
-name = "toml"
-optional = false
-platform = "*"
-python-versions = "*"
-version = "0.9.4"
-
-[[package]]
-category = "main"
 description = "HTTP library with thread-safe connection pooling, file post, and more."
 name = "urllib3"
 optional = false
@@ -344,7 +335,7 @@ version = "0.48.0"
 six = "*"
 
 [metadata]
-content-hash = "b45868b0e31034f11767d1b9b495996157e045b9b7d448633aa4c7a2e43bb6cc"
+content-hash = "7b2ffa865177cd028566cf6d1cae216af508f928427682146564279fa2647af6"
 platform = "*"
 python-versions = "^3.5"
 
@@ -375,6 +366,5 @@ pypiwin32 = ["0cece5cf12ae7f4b32764db8a12cdb1a8b27184be681e0cfbd2996f0cc07376f",
 pytest = ["86a8dbf407e437351cef4dba46736e9c5a6e3c3ac71b2e942209748e76ff2086", "e74466e97ac14582a8188ff4c53e6cc3810315f342f6096899332ae864c1d432"]
 requests = ["63b52e3c866428a224f97cab011de738c36aec0185aa91cfacd418b5d58911d1", "ec22d826a36ed72a7358ff3fe56cbd4ba69dd7a6718ffd450ff0e9df7a47ce6a"]
 six = ["70e8a77beed4562e7f14fe23a786b54f6296e34344c23bc42f07b15018ff98e9", "832dc0e10feb1aa2c68dcc57dbb658f1c7e65b9b61af69048abc87a2db00a0eb"]
-toml = ["8e86bd6ce8cc11b9620cb637466453d94f5d57ad86f17e98a98d1f73e3baab2d"]
 urllib3 = ["a68ac5e15e76e7e5dd2b8f94007233e01effe3e50e8daddf69acfd81cb686baf", "b5725a0bd4ba422ab0e66e89e030c806576753ea3ee08554382c14e685d117b5"]
 websocket-client = ["18f1170e6a1b5463986739d9fd45c4308b0d025c1b2f9b88788d8f69e8a5eb4a", "db70953ae4a064698b27ae56dcad84d0ee68b7b43cb40940f537738f38f510c1"]
