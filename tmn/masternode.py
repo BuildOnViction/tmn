@@ -1,42 +1,42 @@
 import sys
+from collections import OrderedDict
 import docker as dockerpy
 from tmn import display
 
 VOLUMES = ['blockchain_data']
 NETWORKS = ['masternode']
-CONTAINERS = {
-    'telegraf': {
-        'image': 'tomochain/infra-telegraf:devnet',
-        'hostname': 'test',
-        'name': 'telegraf',
-        'network': NETWORKS[0],
-        'volumes': {
-            '/var/run/docker.sock': {
-                'bind': '/var/run/docker.sock', 'mode': 'ro'
-            },
-            '/sys': {
-                'bind': '/rootfs/sys', 'mode': 'ro'
-            },
-            '/proc': {
-                'bind': '/rootfs/proc', 'mode': 'ro'
-            },
-            '/etc': {
-                'bind': '/rootfs/etc', 'mode': 'ro'
-            }
+CONTAINERS = OrderedDict()
+CONTAINERS['telegraf'] = {
+    'image': 'tomochain/infra-telegraf:devnet',
+    'hostname': 'test',
+    'name': 'telegraf',
+    'network': NETWORKS[0],
+    'volumes': {
+        '/var/run/docker.sock': {
+            'bind': '/var/run/docker.sock', 'mode': 'ro'
         },
-        'detach': True
-    },
-    'tomochain': {
-        'image': 'tomochain/infra-tomochain:devnet',
-        'name': 'tomochain',
-        'network': NETWORKS[0],
-        'volumes': {
-            VOLUMES[0]: {
-                'bind': '/tomochain/data', 'mode': 'rw'
-            }
+        '/sys': {
+            'bind': '/rootfs/sys', 'mode': 'ro'
         },
-        'detach': True
+        '/proc': {
+            'bind': '/rootfs/proc', 'mode': 'ro'
+        },
+        '/etc': {
+            'bind': '/rootfs/etc', 'mode': 'ro'
+        }
     },
+    'detach': True
+}
+CONTAINERS['tomochain'] = {
+    'image': 'tomochain/infra-tomochain:devnet',
+    'name': 'tomochain',
+    'network': NETWORKS[0],
+    'volumes': {
+        VOLUMES[0]: {
+            'bind': '/tomochain/data', 'mode': 'rw'
+        }
+    },
+    'detach': True
 }
 
 _client = None
@@ -122,6 +122,23 @@ def _create_networks():
     display.newline()
 
 
+def _get_containers():
+    """
+    Get the containers defined in `CONTAINERS`.
+
+    :returns: The existing `docker.Container`
+    :rtype: list
+    """
+    containers = []
+    for container, config in CONTAINERS.items():
+        try:
+            container = _client.containers.get(config['name'])
+            containers.append(container)
+        except dockerpy.errors.NotFound:
+            pass
+    return containers
+
+
 def _create_containers():
     """
     Try to get the containers defined in `CONTAINERS`.
@@ -169,6 +186,27 @@ def _start_containers(containers):
         display.step_close_status(container.status)
 
 
+def _stop_containers(containers):
+    """
+    Stop the given list of `docker.Container`
+
+    :param containers: list of `docker.Container`
+    :type containers: list
+    """
+    for container in containers:
+        display.step_stop_masternode_container(container.name)
+        container.reload()
+        # filtered status are:
+        # created|restarting|running|removing|paused|exited|dead
+        # might have to add all the status
+        if container.status in ['restarting', 'running', 'paused']:
+            container.stop()
+        elif container.status in ['created', 'exited', 'dead']:
+            pass
+        container.reload()
+        display.step_close_status(container.status)
+
+
 @apierror
 def start():
     """
@@ -186,3 +224,13 @@ def start():
     containers = _create_containers()
     display.newline()
     _start_containers(containers)
+
+
+@apierror
+def stop():
+    """
+    Stop a masternode. Includes:
+    - stoping containers
+    """
+    containers = _get_containers()
+    _stop_containers(containers)

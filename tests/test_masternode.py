@@ -1,3 +1,4 @@
+from collections import OrderedDict
 import pytest
 import docker as dockerpy
 
@@ -8,12 +9,13 @@ def test_data():
     masternode.connect()
     masternode.VOLUMES = ['test']
     masternode.NETWORKS = ['test']
-    masternode.CONTAINERS = {'alpine': {
-            'image': 'alpine:latest',
-            'name': 'test',
-            'command': 'sleep 1000',
-            'detach': True
-    }}
+    masternode.CONTAINERS = OrderedDict()
+    masternode.CONTAINERS['alpine'] = {
+        'image': 'alpine:latest',
+        'name': 'test',
+        'command': 'sleep 1000',
+        'detach': True
+    }
     masternode.connect()
     return masternode
 
@@ -62,7 +64,7 @@ def test_create_volumes(capsys, test_data):
     v.remove(force=True)
 
 
-def test_create_volumes_exists(capsys, test_data):
+def test_create_volumes_exist(capsys, test_data):
     test_data._create_volumes()
     capsys.readouterr()
     test_data._create_volumes()
@@ -89,7 +91,7 @@ def test_create_networks(capsys, test_data):
     n.remove()
 
 
-def test_create_exists(capsys, test_data):
+def test_create_exist(capsys, test_data):
     test_data._create_networks()
     capsys.readouterr()
     test_data._create_networks()
@@ -117,7 +119,7 @@ def test_create_containers(capsys, test_data):
     c.remove(force=True)
 
 
-def test_create_containers_exists(capsys, test_data):
+def test_create_containers_exist(capsys, test_data):
     test_data._create_containers()
     capsys.readouterr()
     c_list = test_data._create_containers()
@@ -133,6 +135,28 @@ def test_create_containers_exists(capsys, test_data):
 def test_create_containers_docker_fail(docker_fail):
     with pytest.raises(Exception):
         docker_fail._create_containers()
+
+
+def test_get_containers(test_data):
+    test_data._create_containers()
+    c_list = test_data._get_containers()
+    c = test_data._client.containers.get(c_list[0].name)
+    assert c
+    c.remove(force=True)
+
+
+def test_get_containers_absent(test_data):
+    test_data._create_containers()
+    c_list = test_data._get_containers()
+    assert len(c_list) == 1
+    c_list[0].remove(force=True)
+    c_list = test_data._get_containers()
+    assert len(c_list) == 0
+
+
+def test_get_containers_docker_fail(docker_fail):
+    with pytest.raises(Exception):
+        docker_fail._get_containers()
 
 
 def test_start_containers(capsys, test_data):
@@ -176,4 +200,31 @@ def test_start_containers_paused(capsys, test_data):
     assert ('- Starting {}... '.format(test_data.CONTAINERS['alpine']['name'])
             in captured.out)
     assert 'running' in captured.out
+    c.remove(force=True)
+
+
+def test_stop_containers(capsys, test_data):
+    c_list = test_data._create_containers()
+    test_data._start_containers(c_list)
+    capsys.readouterr()
+    test_data._stop_containers(c_list)
+    captured = capsys.readouterr()
+    c = test_data._client.containers.get(c_list[0].name)
+    assert c.status == 'exited'
+    assert ('- Stopping {}... '.format(test_data.CONTAINERS['alpine']['name'])
+            in captured.out)
+    assert 'exited' in captured.out
+    c.remove(force=True)
+
+
+def test_stop_containers_created(capsys, test_data):
+    c_list = test_data._create_containers()
+    capsys.readouterr()
+    test_data._stop_containers(c_list)
+    captured = capsys.readouterr()
+    c = test_data._client.containers.get(c_list[0].name)
+    assert c.status == 'created'
+    assert ('- Stopping {}... '.format(test_data.CONTAINERS['alpine']['name'])
+            in captured.out)
+    assert 'created' in captured.out
     c.remove(force=True)

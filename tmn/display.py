@@ -109,6 +109,13 @@ def title_start_masternode():
     title('Starting your masternode!')
 
 
+def title_stop_masternode():
+    """
+    Title when stopping a masternode
+    """
+    title('Stopping your masternode!')
+
+
 @style
 def subtitle(msg):
     """
@@ -196,6 +203,15 @@ def step_start_masternode_container(container):
     Custom step message for docker container starting
     """
     step('Starting <hy>{container}</hy>'.format(
+        container=container
+    ))
+
+
+def step_stop_masternode_container(container):
+    """
+    Custom step message for docker container stopping
+    """
+    step('Stopping <hy>{container}</hy>'.format(
         container=container
     ))
 
