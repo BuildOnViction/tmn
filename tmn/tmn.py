@@ -1,5 +1,6 @@
 import sys
 import click
+from tmn import __version__
 from tmn import display
 from tmn.config import ConfigManager
 from tmn import masternode
@@ -16,7 +17,7 @@ conf = None
 @click.option('--dockerurl',
               metavar='URL',
               help='Url to the docker server')
-@click.version_option()
+@click.version_option(version=__version__)
 def main(config, dockerurl):
     """
     Cli entrypoint.
