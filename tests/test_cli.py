@@ -73,12 +73,12 @@ def test_command_start(runner):
     assert lines[8][:27] == '  - Creating masternode... '
     assert lines[8][27:] in ['exists', 'created']
     assert lines[10] == 'Containers'
-    assert lines[12][:25] == '  - Creating telegraf... '
-    assert lines[12][25:] in ['exists', 'created']
+    assert lines[12][:24] == '  - Creating metrics... '
+    assert lines[12][24:] in ['exists', 'created']
     assert lines[13][:26] == '  - Creating tomochain... '
     assert lines[13][26:] in ['exists', 'created']
-    assert lines[15][:25] == '  - Starting telegraf... '
-    assert lines[15][25:] in [
+    assert lines[15][:24] == '  - Starting metrics... '
+    assert lines[15][24:] in [
         'restarting', 'running'
     ]
     assert lines[16][:26] == '  - Starting tomochain... '

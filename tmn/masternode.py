@@ -6,10 +6,10 @@ from tmn import display
 VOLUMES = ['blockchain_data']
 NETWORKS = ['masternode']
 CONTAINERS = OrderedDict()
-CONTAINERS['telegraf'] = {
+CONTAINERS['metrics'] = {
     'image': 'tomochain/infra-telegraf:devnet',
     'hostname': 'test',
-    'name': 'telegraf',
+    'name': 'metrics',
     'network': NETWORKS[0],
     'volumes': {
         '/var/run/docker.sock': {
