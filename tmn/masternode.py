@@ -1,42 +1,42 @@
 import sys
+from collections import OrderedDict
 import docker as dockerpy
 from tmn import display
 
 VOLUMES = ['blockchain_data']
 NETWORKS = ['masternode']
-CONTAINERS = {
-    'telegraf': {
-        'image': 'tomochain/infra-telegraf:devnet',
-        'hostname': 'test',
-        'name': 'telegraf',
-        'network': NETWORKS[0],
-        'volumes': {
-            '/var/run/docker.sock': {
-                'bind': '/var/run/docker.sock', 'mode': 'ro'
-            },
-            '/sys': {
-                'bind': '/rootfs/sys', 'mode': 'ro'
-            },
-            '/proc': {
-                'bind': '/rootfs/proc', 'mode': 'ro'
-            },
-            '/etc': {
-                'bind': '/rootfs/etc', 'mode': 'ro'
-            }
+CONTAINERS = OrderedDict()
+CONTAINERS['telegraf'] = {
+    'image': 'tomochain/infra-telegraf:devnet',
+    'hostname': 'test',
+    'name': 'telegraf',
+    'network': NETWORKS[0],
+    'volumes': {
+        '/var/run/docker.sock': {
+            'bind': '/var/run/docker.sock', 'mode': 'ro'
         },
-        'detach': True
-    },
-    'tomochain': {
-        'image': 'tomochain/infra-tomochain:devnet',
-        'name': 'tomochain',
-        'network': NETWORKS[0],
-        'volumes': {
-            VOLUMES[0]: {
-                'bind': '/tomochain/data', 'mode': 'rw'
-            }
+        '/sys': {
+            'bind': '/rootfs/sys', 'mode': 'ro'
         },
-        'detach': True
+        '/proc': {
+            'bind': '/rootfs/proc', 'mode': 'ro'
+        },
+        '/etc': {
+            'bind': '/rootfs/etc', 'mode': 'ro'
+        }
     },
+    'detach': True
+}
+CONTAINERS['tomochain'] = {
+    'image': 'tomochain/infra-tomochain:devnet',
+    'name': 'tomochain',
+    'network': NETWORKS[0],
+    'volumes': {
+        VOLUMES[0]: {
+            'bind': '/tomochain/data', 'mode': 'rw'
+        }
+    },
+    'detach': True
 }
 
 _client = None

@@ -1,3 +1,4 @@
+from collections import OrderedDict
 import pytest
 import docker as dockerpy
 
@@ -8,12 +9,13 @@ def test_data():
     masternode.connect()
     masternode.VOLUMES = ['test']
     masternode.NETWORKS = ['test']
-    masternode.CONTAINERS = {'alpine': {
-            'image': 'alpine:latest',
-            'name': 'test',
-            'command': 'sleep 1000',
-            'detach': True
-    }}
+    masternode.CONTAINERS = OrderedDict()
+    masternode.CONTAINERS['alpine'] = {
+        'image': 'alpine:latest',
+        'name': 'test',
+        'command': 'sleep 1000',
+        'detach': True
+    }
     masternode.connect()
     return masternode
 
