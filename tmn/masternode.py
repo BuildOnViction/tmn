@@ -129,11 +129,11 @@ def _get_containers():
     :returns: The existing `docker.Container`
     :rtype: list
     """
-    containers = []
-    for container, config in CONTAINERS.items():
+    containers = {}
+    for key, value in CONTAINERS.items():
         try:
-            container = _client.containers.get(config['name'])
-            containers.append(container)
+            container = _client.containers.get(value['name'])
+            containers[container.name] = container
         except dockerpy.errors.NotFound:
             pass
     return containers
@@ -147,18 +147,18 @@ def _create_containers():
     :returns: The created or existing `docker.Container`
     :rtype: list
     """
-    containers = []
-    for container, config in CONTAINERS.items():
-        display.step_create_masternode_container(config['name'])
+    containers = {}
+    for key, value in CONTAINERS.items():
+        display.step_create_masternode_container(value['name'])
         try:
-            container = _client.containers.get(config['name'])
+            container = _client.containers.get(value['name'])
             display.step_close_exists()
         except dockerpy.errors.NotFound:
             # temporary, see https://github.com/docker/docker-py/issues/2101
-            _client.images.pull(config['image'])
-            container = _client.containers.create(**config)
+            _client.images.pull(value['image'])
+            container = _client.containers.create(**value)
             display.step_close_created()
-        containers.append(container)
+        containers[container.name] = container
     return containers
 
 
@@ -167,10 +167,10 @@ def _start_containers(containers):
     Verify the container status. If it's not restarting or running,
     start them.
 
-    :param containers: list of `docker.Container`
-    :type containers: list
+    :param containers: dict of name:`docker.Container`
+    :type containers: dict
     """
-    for container in containers:
+    for name, container in containers.items():
         display.step_start_masternode_container(container.name)
         container.reload()
         # filtered status are:
@@ -188,12 +188,12 @@ def _start_containers(containers):
 
 def _stop_containers(containers):
     """
-    Stop the given list of `docker.Container`
+    Stop the given dict of `docker.Container`
 
-    :param containers: list of `docker.Container`
-    :type containers: list
+    :param containers: dict of name:`docker.Container`
+    :type containers: dict
     """
-    for container in containers:
+    for name, container in containers.items():
         display.step_stop_masternode_container(container.name)
         container.reload()
         # filtered status are:
@@ -205,6 +205,29 @@ def _stop_containers(containers):
             pass
         container.reload()
         display.step_close_status(container.status)
+
+
+def _status_containers(containers):
+    """
+    Display the status of `CONTAINERS` w/ the passed list of `docker.Container`
+
+    :param containers: list of `docker.Container`
+    :type containers: list
+    """
+    names = [value['name'] for key, value in CONTAINERS.items()]
+    for name in names:
+        display_kwargs = {}
+        display_kwargs.update({'name': name})
+        try:
+            containers[name].reload()
+            if containers[name].status in ['running']:
+                display_kwargs.update({'status_color': 'green'})
+            display_kwargs.update({'status': containers[name].status})
+            display_kwargs.update({'id': containers[name].short_id})
+        except KeyError:
+            display_kwargs.update({'name': name})
+            display_kwargs.update({'name': name})
+        display.status(**display_kwargs)
 
 
 @apierror
@@ -230,7 +253,19 @@ def start():
 def stop():
     """
     Stop a masternode. Includes:
-    - stoping containers
+    - getting the list of containers
+    - stoping them
     """
     containers = _get_containers()
     _stop_containers(containers)
+
+
+@apierror
+def status():
+    """
+    Retrieve masternode status. Includes:
+    - getting the list of containers
+    - displaying their status
+    """
+    containers = _get_containers()
+    _status_containers(containers)

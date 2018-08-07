@@ -73,6 +73,16 @@ def stop():
     masternode.stop()
 
 
+@click.command(help='Status of your Tomochain masternode')
+def status():
+    """
+    Display the status of the masternode containers
+    """
+    display.title_status_masternode()
+    masternode.status()
+
+
 main.add_command(docs)
 main.add_command(start)
 main.add_command(stop)
+main.add_command(status)
