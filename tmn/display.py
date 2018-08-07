@@ -286,19 +286,6 @@ def status(name='', status='absent', id='', status_color='red'):
         )
 
 
-# @style
-# def warning(msg):
-#     """
-#     Return a pastel formated string for warnings
-#
-#     :param msg: warning message
-#     :type msg: str
-#     """
-#     return '<warning>! warning:</warning> {msg}\n'.format(
-#         msg=msg
-#     )
-
-
 @style
 def error(msg):
     """
@@ -326,26 +313,3 @@ def error_docker_api():
     Custom error when docker is not accessible
     """
     error('something went wrong while doing stuff with docker')
-
-
-def error_config():
-    """
-    Custom error when configuration is not accessible or when you can't
-    create it
-    """
-    error('could not access or create configuration file')
-
-
-# def error_docker_state(name, state):
-#     """
-#     Custom error when configuration is not accessible or when you can't
-#     create it
-#     """
-#     error(
-#         'your container <hy>{name}</hy>'.format(
-#             name=name
-#         ),
-#         'was in unexpected state <hy>{state}</hy>'.format(
-#             state=state
-#         )
-#     )

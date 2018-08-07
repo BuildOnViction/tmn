@@ -28,24 +28,6 @@ def test_command(runner):
     assert result.exit_code == 0
 
 
-def test_command_opt_config(runner):
-    result = runner.invoke(tmn.main, ['--config', '/tmp/tmn', 'docs'])
-    assert 'Documentation' in result.output
-    assert result.exit_code == 0
-
-
-def test_command_opt_config_fail_directory(runner):
-    result = runner.invoke(tmn.main, ['--config', '/root', 'docs'])
-    assert '! error' in result.output
-    assert result.exit_code != 0
-
-
-def test_command_opt_config_fail_access(runner):
-    result = runner.invoke(tmn.main, ['--config', '/root/tmn', 'docs'])
-    assert '! error' in result.output
-    assert result.exit_code != 0
-
-
 def test_command_docs(runner):
     result = runner.invoke(tmn.main, ['docs'])
     msg = 'Documentation on running a masternode:'
