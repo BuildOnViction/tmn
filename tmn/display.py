@@ -102,6 +102,13 @@ def title(msg):
     )
 
 
+def title_list_masternodes():
+    """
+    Title when listing masternodes
+    """
+    title('Tomochain masternodes on this machine:')
+
+
 def title_start_masternode():
     """
     Title when starting a masternode
@@ -157,6 +164,25 @@ def subtitle_create_containers():
     Subtitle when creating containers
     """
     subtitle('Containers')
+
+
+@style
+def item(msg, indent=1):
+    """
+    Return a pastel formated list item with indentation.
+    One indent is two spaces.
+
+    :param msg: step message
+    :type msg: str
+    :param indent: number of idents
+    :type indent: int
+    :returns: `msg` formated
+    :rtype: str
+    """
+    item = '  '*indent + '- {msg}... '.format(
+        msg=msg
+    )
+    return item
 
 
 @style_no_new_line

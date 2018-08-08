@@ -3,9 +3,21 @@ from collections import OrderedDict
 import docker as dockerpy
 from tmn import display
 
+LABEL = 'tmn'
 VOLUMES = ['blockchain_data']
 NETWORKS = ['masternode']
 CONTAINERS = OrderedDict()
+CONTAINERS['tomochain'] = {
+    'image': 'tomochain/infra-tomochain:devnet',
+    'name': 'tomochain',
+    'network': NETWORKS[0],
+    'volumes': {
+        VOLUMES[0]: {
+            'bind': '/tomochain/data', 'mode': 'rw'
+        }
+    },
+    'detach': True
+}
 CONTAINERS['metrics'] = {
     'image': 'tomochain/infra-telegraf:devnet',
     'hostname': 'test',
@@ -23,17 +35,6 @@ CONTAINERS['metrics'] = {
         },
         '/etc': {
             'bind': '/rootfs/etc', 'mode': 'ro'
-        }
-    },
-    'detach': True
-}
-CONTAINERS['tomochain'] = {
-    'image': 'tomochain/infra-tomochain:devnet',
-    'name': 'tomochain',
-    'network': NETWORKS[0],
-    'volumes': {
-        VOLUMES[0]: {
-            'bind': '/tomochain/data', 'mode': 'rw'
         }
     },
     'detach': True
@@ -90,6 +91,25 @@ def _ping():
         return _client.ping()
     except Exception:
         return False
+
+
+def _get_labeled_containers():
+    """
+    Get the list of tmn labeled containers
+    """
+    return _client.containers.list(filters={'label': 'tmn'})
+
+
+def _list_labels(containers):
+    """
+    List labels value from a list of containers
+    """
+    values = []
+    for container in containers:
+        values.append(container.labels['tmn'])
+    values = list(set(values))
+    for value in values:
+        display.item(value)
 
 
 def _create_volumes():
@@ -228,6 +248,17 @@ def _status_containers(containers):
             display_kwargs.update({'name': name})
             display_kwargs.update({'name': name})
         display.status(**display_kwargs)
+
+
+@apierror
+def list_masternodes():
+    """
+    List masternodes. Includes:
+    - retrieving tmn labeled containers
+    - display label values
+    """
+    containers = _get_labeled_containers()
+    _list_labels(containers)
 
 
 @apierror

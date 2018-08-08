@@ -44,6 +44,15 @@ def docs(open):
         click.launch(url)
 
 
+@click.command(help='List local Tomochain masternodes')
+def list():
+    """
+    List the currently existing Tomochain masternodes
+    """
+    display.title_list_masternodes()
+    masternode.list_masternodes()
+
+
 @click.command(help='Start your Tomochain masternode')
 def start():
     """
@@ -72,6 +81,7 @@ def status():
 
 
 main.add_command(docs)
+main.add_command(list)
 main.add_command(start)
 main.add_command(stop)
 main.add_command(status)
