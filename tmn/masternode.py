@@ -211,8 +211,8 @@ def _status_containers(containers):
     """
     Display the status of `CONTAINERS` w/ the passed list of `docker.Container`
 
-    :param containers: list of `docker.Container`
-    :type containers: list
+    :param containers: dict of `docker.Container`
+    :type containers: dict
     """
     names = [value['name'] for key, value in CONTAINERS.items()]
     for name in names:
