@@ -18,6 +18,15 @@ version = "18.1.0"
 
 [[package]]
 category = "main"
+description = "Utility package to print visually appealing ASCII tables to terminal"
+name = "beautifultable"
+optional = false
+platform = "*"
+python-versions = "*"
+version = "0.5.2"
+
+[[package]]
+category = "main"
 description = "Python package for providing Mozilla's CA Bundle."
 name = "certifi"
 optional = false
@@ -306,15 +315,6 @@ version = "1.11.0"
 
 [[package]]
 category = "main"
-description = "Python Library for Tom's Obvious, Minimal Language"
-name = "toml"
-optional = false
-platform = "*"
-python-versions = "*"
-version = "0.9.4"
-
-[[package]]
-category = "main"
 description = "HTTP library with thread-safe connection pooling, file post, and more."
 name = "urllib3"
 optional = false
@@ -335,13 +335,14 @@ version = "0.48.0"
 six = "*"
 
 [metadata]
-content-hash = "3af02f259c94df1a1b731579281c804aa9704993fbe5899576208c97836932cd"
+content-hash = "7b2ffa865177cd028566cf6d1cae216af508f928427682146564279fa2647af6"
 platform = "*"
 python-versions = "^3.5"
 
 [metadata.hashes]
 atomicwrites = ["240831ea22da9ab882b551b31d4225591e5e447a68c5e188db5b89ca1d487585", "a24da68318b08ac9c9c45029f4a10371ab5b20e4226738e150e6e7c571630ae6"]
 attrs = ["4b90b09eeeb9b88c35bc642cbac057e45a5fd85367b985bd2809c62b7b939265", "e0d0eb91441a3b53dab4d9b743eafc1ac44476296a2053b6ca3af0b139faf87b"]
+beautifultable = ["53f99029c02ef482bd5fe4244e01a3639751194725aa43db0b511dc6910ed654", "5d00456dcd47a4b022243a6ec463d90a4ce80dfd1af148ca7f698ee38780ceb5"]
 certifi = ["13e698f54293db9f89122b0581843a782ad0934a4fe0172d2a980ba77fc61bb7", "9fa520c1bacfb634fa7af20a76bcbd3d5fb390481724c597da32c719a7dca4b0"]
 chardet = ["84ab92ed1c4d4f16916e05906b6b75a6c0fb5db821cc65e70cbd64a3e2a5eaae", "fc323ffcaeaed0e0a02bf4d117757b98aed530d9ed4531e3e15460124c106691"]
 click = ["29f99fc6125fbc931b758dc053b3114e55c77a6e4c6c3a2674a2dc986016381d", "f15516df478d5a56180fbf80e68f206010e6d160fc39fa508b65e035fd75130b"]
@@ -365,6 +366,5 @@ pypiwin32 = ["0cece5cf12ae7f4b32764db8a12cdb1a8b27184be681e0cfbd2996f0cc07376f",
 pytest = ["86a8dbf407e437351cef4dba46736e9c5a6e3c3ac71b2e942209748e76ff2086", "e74466e97ac14582a8188ff4c53e6cc3810315f342f6096899332ae864c1d432"]
 requests = ["63b52e3c866428a224f97cab011de738c36aec0185aa91cfacd418b5d58911d1", "ec22d826a36ed72a7358ff3fe56cbd4ba69dd7a6718ffd450ff0e9df7a47ce6a"]
 six = ["70e8a77beed4562e7f14fe23a786b54f6296e34344c23bc42f07b15018ff98e9", "832dc0e10feb1aa2c68dcc57dbb658f1c7e65b9b61af69048abc87a2db00a0eb"]
-toml = ["8e86bd6ce8cc11b9620cb637466453d94f5d57ad86f17e98a98d1f73e3baab2d"]
 urllib3 = ["a68ac5e15e76e7e5dd2b8f94007233e01effe3e50e8daddf69acfd81cb686baf", "b5725a0bd4ba422ab0e66e89e030c806576753ea3ee08554382c14e685d117b5"]
 websocket-client = ["18f1170e6a1b5463986739d9fd45c4308b0d025c1b2f9b88788d8f69e8a5eb4a", "db70953ae4a064698b27ae56dcad84d0ee68b7b43cb40940f537738f38f510c1"]

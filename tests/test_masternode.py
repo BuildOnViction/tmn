@@ -109,9 +109,11 @@ def test_create_networks_docker_fail(docker_fail):
 
 
 def test_create_containers(capsys, test_data):
-    c_list = test_data._create_containers()
+    c_dict = test_data._create_containers()
     captured = capsys.readouterr()
-    c = test_data._client.containers.get(c_list[0].name)
+    c = test_data._client.containers.get(
+        c_dict[test_data.CONTAINERS['alpine']['name']].name
+    )
     assert c
     assert ('- Creating {}... '.format(test_data.CONTAINERS['alpine']['name'])
             in captured.out)
@@ -122,9 +124,11 @@ def test_create_containers(capsys, test_data):
 def test_create_containers_exist(capsys, test_data):
     test_data._create_containers()
     capsys.readouterr()
-    c_list = test_data._create_containers()
+    c_dict = test_data._create_containers()
     captured = capsys.readouterr()
-    c = test_data._client.containers.get(c_list[0].name)
+    c = test_data._client.containers.get(
+        c_dict[test_data.CONTAINERS['alpine']['name']].name
+    )
     assert c
     assert ('- Creating {}... '.format(test_data.CONTAINERS['alpine']['name'])
             in captured.out)
@@ -139,19 +143,21 @@ def test_create_containers_docker_fail(docker_fail):
 
 def test_get_containers(test_data):
     test_data._create_containers()
-    c_list = test_data._get_containers()
-    c = test_data._client.containers.get(c_list[0].name)
+    c_dict = test_data._get_containers()
+    c = test_data._client.containers.get(
+        c_dict[test_data.CONTAINERS['alpine']['name']].name
+    )
     assert c
     c.remove(force=True)
 
 
 def test_get_containers_absent(test_data):
     test_data._create_containers()
-    c_list = test_data._get_containers()
-    assert len(c_list) == 1
-    c_list[0].remove(force=True)
-    c_list = test_data._get_containers()
-    assert len(c_list) == 0
+    c_dict = test_data._get_containers()
+    assert len(c_dict) == 1
+    c_dict[test_data.CONTAINERS['alpine']['name']].remove(force=True)
+    c_dict = test_data._get_containers()
+    assert len(c_dict) == 0
 
 
 def test_get_containers_docker_fail(docker_fail):
@@ -160,10 +166,12 @@ def test_get_containers_docker_fail(docker_fail):
 
 
 def test_start_containers(capsys, test_data):
-    c_list = test_data._create_containers()
-    test_data._start_containers(c_list)
+    c_dict = test_data._create_containers()
+    test_data._start_containers(c_dict)
     captured = capsys.readouterr()
-    c = test_data._client.containers.get(c_list[0].name)
+    c = test_data._client.containers.get(
+        c_dict[test_data.CONTAINERS['alpine']['name']].name
+    )
     assert c.status == 'running'
     assert ('- Starting {}... '.format(test_data.CONTAINERS['alpine']['name'])
             in captured.out)
@@ -172,13 +180,15 @@ def test_start_containers(capsys, test_data):
 
 
 def test_start_containers_running(capsys, test_data):
-    c_list = test_data._create_containers()
-    test_data._start_containers(c_list)
+    c_dict = test_data._create_containers()
+    test_data._start_containers(c_dict)
     capsys.readouterr()
-    c_list[0].reload()
-    test_data._start_containers(c_list)
+    c_dict[test_data.CONTAINERS['alpine']['name']].reload()
+    test_data._start_containers(c_dict)
     captured = capsys.readouterr()
-    c = test_data._client.containers.get(c_list[0].name)
+    c = test_data._client.containers.get(
+        c_dict[test_data.CONTAINERS['alpine']['name']].name
+    )
     assert c.status == 'running'
     assert ('- Starting {}... '.format(test_data.CONTAINERS['alpine']['name'])
             in captured.out)
@@ -187,15 +197,17 @@ def test_start_containers_running(capsys, test_data):
 
 
 def test_start_containers_paused(capsys, test_data):
-    c_list = test_data._create_containers()
-    test_data._start_containers(c_list)
+    c_dict = test_data._create_containers()
+    test_data._start_containers(c_dict)
     capsys.readouterr()
-    c_list[0].pause()
-    c_list[0].reload()
-    assert c_list[0].status == 'paused'
-    test_data._start_containers(c_list)
+    c_dict[test_data.CONTAINERS['alpine']['name']].pause()
+    c_dict[test_data.CONTAINERS['alpine']['name']].reload()
+    assert c_dict[test_data.CONTAINERS['alpine']['name']].status == 'paused'
+    test_data._start_containers(c_dict)
     captured = capsys.readouterr()
-    c = test_data._client.containers.get(c_list[0].name)
+    c = test_data._client.containers.get(
+        c_dict[test_data.CONTAINERS['alpine']['name']].name
+    )
     assert c.status == 'running'
     assert ('- Starting {}... '.format(test_data.CONTAINERS['alpine']['name'])
             in captured.out)
@@ -204,12 +216,14 @@ def test_start_containers_paused(capsys, test_data):
 
 
 def test_stop_containers(capsys, test_data):
-    c_list = test_data._create_containers()
-    test_data._start_containers(c_list)
+    c_dict = test_data._create_containers()
+    test_data._start_containers(c_dict)
     capsys.readouterr()
-    test_data._stop_containers(c_list)
+    test_data._stop_containers(c_dict)
     captured = capsys.readouterr()
-    c = test_data._client.containers.get(c_list[0].name)
+    c = test_data._client.containers.get(
+        c_dict[test_data.CONTAINERS['alpine']['name']].name
+    )
     assert c.status == 'exited'
     assert ('- Stopping {}... '.format(test_data.CONTAINERS['alpine']['name'])
             in captured.out)
@@ -218,13 +232,42 @@ def test_stop_containers(capsys, test_data):
 
 
 def test_stop_containers_created(capsys, test_data):
-    c_list = test_data._create_containers()
+    c_dict = test_data._create_containers()
     capsys.readouterr()
-    test_data._stop_containers(c_list)
+    test_data._stop_containers(c_dict)
     captured = capsys.readouterr()
-    c = test_data._client.containers.get(c_list[0].name)
+    c = test_data._client.containers.get(
+        c_dict[test_data.CONTAINERS['alpine']['name']].name
+    )
     assert c.status == 'created'
     assert ('- Stopping {}... '.format(test_data.CONTAINERS['alpine']['name'])
             in captured.out)
     assert 'created' in captured.out
     c.remove(force=True)
+
+
+def test_status_containers(capsys, test_data):
+    c_dict = test_data._create_containers()
+    test_data._start_containers(c_dict)
+    capsys.readouterr()
+    test_data._status_containers(c_dict)
+    captured = capsys.readouterr()
+    c = test_data._client.containers.get(
+        c_dict[test_data.CONTAINERS['alpine']['name']].name
+    )
+    assert c.status == 'running'
+    assert ('{}\trunning({})'.format(
+        test_data.CONTAINERS['alpine']['name'],
+        c.short_id
+    ) in captured.out)
+    c.remove(force=True)
+
+
+def test_status_containers_absent(capsys, test_data):
+    c_dict = test_data._get_containers()
+    capsys.readouterr()
+    test_data._status_containers(c_dict)
+    captured = capsys.readouterr()
+    assert ('{}\tabsent'.format(
+        test_data.CONTAINERS['alpine']['name']
+    ) in captured.out)
