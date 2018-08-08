@@ -244,3 +244,30 @@ def test_stop_containers_created(capsys, test_data):
             in captured.out)
     assert 'created' in captured.out
     c.remove(force=True)
+
+
+def test_status_containers(capsys, test_data):
+    c_dict = test_data._create_containers()
+    test_data._start_containers(c_dict)
+    capsys.readouterr()
+    test_data._status_containers(c_dict)
+    captured = capsys.readouterr()
+    c = test_data._client.containers.get(
+        c_dict[test_data.CONTAINERS['alpine']['name']].name
+    )
+    assert c.status == 'running'
+    assert ('{}\trunning({})'.format(
+        test_data.CONTAINERS['alpine']['name'],
+        c.short_id
+    ) in captured.out)
+    c.remove(force=True)
+
+
+def test_status_containers_absent(capsys, test_data):
+    c_dict = test_data._get_containers()
+    capsys.readouterr()
+    test_data._status_containers(c_dict)
+    captured = capsys.readouterr()
+    assert ('{}\tabsent'.format(
+        test_data.CONTAINERS['alpine']['name']
+    ) in captured.out)

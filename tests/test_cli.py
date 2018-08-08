@@ -75,3 +75,10 @@ def test_command_stop(runner):
     lines = result.output.splitlines()
     assert lines[0] == 'Stopping your masternode!'
     assert result.exit_code == 0
+
+
+def test_command_status(runner):
+    result = runner.invoke(tmn.main, ['status'])
+    lines = result.output.splitlines()
+    assert lines[0] == 'Your masternode status:'
+    assert result.exit_code == 0
