@@ -54,6 +54,7 @@ def list():
 
 
 @click.command(help='Start your Tomochain masternode')
+@click.argument('masternode')
 def start():
     """
     Start the containers needed to run a masternode
@@ -63,6 +64,7 @@ def start():
 
 
 @click.command(help='Stop your Tomochain masternode')
+@click.argument('masternode')
 def stop():
     """
     Stop the containers needed to run a masternode
@@ -72,6 +74,7 @@ def stop():
 
 
 @click.command(help='Status of your Tomochain masternode')
+@click.argument('masternode')
 def status():
     """
     Display the status of the masternode containers
