@@ -2,7 +2,6 @@ import sys
 import click
 from tmn import __version__
 from tmn import display
-from tmn.config import ConfigManager
 from tmn import masternode
 
 
@@ -11,27 +10,17 @@ conf = None
 
 @click.group(help='Tomo MasterNode (tmn) is a cli tool to help you run a '
              + 'Tomochain masternode')
-@click.option('--config',
-              metavar='PATH',
-              help='Path to the config file')
 @click.option('--dockerurl',
               metavar='URL',
               help='Url to the docker server')
 @click.version_option(version=__version__)
-def main(config, dockerurl):
+def main(dockerurl):
     """
     Cli entrypoint.
 
     :param config: path to the configuration file
     :type config: str
     """
-    if config:
-        conf = ConfigManager(config)
-    else:
-        conf = ConfigManager()
-    if not conf.valid:
-        display.error_config()
-        sys.exit()
     masternode.connect(url=dockerurl)
     if masternode.connected is False:
         display.error_docker()
@@ -73,6 +62,16 @@ def stop():
     masternode.stop()
 
 
+@click.command(help='Status of your Tomochain masternode')
+def status():
+    """
+    Display the status of the masternode containers
+    """
+    display.title_status_masternode()
+    masternode.status()
+
+
 main.add_command(docs)
 main.add_command(start)
 main.add_command(stop)
+main.add_command(status)

@@ -11,7 +11,7 @@ def runner():
 
 
 def test_version(runner):
-    version = '0.0.2'
+    version = '0.0.3'
     result = runner.invoke(tmn.main, ['--version'])
     assert result.output[-6:-1] == version
     assert package.__version__ == version
@@ -26,24 +26,6 @@ def test_error_docker(runner):
 def test_command(runner):
     result = runner.invoke(tmn.main)
     assert result.exit_code == 0
-
-
-def test_command_opt_config(runner):
-    result = runner.invoke(tmn.main, ['--config', '/tmp/tmn', 'docs'])
-    assert 'Documentation' in result.output
-    assert result.exit_code == 0
-
-
-def test_command_opt_config_fail_directory(runner):
-    result = runner.invoke(tmn.main, ['--config', '/root', 'docs'])
-    assert '! error' in result.output
-    assert result.exit_code != 0
-
-
-def test_command_opt_config_fail_access(runner):
-    result = runner.invoke(tmn.main, ['--config', '/root/tmn', 'docs'])
-    assert '! error' in result.output
-    assert result.exit_code != 0
 
 
 def test_command_docs(runner):
@@ -73,12 +55,12 @@ def test_command_start(runner):
     assert lines[8][:27] == '  - Creating masternode... '
     assert lines[8][27:] in ['exists', 'created']
     assert lines[10] == 'Containers'
-    assert lines[12][:25] == '  - Creating telegraf... '
-    assert lines[12][25:] in ['exists', 'created']
+    assert lines[12][:24] == '  - Creating metrics... '
+    assert lines[12][24:] in ['exists', 'created']
     assert lines[13][:26] == '  - Creating tomochain... '
     assert lines[13][26:] in ['exists', 'created']
-    assert lines[15][:25] == '  - Starting telegraf... '
-    assert lines[15][25:] in [
+    assert lines[15][:24] == '  - Starting metrics... '
+    assert lines[15][24:] in [
         'restarting', 'running'
     ]
     assert lines[16][:26] == '  - Starting tomochain... '
@@ -92,4 +74,11 @@ def test_command_stop(runner):
     result = runner.invoke(tmn.main, ['stop'])
     lines = result.output.splitlines()
     assert lines[0] == 'Stopping your masternode!'
+    assert result.exit_code == 0
+
+
+def test_command_status(runner):
+    result = runner.invoke(tmn.main, ['status'])
+    lines = result.output.splitlines()
+    assert lines[0] == 'Your masternode status:'
     assert result.exit_code == 0

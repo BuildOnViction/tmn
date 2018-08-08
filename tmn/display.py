@@ -29,8 +29,8 @@ def style(function):
     :returns: decorated function
     :rtype: function
     """
-    def wrapper(*args):
-        print(pastel.colorize(function(*args)))
+    def wrapper(*args, **kwargs):
+        print(pastel.colorize(function(*args, **kwargs)))
     return wrapper
 
 
@@ -114,6 +114,13 @@ def title_stop_masternode():
     Title when stopping a masternode
     """
     title('Stopping your masternode!')
+
+
+def title_status_masternode():
+    """
+    Title when stopping a masternode
+    """
+    title('Your masternode status:')
 
 
 @style
@@ -239,13 +246,6 @@ def step_close_created():
     step_close('created')
 
 
-# def step_close_exist():
-#     """
-#     Custom 'exist' closing step message
-#     """
-#     step_close('exist')
-
-
 def step_close_exists():
     """
     Custom 'exists' closing step message
@@ -260,17 +260,30 @@ def step_close_status(status):
     step_close(status)
 
 
-# @style
-# def warning(msg):
-#     """
-#     Return a pastel formated string for warnings
-#
-#     :param msg: warning message
-#     :type msg: str
-#     """
-#     return '<warning>! warning:</warning> {msg}\n'.format(
-#         msg=msg
-#     )
+@style
+def status(name='', status='absent', id='', status_color='red'):
+    """
+    Return a pastel formated end of step
+
+    :param msg: task status of the step
+    :type msg: str
+    :returns: `msg` formated
+    :rtype: str
+    """
+    if id:
+        return '  {name}\t<fg={color}>{status}(</>{id}<fg={color}>)</>'.format(
+            name=name,
+            status=status,
+            color=status_color,
+            id=id
+        )
+    else:
+        return '  {name}\t<fg={color}>{status}{id}</>'.format(
+            name=name,
+            status=status,
+            color=status_color,
+            id=id
+        )
 
 
 @style
@@ -300,26 +313,3 @@ def error_docker_api():
     Custom error when docker is not accessible
     """
     error('something went wrong while doing stuff with docker')
-
-
-def error_config():
-    """
-    Custom error when configuration is not accessible or when you can't
-    create it
-    """
-    error('could not access or create configuration file')
-
-
-# def error_docker_state(name, state):
-#     """
-#     Custom error when configuration is not accessible or when you can't
-#     create it
-#     """
-#     error(
-#         'your container <hy>{name}</hy>'.format(
-#             name=name
-#         ),
-#         'was in unexpected state <hy>{state}</hy>'.format(
-#             state=state
-#         )
-#     )
