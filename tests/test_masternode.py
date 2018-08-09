@@ -7,8 +7,8 @@ import docker as dockerpy
 def test_data():
     from tmn import masternode
     masternode.connect()
-    masternode.VOLUMES = ['test']
-    masternode.NETWORKS = ['test']
+    masternode.VOLUME = ['test']
+    masternode.NETWORK = ['test']
     masternode.CONTAINERS = OrderedDict()
     masternode.CONTAINERS['alpine'] = {
         'image': 'alpine:latest',
@@ -54,58 +54,58 @@ def test_ping_docker_fail(docker_fail):
     assert not docker_fail._ping()
 
 
-def test_create_volumes(capsys, test_data):
-    test_data._create_volumes()
+def test_create_VOLUME(capsys, test_data):
+    test_data._create_VOLUME()
     captured = capsys.readouterr()
-    v = test_data._client.volumes.get(test_data.VOLUMES[0])
+    v = test_data._client.volumes.get(test_data.volumes[0])
     assert v
-    assert '- Creating {}... '.format(test_data.VOLUMES[0]) in captured.out
+    assert '- Creating {}... '.format(test_data.volumes[0]) in captured.out
     assert 'created' in captured.out
     v.remove(force=True)
 
 
-def test_create_volumes_exist(capsys, test_data):
-    test_data._create_volumes()
+def test_create_VOLUME_exist(capsys, test_data):
+    test_data._create_VOLUME()
     capsys.readouterr()
-    test_data._create_volumes()
+    test_data._create_VOLUME()
     captured = capsys.readouterr()
-    v = test_data._client.volumes.get(test_data.VOLUMES[0])
+    v = test_data._client.volumes.get(test_data.volumes[0])
     assert v
-    assert '- Creating {}... '.format(test_data.VOLUMES[0]) in captured.out
+    assert '- Creating {}... '.format(test_data.volumes[0]) in captured.out
     assert 'exists' in captured.out
     v.remove(force=True)
 
 
-def test_create_volumes_docker_fail(docker_fail):
+def test_create_VOLUME_docker_fail(docker_fail):
     with pytest.raises(Exception):
-        docker_fail._create_volumes()
+        docker_fail._create_VOLUME()
 
 
-def test_create_networks(capsys, test_data):
-    test_data._create_networks()
+def test_create_NETWORK(capsys, test_data):
+    test_data._create_NETWORK()
     captured = capsys.readouterr()
-    n = test_data._client.networks.get(test_data.NETWORKS[0])
+    n = test_data._client.networks.get(test_data.NETWORK[0])
     assert n
-    assert '- Creating {}... '.format(test_data.NETWORKS[0]) in captured.out
+    assert '- Creating {}... '.format(test_data.NETWORK[0]) in captured.out
     assert 'created' in captured.out
     n.remove()
 
 
 def test_create_exist(capsys, test_data):
-    test_data._create_networks()
+    test_data._create_NETWORK()
     capsys.readouterr()
-    test_data._create_networks()
+    test_data._create_NETWORK()
     captured = capsys.readouterr()
-    n = test_data._client.networks.get(test_data.NETWORKS[0])
+    n = test_data._client.networks.get(test_data.NETWORK[0])
     assert n
-    assert '- Creating {}... '.format(test_data.NETWORKS[0]) in captured.out
+    assert '- Creating {}... '.format(test_data.NETWORK[0]) in captured.out
     assert 'exists' in captured.out
     n.remove()
 
 
-def test_create_networks_docker_fail(docker_fail):
+def test_create_NETWORK_docker_fail(docker_fail):
     with pytest.raises(Exception):
-        docker_fail._create_networks()
+        docker_fail._create_NETWORK()
 
 
 def test_create_containers(capsys, test_data):

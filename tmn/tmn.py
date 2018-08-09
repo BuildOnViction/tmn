@@ -54,33 +54,33 @@ def list():
 
 
 @click.command(help='Start your Tomochain masternode')
-@click.argument('masternode')
-def start():
+@click.argument('name')
+def start(name):
     """
     Start the containers needed to run a masternode
     """
-    display.title_start_masternode()
-    masternode.start()
+    display.title_start_masternode(name)
+    masternode.start(name)
 
 
 @click.command(help='Stop your Tomochain masternode')
-@click.argument('masternode')
-def stop():
+@click.argument('name')
+def stop(name):
     """
     Stop the containers needed to run a masternode
     """
-    display.title_stop_masternode()
-    masternode.stop()
+    display.title_stop_masternode(name)
+    masternode.stop(name)
 
 
 @click.command(help='Status of your Tomochain masternode')
-@click.argument('masternode')
-def status():
+@click.argument('name')
+def status(name):
     """
     Display the status of the masternode containers
     """
-    display.title_status_masternode()
-    masternode.status()
+    display.title_status_masternode(name)
+    masternode.status(name)
 
 
 main.add_command(docs)

@@ -48,10 +48,10 @@ def test_command_start(runner):
     result = runner.invoke(tmn.main, ['start'])
     lines = result.output.splitlines()
     assert lines[0] == 'Starting your masternode!'
-    assert lines[2] == 'Volumes'
+    assert lines[2] == 'volume'
     assert lines[4][:32] == '  - Creating blockchain_data... '
     assert lines[4][32:] in ['exists', 'created']
-    assert lines[6] == 'Networks'
+    assert lines[6] == 'network'
     assert lines[8][:27] == '  - Creating masternode... '
     assert lines[8][27:] in ['exists', 'created']
     assert lines[10] == 'Containers'

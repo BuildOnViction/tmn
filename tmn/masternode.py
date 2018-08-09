@@ -4,17 +4,14 @@ import docker as dockerpy
 from tmn import display
 
 LABEL = 'tmn'
-VOLUMES = ['blockchain_data']
-NETWORKS = ['masternode']
+VOLUME = {'name': 'data'}
+BIND = {'bind': '/tomochain/data', 'mode': 'rw'}
+NETWORK = {'name': 'network'}
 CONTAINERS = OrderedDict()
 CONTAINERS['tomochain'] = {
     'image': 'tomochain/infra-tomochain:devnet',
     'name': 'tomochain',
-    'network': NETWORKS[0],
     'volumes': {
-        VOLUMES[0]: {
-            'bind': '/tomochain/data', 'mode': 'rw'
-        }
     },
     'detach': True
 }
@@ -22,7 +19,6 @@ CONTAINERS['metrics'] = {
     'image': 'tomochain/infra-telegraf:devnet',
     'hostname': 'test',
     'name': 'metrics',
-    'network': NETWORKS[0],
     'volumes': {
         '/var/run/docker.sock': {
             'bind': '/var/run/docker.sock', 'mode': 'ro'
@@ -93,13 +89,6 @@ def _ping():
         return False
 
 
-def _get_labeled_containers():
-    """
-    Get the list of tmn labeled containers
-    """
-    return _client.containers.list(filters={'label': 'tmn'})
-
-
 def _list_labels(containers):
     """
     List labels value from a list of containers
@@ -112,51 +101,64 @@ def _list_labels(containers):
         display.item(value)
 
 
-def _create_volumes():
+def _compose(name):
+    NETWORK['name'] = '{}_{}'.format(name, NETWORK['name'])
+    NETWORK['labels'] = {LABEL: name}
+    VOLUME['name'] = '{}_{}'.format(name, VOLUME['name'])
+    VOLUME['labels'] = {LABEL: name}
+    CONTAINERS['tomochain']['network'] = NETWORK['name']
+    CONTAINERS['metrics']['network'] = NETWORK['name']
+    CONTAINERS['tomochain']['volumes'][VOLUME['name']] = BIND
+    for key, value in CONTAINERS.items():
+        CONTAINERS[key]['labels'] = {LABEL: name}
+        CONTAINERS[key]['name'] = '{}_{}'.format(name, CONTAINERS[key]['name'])
+
+
+def _create_volume():
     """
-    Try to get the volumes defined in `VOLUMES`. If it fails, create them.
+    Try to get the VOLUME defined in `VOLUME`. If it fails, create them.
     """
-    for volume in VOLUMES:
-        display.step_create_masternode_volume(volume)
-        try:
-            _client.volumes.get(volume)
-            display.step_close_exists()
-        except dockerpy.errors.NotFound:
-            _client.volumes.create(volume)
-            display.step_close_created()
+    display.step_create_masternode_volume(VOLUME['name'])
+    try:
+        _client.volumes.get(VOLUME['name'])
+        display.step_close_exists()
+    except dockerpy.errors.NotFound:
+        _client.volumes.create(**VOLUME)
+        display.step_close_created()
     display.newline()
 
 
-def _create_networks():
+def _create_network():
     """
-    Try to get the networks defined in `NETWORKS`. If it fails, create them.
+    Try to get the NETWORK defined in `NETWORK`. If it fails, create them.
     """
-    for network in NETWORKS:
-        display.step_create_masternode_network(network)
-        try:
-            _client.networks.get(network)
-            display.step_close_exists()
-        except dockerpy.errors.NotFound:
-            _client.networks.create(network)
-            display.step_close_created()
+    display.step_create_masternode_network(NETWORK['name'])
+    try:
+        _client.networks.get(NETWORK['name'])
+        display.step_close_exists()
+    except dockerpy.errors.NotFound:
+        _client.networks.create(**NETWORK)
+        display.step_close_created()
     display.newline()
 
 
-def _get_containers():
+def _get_containers(name=None, all=True):
     """
     Get the containers defined in `CONTAINERS`.
 
     :returns: The existing `docker.Container`
     :rtype: list
     """
-    containers = {}
-    for key, value in CONTAINERS.items():
-        try:
-            container = _client.containers.get(value['name'])
-            containers[container.name] = container
-        except dockerpy.errors.NotFound:
-            pass
-    return containers
+    if name:
+        return _client.containers.list(
+            all=all,
+            filters={'label': 'tmn={}'.format(name)}
+        )
+    else:
+        return _client.containers.list(
+            all=all,
+            filters={'label': 'tmn'}
+        )
 
 
 def _create_containers():
@@ -213,7 +215,7 @@ def _stop_containers(containers):
     :param containers: dict of name:`docker.Container`
     :type containers: dict
     """
-    for name, container in containers.items():
+    for container in containers:
         display.step_stop_masternode_container(container.name)
         container.reload()
         # filtered status are:
@@ -239,11 +241,13 @@ def _status_containers(containers):
         display_kwargs = {}
         display_kwargs.update({'name': name})
         try:
-            containers[name].reload()
-            if containers[name].status in ['running']:
-                display_kwargs.update({'status_color': 'green'})
-            display_kwargs.update({'status': containers[name].status})
-            display_kwargs.update({'id': containers[name].short_id})
+            for container in containers:
+                if container.name == name:
+                    container.reload()
+                    if container.status in ['running']:
+                        display_kwargs.update({'status_color': 'green'})
+                    display_kwargs.update({'status': container.status})
+                    display_kwargs.update({'id': container.short_id})
         except KeyError:
             display_kwargs.update({'name': name})
             display_kwargs.update({'name': name})
@@ -257,23 +261,25 @@ def list_masternodes():
     - retrieving tmn labeled containers
     - display label values
     """
-    containers = _get_labeled_containers()
+    containers = _get_containers()
     _list_labels(containers)
 
 
 @apierror
-def start():
+def start(name):
     """
     Start a masternode. Includes:
-    - creating volumes
-    - creating networks
+    - compose node name into config
+    - creating VOLUME
+    - creating NETWORK
     - creating containers
     - starting containers
     """
-    display.subtitle_create_volumes()
-    _create_volumes()
-    display.subtitle_create_networks()
-    _create_networks()
+    _compose(name)
+    display.subtitle_create_volume()
+    _create_volume()
+    display.subtitle_create_network()
+    _create_network()
     display.subtitle_create_containers()
     containers = _create_containers()
     display.newline()
@@ -281,22 +287,24 @@ def start():
 
 
 @apierror
-def stop():
+def stop(name):
     """
     Stop a masternode. Includes:
     - getting the list of containers
     - stoping them
     """
-    containers = _get_containers()
+    _compose(name)
+    containers = _get_containers(name)
     _stop_containers(containers)
 
 
 @apierror
-def status():
+def status(name):
     """
     Retrieve masternode status. Includes:
     - getting the list of containers
     - displaying their status
     """
-    containers = _get_containers()
+    _compose(name)
+    containers = _get_containers(name)
     _status_containers(containers)
