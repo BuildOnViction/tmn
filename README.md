@@ -26,13 +26,14 @@ Usage: tmn [OPTIONS] COMMAND [ARGS]...
   Tomo MasterNode (tmn) is a cli tool to help you run a Tomochain masternode
 
 Options:
-  --config PATH    Path to the config file
   --dockerurl URL  Url to the docker server
   --version        Show the version and exit.
   --help           Show this message and exit.
 
 Commands:
-  docs   Display Tomochain documentation link
-  start  Start your Tomochain masternode
-  stop   Stop your Tomochain masternode
+  docs    Display Tomochain documentation link
+  list    List local Tomochain masternodes
+  start   Start your Tomochain masternode
+  status  Status of your Tomochain masternode
+  stop    Stop your Tomochain masternode
 ```
