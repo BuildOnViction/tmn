@@ -297,14 +297,14 @@ def status(name='', status='absent', id='', status_color='red'):
     :rtype: str
     """
     if id:
-        return '  {name}  <fg={color}>{status}(</>{id}<fg={color}>)</>'.format(
+        return '  {name} <fg={color}>{status}(</>{id}<fg={color}>)</>'.format(
             name=name,
             status=status,
             color=status_color,
             id=id
         )
     else:
-        return '  {name}  <fg={color}>{status}{id}</>'.format(
+        return '  {name} <fg={color}>{status}{id}</>'.format(
             name=name,
             status=status,
             color=status_color,

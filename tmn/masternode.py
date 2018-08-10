@@ -106,10 +106,12 @@ def _compose(name):
     NETWORK['labels'] = {LABEL: name}
     VOLUME['name'] = '{}_{}'.format(name, VOLUME['name'])
     VOLUME['labels'] = {LABEL: name}
-    CONTAINERS['tomochain']['network'] = NETWORK['name']
-    CONTAINERS['metrics']['network'] = NETWORK['name']
-    CONTAINERS['tomochain']['volumes'][VOLUME['name']] = BIND
     for key, value in CONTAINERS.items():
+        CONTAINERS[key]['network'] = NETWORK['name']
+        try:
+            CONTAINERS[key]['volumes'][VOLUME['name']] = BIND
+        except KeyError:
+            pass
         CONTAINERS[key]['labels'] = {LABEL: name}
         CONTAINERS[key]['name'] = '{}_{}'.format(name, CONTAINERS[key]['name'])
 
@@ -169,7 +171,7 @@ def _create_containers():
     :returns: The created or existing `docker.Container`
     :rtype: list
     """
-    containers = {}
+    containers = []
     for key, value in CONTAINERS.items():
         display.step_create_masternode_container(value['name'])
         try:
@@ -180,7 +182,7 @@ def _create_containers():
             _client.images.pull(value['image'])
             container = _client.containers.create(**value)
             display.step_close_created()
-        containers[container.name] = container
+        containers.append(container)
     return containers
 
 
@@ -192,7 +194,7 @@ def _start_containers(containers):
     :param containers: dict of name:`docker.Container`
     :type containers: dict
     """
-    for name, container in containers.items():
+    for container in containers:
         display.step_start_masternode_container(container.name)
         container.reload()
         # filtered status are:
@@ -240,17 +242,13 @@ def _status_containers(containers):
     for name in names:
         display_kwargs = {}
         display_kwargs.update({'name': name})
-        try:
-            for container in containers:
-                if container.name == name:
-                    container.reload()
-                    if container.status in ['running']:
-                        display_kwargs.update({'status_color': 'green'})
-                    display_kwargs.update({'status': container.status})
-                    display_kwargs.update({'id': container.short_id})
-        except KeyError:
-            display_kwargs.update({'name': name})
-            display_kwargs.update({'name': name})
+        for container in containers:
+            if container.name == name:
+                container.reload()
+                if container.status in ['running']:
+                    display_kwargs.update({'status_color': 'green'})
+                display_kwargs.update({'status': container.status})
+                display_kwargs.update({'id': container.short_id})
         display.status(**display_kwargs)
 
 
