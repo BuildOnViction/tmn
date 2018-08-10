@@ -102,25 +102,32 @@ def title(msg):
     )
 
 
-def title_start_masternode():
+def title_list_masternodes():
+    """
+    Title when listing masternodes
+    """
+    title('Tomochain masternodes on this machine:')
+
+
+def title_start_masternode(masternode):
     """
     Title when starting a masternode
     """
-    title('Starting your masternode!')
+    title('Starting masternode {mn}!'.format(mn=masternode))
 
 
-def title_stop_masternode():
+def title_stop_masternode(masternode):
     """
     Title when stopping a masternode
     """
-    title('Stopping your masternode!')
+    title('Stopping masternode {mn}!'.format(mn=masternode))
 
 
-def title_status_masternode():
+def title_status_masternode(masternode):
     """
     Title when stopping a masternode
     """
-    title('Your masternode status:')
+    title('Masternode {mn} status:'.format(mn=masternode))
 
 
 @style
@@ -138,18 +145,18 @@ def subtitle(msg):
     )
 
 
-def subtitle_create_volumes():
+def subtitle_create_volume():
     """
-    Subtitle when creating volumes
+    Subtitle when creating volume
     """
-    subtitle('Volumes')
+    subtitle('Volume')
 
 
-def subtitle_create_networks():
+def subtitle_create_network():
     """
-    Subtitle when creating networks
+    Subtitle when creating network
     """
-    subtitle('Networks')
+    subtitle('Network')
 
 
 def subtitle_create_containers():
@@ -157,6 +164,44 @@ def subtitle_create_containers():
     Subtitle when creating containers
     """
     subtitle('Containers')
+
+
+@style
+def item(msg, indent=1):
+    """
+    Return a pastel formated list item with indentation.
+    One indent is two spaces.
+
+    :param msg: step message
+    :type msg: str
+    :param indent: number of idents
+    :type indent: int
+    :returns: `msg` formated
+    :rtype: str
+    """
+    item = '  '*indent + '- {msg}'.format(
+        msg=msg
+    )
+    return item
+
+
+@style
+def undecorated_item(msg, indent=1):
+    """
+    Return a pastel formated list item with indentation.
+    One indent is two spaces.
+
+    :param msg: step message
+    :type msg: str
+    :param indent: number of idents
+    :type indent: int
+    :returns: `msg` formated
+    :rtype: str
+    """
+    item = '  '*indent + '{msg}'.format(
+        msg=msg
+    )
+    return item
 
 
 @style_no_new_line
@@ -180,7 +225,7 @@ def step(msg, indent=1):
 
 def step_create_masternode_volume(volume):
     """
-    Custom step message for docker volumes creation
+    Custom step message for docker VOLUME creation
     """
     step('Creating <hy>{volume}</hy>'.format(
         volume=volume
@@ -189,7 +234,7 @@ def step_create_masternode_volume(volume):
 
 def step_create_masternode_network(network):
     """
-    Custom step message for docker networks creatin
+    Custom step message for docker NETWORK creatin
     """
     step('Creating <hy>{network}</hy>'.format(
         network=network
@@ -271,14 +316,14 @@ def status(name='', status='absent', id='', status_color='red'):
     :rtype: str
     """
     if id:
-        return '  {name}\t<fg={color}>{status}(</>{id}<fg={color}>)</>'.format(
+        return '  {name} <fg={color}>{status}(</>{id}<fg={color}>)</>'.format(
             name=name,
             status=status,
             color=status_color,
             id=id
         )
     else:
-        return '  {name}\t<fg={color}>{status}{id}</>'.format(
+        return '  {name} <fg={color}>{status}{id}</>'.format(
             name=name,
             status=status,
             color=status_color,
