@@ -14,7 +14,7 @@ def runner():
 
 
 def test_version(runner):
-    version = '0.0.3'
+    version = '0.0.4'
     result = runner.invoke(tmn.main, ['--version'])
     assert result.output[-6:-1] == version
     assert package.__version__ == version
