@@ -18,6 +18,12 @@ All you need to run your own masternode
 pip3 install --user tmn
 ```
 
+## Update
+
+```
+pip3 install -U --user tmn
+```
+
 ## Usage
 
 ```
