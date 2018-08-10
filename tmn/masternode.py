@@ -93,12 +93,17 @@ def _list_labels(containers):
     """
     List labels value from a list of containers
     """
-    values = []
-    for container in containers:
-        values.append(container.labels['tmn'])
-    values = list(set(values))
-    for value in values:
-        display.item(value)
+    if containers:
+        values = []
+        for container in containers:
+            values.append(container.labels['tmn'])
+        values = list(set(values))
+        for value in values:
+            display.item(value)
+    else:
+        display.undecorated_item(
+            'No masternode. Check the start command to begin.'
+        )
 
 
 def _compose(name):

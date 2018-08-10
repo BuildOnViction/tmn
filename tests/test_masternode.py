@@ -70,6 +70,12 @@ def test_list_labels(capsys, test_data):
     n.remove()
 
 
+def test_list_labels_empty(capsys, test_data):
+    test_data._list_labels([])
+    captured = capsys.readouterr()
+    assert ('No masternode.' in captured.out)
+
+
 def test_create_volume(capsys, test_data):
     test_data._create_volume()
     captured = capsys.readouterr()
