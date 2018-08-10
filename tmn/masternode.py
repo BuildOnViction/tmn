@@ -80,7 +80,7 @@ def _ping():
     """
     Try to ping the Docker daemon. Check if accessible.
 
-    :returns: is Docker running
+    :returns: if Docker is joinable
     :rtype: bool
     """
     try:
@@ -92,6 +92,9 @@ def _ping():
 def _list_labels(containers):
     """
     List labels value from a list of containers
+
+    :param containers: list of `docker.Container`
+    :type containers: list
     """
     if containers:
         values = []
@@ -107,6 +110,13 @@ def _list_labels(containers):
 
 
 def _compose(name):
+    """
+    Update the containers and network depending on the masternode configured
+    by the user with the agruments and options
+
+    :param name: masternode name
+    :type name: str
+    """
     NETWORK['name'] = '{}_{}'.format(name, NETWORK['name'])
     NETWORK['labels'] = {LABEL: name}
     VOLUME['name'] = '{}_{}'.format(name, VOLUME['name'])
@@ -149,10 +159,12 @@ def _create_network():
     display.newline()
 
 
-def _get_containers(name=None, all=True):
+def _get_containers(name=None):
     """
     Get the containers defined in `CONTAINERS`.
 
+    :param name: masternode name
+    :type name: str
     :returns: The existing `docker.Container`
     :rtype: list
     """
@@ -196,8 +208,8 @@ def _start_containers(containers):
     Verify the container status. If it's not restarting or running,
     start them.
 
-    :param containers: dict of name:`docker.Container`
-    :type containers: dict
+    :param containers: list of `docker.Container`
+    :type containers: list
     """
     for container in containers:
         display.step_start_masternode_container(container.name)
@@ -219,8 +231,8 @@ def _stop_containers(containers):
     """
     Stop the given dict of `docker.Container`
 
-    :param containers: dict of name:`docker.Container`
-    :type containers: dict
+    :param containers: list of `docker.Container`
+    :type containers: list
     """
     for container in containers:
         display.step_stop_masternode_container(container.name)
@@ -240,8 +252,8 @@ def _status_containers(containers):
     """
     Display the status of `CONTAINERS` w/ the passed list of `docker.Container`
 
-    :param containers: dict of `docker.Container`
-    :type containers: dict
+    :param containers: list of `docker.Container`
+    :type containers: list
     """
     names = [value['name'] for key, value in CONTAINERS.items()]
     for name in names:

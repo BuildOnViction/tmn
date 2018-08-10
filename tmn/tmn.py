@@ -18,8 +18,8 @@ def main(dockerurl):
     """
     Cli entrypoint.
 
-    :param config: path to the configuration file
-    :type config: str
+    :param dockerurl: url to the docker server
+    :type dockerurl: str
     """
     masternode.connect(url=dockerurl)
     if masternode.connected is False:
@@ -58,6 +58,9 @@ def list():
 def start(name):
     """
     Start the containers needed to run a masternode
+
+    :param name: name of the masternode
+    :type name: str
     """
     display.title_start_masternode(name)
     masternode.start(name)
@@ -68,6 +71,9 @@ def start(name):
 def stop(name):
     """
     Stop the containers needed to run a masternode
+
+    :param name: name of the masternode
+    :type name: str
     """
     display.title_stop_masternode(name)
     masternode.stop(name)
@@ -78,6 +84,9 @@ def stop(name):
 def status(name):
     """
     Display the status of the masternode containers
+
+    :param name: name of the masternode
+    :type name: str
     """
     display.title_status_masternode(name)
     masternode.status(name)
