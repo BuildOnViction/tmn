@@ -18,8 +18,8 @@ def main(dockerurl):
     """
     Cli entrypoint.
 
-    :param config: path to the configuration file
-    :type config: str
+    :param dockerurl: url to the docker server
+    :type dockerurl: str
     """
     masternode.connect(url=dockerurl)
     if masternode.connected is False:
@@ -44,34 +44,56 @@ def docs(open):
         click.launch(url)
 
 
+@click.command(help='List local Tomochain masternodes')
+def list():
+    """
+    List the currently existing Tomochain masternodes
+    """
+    display.title_list_masternodes()
+    masternode.list_masternodes()
+
+
 @click.command(help='Start your Tomochain masternode')
-def start():
+@click.argument('name')
+def start(name):
     """
     Start the containers needed to run a masternode
+
+    :param name: name of the masternode
+    :type name: str
     """
-    display.title_start_masternode()
-    masternode.start()
+    display.title_start_masternode(name)
+    masternode.start(name)
 
 
 @click.command(help='Stop your Tomochain masternode')
-def stop():
+@click.argument('name')
+def stop(name):
     """
     Stop the containers needed to run a masternode
+
+    :param name: name of the masternode
+    :type name: str
     """
-    display.title_stop_masternode()
-    masternode.stop()
+    display.title_stop_masternode(name)
+    masternode.stop(name)
 
 
 @click.command(help='Status of your Tomochain masternode')
-def status():
+@click.argument('name')
+def status(name):
     """
     Display the status of the masternode containers
+
+    :param name: name of the masternode
+    :type name: str
     """
-    display.title_status_masternode()
-    masternode.status()
+    display.title_status_masternode(name)
+    masternode.status(name)
 
 
 main.add_command(docs)
+main.add_command(list)
 main.add_command(start)
 main.add_command(stop)
 main.add_command(status)
