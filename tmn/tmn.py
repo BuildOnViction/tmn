@@ -53,6 +53,19 @@ def list():
     masternode.list_masternodes()
 
 
+@click.command(help='Create your Tomochain masternode')
+@click.argument('name')
+def create(name):
+    """
+    Start the containers needed to run a masternode
+
+    :param name: name of the masternode
+    :type name: str
+    """
+    display.title_create_masternode(name)
+    masternode.create(name)
+
+
 @click.command(help='Start your Tomochain masternode')
 @click.argument('name')
 def start(name):
@@ -94,6 +107,7 @@ def status(name):
 
 main.add_command(docs)
 main.add_command(list)
+main.add_command(create)
 main.add_command(start)
 main.add_command(stop)
 main.add_command(status)

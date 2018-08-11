@@ -109,6 +109,13 @@ def title_list_masternodes():
     title('Tomochain masternodes on this machine:')
 
 
+def title_create_masternode(masternode):
+    """
+    Title when creating a masternode
+    """
+    title('Creating masternode {mn}!'.format(mn=masternode))
+
+
 def title_start_masternode(masternode):
     """
     Title when starting a masternode
@@ -358,3 +365,14 @@ def error_docker_api():
     Custom error when docker is not accessible
     """
     error('something went wrong while doing stuff with docker')
+
+
+def error_start_empty():
+    """
+    Custom error when trying to start inexistant containers
+    """
+    error((
+        'No containers found. Please create them beforehand.\n'
+        '         '
+        'More help with <fg=yellow>tmn create --help</>.'
+    ))

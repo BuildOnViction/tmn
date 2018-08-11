@@ -59,15 +59,17 @@ def test_ping_docker_fail(docker_fail):
 
 
 def test_list_labels(capsys, test_data):
-    test_data._create_network()
-    n = test_data._client.networks.get(test_data.NETWORK['name'])
-    c_list = test_data._create_containers()
+    test_data.create(mn)
     capsys.readouterr()
-    test_data._list_labels(c_list)
+    test_data._list_labels(test_data._get_containers(name=mn))
     captured = capsys.readouterr()
     assert ('- {}'.format(mn) in captured.out)
-    c_list[0].remove(force=True)
+    for container in test_data._get_containers(name=mn):
+        container.remove(force=True)
+    n = test_data._client.networks.get(test_data.NETWORK['name'])
+    v = test_data._client.volumes.get(test_data.NETWORK['name'])
     n.remove()
+    v.remove(force=True)
 
 
 def test_list_labels_empty(capsys, test_data):
@@ -115,7 +117,7 @@ def test_create_network(capsys, test_data):
     n.remove()
 
 
-def test_create_exist(capsys, test_data):
+def test_create_network_exist(capsys, test_data):
     test_data._create_network()
     capsys.readouterr()
     test_data._create_network()
@@ -135,9 +137,9 @@ def test_create_network_docker_fail(docker_fail):
 
 
 def test_create_containers(capsys, test_data):
-    c_list = test_data._create_containers()
+    test_data._create_containers()
     captured = capsys.readouterr()
-    c = test_data._client.containers.get(c_list[0].name)
+    c = test_data._client.containers.get(test_data.CONTAINERS[mn]['name'])
     assert c
     assert ('- Creating {}... '.format(
         test_data.CONTAINERS[mn]['name']
@@ -149,9 +151,9 @@ def test_create_containers(capsys, test_data):
 def test_create_containers_exist(capsys, test_data):
     test_data._create_containers()
     capsys.readouterr()
-    c_list = test_data._create_containers()
+    test_data._create_containers()
     captured = capsys.readouterr()
-    c = test_data._client.containers.get(c_list[0].name)
+    c = test_data._client.containers.get(test_data.CONTAINERS[mn]['name'])
     assert c
     assert ('- Creating {}... '.format(
         test_data.CONTAINERS[mn]['name']
@@ -191,7 +193,8 @@ def test_start_containers(capsys, test_data):
     test_data._create_network()
     n = test_data._client.networks.get(test_data.NETWORK['name'])
     capsys.readouterr()
-    c_list = test_data._create_containers()
+    test_data._create_containers()
+    c_list = test_data._get_containers(name=mn)
     test_data._start_containers(c_list)
     captured = capsys.readouterr()
     c = test_data._client.containers.get(
@@ -209,7 +212,8 @@ def test_start_containers(capsys, test_data):
 def test_start_containers_running(capsys, test_data):
     test_data._create_network()
     n = test_data._client.networks.get(test_data.NETWORK['name'])
-    c_list = test_data._create_containers()
+    test_data._create_containers()
+    c_list = test_data._get_containers(name=mn)
     test_data._start_containers(c_list)
     capsys.readouterr()
     c_list[0].reload()
@@ -230,7 +234,8 @@ def test_start_containers_running(capsys, test_data):
 def test_start_containers_paused(capsys, test_data):
     test_data._create_network()
     n = test_data._client.networks.get(test_data.NETWORK['name'])
-    c_list = test_data._create_containers()
+    test_data._create_containers()
+    c_list = test_data._get_containers(name=mn)
     test_data._start_containers(c_list)
     capsys.readouterr()
     c_list[0].pause()
@@ -253,7 +258,8 @@ def test_start_containers_paused(capsys, test_data):
 def test_stop_containers(capsys, test_data):
     test_data._create_network()
     n = test_data._client.networks.get(test_data.NETWORK['name'])
-    c_list = test_data._create_containers()
+    test_data._create_containers()
+    c_list = test_data._get_containers(name=mn)
     test_data._start_containers(c_list)
     capsys.readouterr()
     test_data._stop_containers(c_list)
@@ -273,7 +279,8 @@ def test_stop_containers(capsys, test_data):
 def test_stop_containers_created(capsys, test_data):
     test_data._create_network()
     n = test_data._client.networks.get(test_data.NETWORK['name'])
-    c_list = test_data._create_containers()
+    test_data._create_containers()
+    c_list = test_data._get_containers(name=mn)
     capsys.readouterr()
     test_data._stop_containers(c_list)
     captured = capsys.readouterr()
@@ -292,7 +299,8 @@ def test_stop_containers_created(capsys, test_data):
 def test_status_containers(capsys, test_data):
     test_data._create_network()
     n = test_data._client.networks.get(test_data.NETWORK['name'])
-    c_list = test_data._create_containers()
+    test_data._create_containers()
+    c_list = test_data._get_containers(name=mn)
     test_data._start_containers(c_list)
     capsys.readouterr()
     test_data._status_containers(c_list)
@@ -310,7 +318,7 @@ def test_status_containers(capsys, test_data):
 
 
 def test_status_containers_absent(capsys, test_data):
-    c_list = test_data._get_containers()
+    c_list = test_data._get_containers(name=mn)
     capsys.readouterr()
     test_data._status_containers(c_list)
     captured = capsys.readouterr()
