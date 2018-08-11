@@ -82,6 +82,7 @@ def test_command_create_no_arg(runner):
 
 
 def test_command_start(runner):
+    tmn.masternode._client.images.pull('alpine:latest')
     c = {
         'image': 'alpine:latest',
         'name': '{}_{}'.format(mn, mn),
