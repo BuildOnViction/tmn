@@ -2,8 +2,8 @@ import pytest
 import tmn as package
 from tmn import tmn
 
-mn_name = 'test'
-# le = len(mn_name)
+mn = 'test'
+# le = len(mn)
 
 
 @pytest.fixture
@@ -61,17 +61,50 @@ def test_command_list_arg(runner):
     assert result.exit_code == 2
 
 
-def test_command_start(runner):
-    result = runner.invoke(tmn.main, ['start', mn_name])
+def test_command_create(runner):
+    result = runner.invoke(tmn.main, ['create', mn])
     lines = result.output.splitlines()
-    assert lines[0] == 'Starting masternode {}!'.format(mn_name)
+    assert lines[0] == 'Creating masternode {}!'.format(mn)
     assert result.exit_code == 0
-    n = tmn.masternode._client.networks.get('{}_network'.format(mn_name))
-    c = tmn.masternode._client.volumes.get('{}_data'.format(mn_name))
-    for container in tmn.masternode._get_containers(name=mn_name):
+    n = tmn.masternode._client.networks.get('{}_network'.format(mn))
+    v = tmn.masternode._client.volumes.get('{}_data'.format(mn))
+    for container in tmn.masternode._get_containers(name=mn):
         container.remove(force=True)
-    c.remove(force=True)
     n.remove()
+    v.remove(force=True)
+
+
+def test_command_create_no_arg(runner):
+    result = runner.invoke(tmn.main, ['create'])
+    lines = result.output.splitlines()
+    assert 'Usage' in lines[0]
+    assert result.exit_code == 2
+
+
+def test_command_start(runner):
+    tmn.masternode._client.images.pull('alpine:latest')
+    c = {
+        'image': 'alpine:latest',
+        'name': '{}_{}'.format(mn, mn),
+        'command': 'sleep 1000',
+        'labels': {'tmn': mn},
+        'detach': True
+    }
+    tmn.masternode._client.containers.create(**c)
+    result = runner.invoke(tmn.main, ['start', mn])
+    lines = result.output.splitlines()
+    assert lines[0] == 'Starting masternode {}!'.format(mn)
+    assert result.exit_code == 0
+    for container in tmn.masternode._get_containers(name=mn):
+        container.remove(force=True)
+
+
+def test_command_start_empty(runner):
+    result = runner.invoke(tmn.main, ['start', mn])
+    lines = result.output.splitlines()
+    assert lines[0] == 'Starting masternode {}!'.format(mn)
+    assert 'error' in lines[2]
+    assert result.exit_code == 0
 
 
 def test_command_start_no_arg(runner):
@@ -82,9 +115,9 @@ def test_command_start_no_arg(runner):
 
 
 def test_command_stop(runner):
-    result = runner.invoke(tmn.main, ['stop', mn_name])
+    result = runner.invoke(tmn.main, ['stop', mn])
     lines = result.output.splitlines()
-    assert lines[0] == 'Stopping masternode {}!'.format(mn_name)
+    assert lines[0] == 'Stopping masternode {}!'.format(mn)
     assert result.exit_code == 0
 
 
@@ -96,9 +129,9 @@ def test_command_stop_no_arg(runner):
 
 
 def test_command_status(runner):
-    result = runner.invoke(tmn.main, ['status', mn_name])
+    result = runner.invoke(tmn.main, ['status', mn])
     lines = result.output.splitlines()
-    assert lines[0] == 'Masternode {} status:'.format(mn_name)
+    assert lines[0] == 'Masternode {} status:'.format(mn)
     assert result.exit_code == 0
 
 
