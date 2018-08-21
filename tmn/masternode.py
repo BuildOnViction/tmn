@@ -124,7 +124,7 @@ def _compose(name):
     for key, value in CONTAINERS.items():
         CONTAINERS[key]['network'] = NETWORK['name']
         try:
-            CONTAINERS['tomochain']['volumes'][VOLUME['name']] = BIND
+            CONTAINERS[key]['volumes'][VOLUME['name']] = BIND
         except KeyError:
             pass
         CONTAINERS[key]['labels'] = {LABEL: name}
@@ -184,17 +184,23 @@ def _create_containers():
     """
     Try to get the containers defined in `CONTAINERS`.
     If it fails, create them.
+
+    :returns: The created or existing `docker.Container`
+    :rtype: list
     """
+    containers = []
     for key, value in CONTAINERS.items():
         display.step_create_masternode_container(value['name'])
         try:
-            _client.containers.get(value['name'])
+            container = _client.containers.get(value['name'])
             display.step_close_exists()
         except dockerpy.errors.NotFound:
             # temporary, see https://github.com/docker/docker-py/issues/2101
             _client.images.pull(value['image'])
-            _client.containers.create(**value)
+            container = _client.containers.create(**value)
             display.step_close_created()
+        containers.append(container)
+    return containers
 
 
 def _start_containers(containers):
@@ -205,8 +211,6 @@ def _start_containers(containers):
     :param containers: list of `docker.Container`
     :type containers: list
     """
-    if not containers:
-        display.error_start_empty()
     for container in containers:
         display.step_start_masternode_container(container.name)
         container.reload()
@@ -277,13 +281,14 @@ def list_masternodes():
 
 
 @apierror
-def create(name):
+def start(name):
     """
-    Create a masternode. Includes:
+    Start a masternode. Includes:
     - compose node name into config
-    - creating volume
-    - creating network
+    - creating VOLUME
+    - creating NETWORK
     - creating containers
+    - starting containers
     """
     _compose(name)
     display.subtitle_create_volume()
@@ -291,18 +296,8 @@ def create(name):
     display.subtitle_create_network()
     _create_network()
     display.subtitle_create_containers()
-    _create_containers()
-
-
-@apierror
-def start(name):
-    """
-    Start a masternode. Includes:
-    - compose node name into config
-    - starting containers
-    """
-    _compose(name)
-    containers = _get_containers(name)
+    containers = _create_containers()
+    display.newline()
     _start_containers(containers)
 
 
