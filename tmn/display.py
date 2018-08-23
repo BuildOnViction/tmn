@@ -9,6 +9,8 @@ pastel.add_style('und', options=['underscore'])
 pastel.add_style('warning', 'yellow')
 pastel.add_style('error', 'red')
 
+help_url = 'https://docs.tomochain.com/'
+
 
 def newline(number=1):
     """
@@ -67,14 +69,11 @@ def link(msg, url):
     )
 
 
-def link_docs(url):
+def link_docs():
     """
     Custom link message for documentation
-
-    :param url: url to display
-    :type url: str
     """
-    link('Documentation on running a masternode:', url)
+    link('Documentation on running a masternode:', help_url)
 
 
 @style
@@ -277,6 +276,31 @@ def status(name='', status='absent', id='', status_color='red'):
 
 
 @style
+def warning(msg):
+    """
+    Return a pastel formated string for warnings
+
+    :param msg: error message
+    :type msg: str
+    :returns: `msg` formated
+    :rtype: str
+    """
+    return '\n<warning>! warning:</warning> {msg}\n'.format(
+        msg=msg
+    )
+
+
+def warning_ignoring_name():
+    """
+    Custom error when tmn is ignoring the start "name" option
+    """
+    warning(
+        'ignoring option <hy>--name</hy> as a masternode '
+        'is already configured.\n'
+    )
+
+
+@style
 def error(msg):
     """
     Return a pastel formated string for errors
@@ -286,8 +310,10 @@ def error(msg):
     :returns: `msg` formated
     :rtype: str
     """
-    return '<error>! error:</error> {msg}\n'.format(
-        msg=msg
+    return (
+        '\n<error>! error:</error> {msg}\n'.format(msg=msg)
+        + '         '
+        + 'need help? <hy>{}</hy>'.format(help_url)
     )
 
 
@@ -303,3 +329,14 @@ def error_docker_api():
     Custom error when docker is not accessible
     """
     error('something went wrong while doing stuff with docker')
+
+
+def error_start_not_initialized():
+    """
+    Custom error when `tmn start` has never been used with the `--name` option
+    """
+    error(
+        'tmn don\'t manage any masternode yet\n'
+        '         please use '
+        '<hy>tmn start --name</hy> to get started'
+    )

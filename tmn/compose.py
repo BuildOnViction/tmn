@@ -31,7 +31,7 @@ containers = {
 }
 
 
-def process():
+def process(name):
     """
     Compose the containers with their volumes, networks, environment variables
     """
@@ -48,5 +48,4 @@ def process():
         except TypeError:
             pass
         # rename containers
-        # containers[container]['name'] = '{}_{}'.format(name, container)
-        # containers.append(container)
+        containers[container]['name'] = '{}_{}'.format(name, container)
