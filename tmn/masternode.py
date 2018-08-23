@@ -203,6 +203,7 @@ def start():
     - creating containers
     - starting containers
     """
+    compose.process()
     display.subtitle_create_volumes()
     _create_volumes()
     display.subtitle_create_networks()
@@ -220,6 +221,7 @@ def stop():
     - getting the list of containers
     - stoping them
     """
+    compose.process()
     containers = _get_existing_containers()
     _stop_containers(containers)
 
@@ -231,5 +233,6 @@ def status():
     - getting the list of containers
     - displaying their status
     """
+    compose.process()
     containers = _get_existing_containers()
     _status_containers(containers)

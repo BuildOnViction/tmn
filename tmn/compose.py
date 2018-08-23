@@ -34,13 +34,16 @@ containers = {
 def process():
     for container in list(containers):
         # add environment variables
-        for variable in list(containers[container]['environment']):
-            try:
-                containers[container]['environment'][variable] = (
-                    environment[variable])
-            except KeyError:
-                # TODO add logging
-                pass
+        try:
+            for variable in list(containers[container]['environment']):
+                try:
+                    containers[container]['environment'][variable] = (
+                        environment[variable])
+                except KeyError:
+                    # TODO add logging
+                    pass
+        except TypeError:
+            pass
         # rename containers
         # containers[container]['name'] = '{}_{}'.format(name, container)
         # containers.append(container)

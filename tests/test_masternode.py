@@ -8,6 +8,7 @@ def test_data():
     masternode.connect()
     masternode.compose.volumes = ['test']
     masternode.compose.networks = ['test']
+    masternode.compose.environment = {'TEST': 'test'}
     masternode.compose.containers = {
         'alpine': {
             'image': 'alpine:latest',
@@ -119,7 +120,8 @@ def test_create_containers(capsys, test_data):
         c_dict[test_data.compose.containers['alpine']['name']].name
     )
     assert c
-    assert ('- Creating {}... '.format(test_data.compose.containers['alpine']['name'])
+    assert ('- Creating {}... '.format(
+            test_data.compose.containers['alpine']['name'])
             in captured.out)
     assert 'created' in captured.out
     c.remove(force=True)
@@ -134,7 +136,8 @@ def test_create_containers_exist(capsys, test_data):
         c_dict[test_data.compose.containers['alpine']['name']].name
     )
     assert c
-    assert ('- Creating {}... '.format(test_data.compose.containers['alpine']['name'])
+    assert ('- Creating {}... '.format(
+            test_data.compose.containers['alpine']['name'])
             in captured.out)
     assert 'exists' in captured.out
     c.remove(force=True)
