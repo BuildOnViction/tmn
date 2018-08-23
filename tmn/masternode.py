@@ -1,46 +1,9 @@
 import sys
-from collections import OrderedDict
 import docker as dockerpy
+from tmn import compose
 from tmn import display
 
-VOLUMES = ['blockchain_data']
-NETWORKS = ['masternode']
-CONTAINERS = OrderedDict()
-CONTAINERS['metrics'] = {
-    'image': 'tomochain/infra-telegraf:devnet',
-    'hostname': 'test',
-    'name': 'metrics',
-    'network': NETWORKS[0],
-    'volumes': {
-        '/var/run/docker.sock': {
-            'bind': '/var/run/docker.sock', 'mode': 'ro'
-        },
-        '/sys': {
-            'bind': '/rootfs/sys', 'mode': 'ro'
-        },
-        '/proc': {
-            'bind': '/rootfs/proc', 'mode': 'ro'
-        },
-        '/etc': {
-            'bind': '/rootfs/etc', 'mode': 'ro'
-        }
-    },
-    'detach': True
-}
-CONTAINERS['tomochain'] = {
-    'image': 'tomochain/infra-tomochain:devnet',
-    'name': 'tomochain',
-    'network': NETWORKS[0],
-    'volumes': {
-        VOLUMES[0]: {
-            'bind': '/tomochain/data', 'mode': 'rw'
-        }
-    },
-    'detach': True
-}
-
 _client = None
-connected = False
 
 
 def apierror(function):
@@ -68,22 +31,22 @@ def connect(url=None):
 
     :param url: url to the docker deamon
     :type url: str
+    :returns: is connected to Docker api
+    :rtype: bool
     """
     global _client
-    global connected
     if not url:
         _client = dockerpy.from_env()
     else:
         _client = dockerpy.DockerClient(base_url=url)
-    if _ping():
-        connected = True
+    return _ping()
 
 
 def _ping():
     """
     Try to ping the Docker daemon. Check if accessible.
 
-    :returns: is Docker running
+    :returns: is Docker api reachable
     :rtype: bool
     """
     try:
@@ -94,9 +57,10 @@ def _ping():
 
 def _create_volumes():
     """
-    Try to get the volumes defined in `VOLUMES`. If it fails, create them.
+    Try to get the volumes defined in `compose.volumes`.
+    If it fails, create them.
     """
-    for volume in VOLUMES:
+    for volume in compose.volumes:
         display.step_create_masternode_volume(volume)
         try:
             _client.volumes.get(volume)
@@ -109,9 +73,10 @@ def _create_volumes():
 
 def _create_networks():
     """
-    Try to get the networks defined in `NETWORKS`. If it fails, create them.
+    Try to get the networks defined in `compose.networks`.
+    If it fails, create them.
     """
-    for network in NETWORKS:
+    for network in compose.networks:
         display.step_create_masternode_network(network)
         try:
             _client.networks.get(network)
@@ -122,15 +87,15 @@ def _create_networks():
     display.newline()
 
 
-def _get_containers():
+def _get_existing_containers():
     """
-    Get the containers defined in `CONTAINERS`.
+    Get from docker the containers defined in `compose.containers`.
 
     :returns: The existing `docker.Container`
     :rtype: list
     """
     containers = {}
-    for key, value in CONTAINERS.items():
+    for key, value in compose.containers.items():
         try:
             container = _client.containers.get(value['name'])
             containers[container.name] = container
@@ -141,14 +106,14 @@ def _get_containers():
 
 def _create_containers():
     """
-    Try to get the containers defined in `CONTAINERS`.
+    Try to get the containers defined in `compose.containers`.
     If it fails, create them.
 
     :returns: The created or existing `docker.Container`
     :rtype: list
     """
     containers = {}
-    for key, value in CONTAINERS.items():
+    for key, value in compose.containers.items():
         display.step_create_masternode_container(value['name'])
         try:
             container = _client.containers.get(value['name'])
@@ -214,7 +179,10 @@ def _status_containers(containers):
     :param containers: dict of `docker.Container`
     :type containers: dict
     """
-    names = [value['name'] for key, value in CONTAINERS.items()]
+    names = [
+        compose.containers[container]['name']
+        for container in list(compose.containers)
+    ]
     for name in names:
         display_kwargs = {}
         display_kwargs.update({'name': name})
@@ -234,11 +202,13 @@ def _status_containers(containers):
 def start():
     """
     Start a masternode. Includes:
+    - process components
     - creating volumes
     - creating networks
     - creating containers
     - starting containers
     """
+    compose.process()
     display.subtitle_create_volumes()
     _create_volumes()
     display.subtitle_create_networks()
@@ -253,10 +223,12 @@ def start():
 def stop():
     """
     Stop a masternode. Includes:
+    - process components
     - getting the list of containers
     - stoping them
     """
-    containers = _get_containers()
+    compose.process()
+    containers = _get_existing_containers()
     _stop_containers(containers)
 
 
@@ -264,8 +236,10 @@ def stop():
 def status():
     """
     Retrieve masternode status. Includes:
+    - process components
     - getting the list of containers
     - displaying their status
     """
-    containers = _get_containers()
+    compose.process()
+    containers = _get_existing_containers()
     _status_containers(containers)

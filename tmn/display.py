@@ -77,16 +77,6 @@ def link_docs(url):
     link('Documentation on running a masternode:', url)
 
 
-def link_docs_open(url):
-    """
-    Custom link message for documentation, 'open in browser' version
-
-    :param url: url to display
-    :type url: str
-    """
-    link('Opening documentation:', url)
-
-
 @style
 def title(msg):
     """
