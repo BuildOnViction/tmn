@@ -28,8 +28,7 @@ def main(dockerurl):
 
 
 @click.command(help='Display Tomochain documentation link')
-@click.option('--open', is_flag=True, help='Open directly in your browser')
-def docs(open):
+def docs():
     """
     Link to the documentation
 
@@ -37,11 +36,7 @@ def docs(open):
     :type open: bool
     """
     url = 'https://docs.tomochain.com/'
-    if not open:
-        display.link_docs(url)
-    else:
-        display.link_docs_open(url)
-        click.launch(url)
+    display.link_docs(url)
 
 
 @click.command(help='Start your Tomochain masternode')

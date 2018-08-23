@@ -36,14 +36,6 @@ def test_command_docs(runner):
     assert result.exit_code == 0
 
 
-def test_command_docs_opt_open(runner):
-    result = runner.invoke(tmn.main, ['docs', '--open'])
-    msg = 'Opening documentation:'
-    link = 'https://docs.tomochain.com/\n'
-    assert result.output == "{} {}".format(msg, link)
-    assert result.exit_code == 0
-
-
 def test_command_start(runner):
     result = runner.invoke(tmn.main, ['start'])
     lines = result.output.splitlines()
