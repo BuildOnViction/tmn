@@ -9,13 +9,19 @@ All you need to run your own masternode
 
 ## Requirements
 
-- Python >= 3.5
+- Python >= 3.6
 - Docker
 
 ## Installation
 
 ```
 pip3 install --user tmn
+```
+
+## Update
+
+```
+pip3 install -U tmn
 ```
 
 ## Usage
@@ -32,7 +38,6 @@ Options:
 
 Commands:
   docs    Display Tomochain documentation link
-  list    List local Tomochain masternodes
   start   Start your Tomochain masternode
   status  Status of your Tomochain masternode
   stop    Stop your Tomochain masternode

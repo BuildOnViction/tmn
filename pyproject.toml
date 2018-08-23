@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "tmn"
-version = "0.0.4"
+version = "0.0.5"
 description = ""
 readme = "README.md"
 homepage = "https://tomochain.com"
@@ -12,12 +12,12 @@ authors = [
 ]
 
 [tool.poetry.dependencies]
-python = "^3.5"
+python = "^3.6"
 click = "^6.7"
 docker = "^3.4"
 pytest = "^3.6"
 pastel = "^0.1.0"
-beautifultable = "^0.5.2"
+clint = "^0.5.1"
 
 [tool.poetry.dev-dependencies]
 

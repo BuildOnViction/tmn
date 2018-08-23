@@ -77,16 +77,6 @@ def link_docs(url):
     link('Documentation on running a masternode:', url)
 
 
-def link_docs_open(url):
-    """
-    Custom link message for documentation, 'open in browser' version
-
-    :param url: url to display
-    :type url: str
-    """
-    link('Opening documentation:', url)
-
-
 @style
 def title(msg):
     """
@@ -102,32 +92,25 @@ def title(msg):
     )
 
 
-def title_list_masternodes():
-    """
-    Title when listing masternodes
-    """
-    title('Tomochain masternodes on this machine:')
-
-
-def title_start_masternode(masternode):
+def title_start_masternode():
     """
     Title when starting a masternode
     """
-    title('Starting masternode {mn}!'.format(mn=masternode))
+    title('Starting your masternode!')
 
 
-def title_stop_masternode(masternode):
+def title_stop_masternode():
     """
     Title when stopping a masternode
     """
-    title('Stopping masternode {mn}!'.format(mn=masternode))
+    title('Stopping your masternode!')
 
 
-def title_status_masternode(masternode):
+def title_status_masternode():
     """
     Title when stopping a masternode
     """
-    title('Masternode {mn} status:'.format(mn=masternode))
+    title('Your masternode status:')
 
 
 @style
@@ -145,18 +128,18 @@ def subtitle(msg):
     )
 
 
-def subtitle_create_volume():
+def subtitle_create_volumes():
     """
-    Subtitle when creating volume
+    Subtitle when creating volumes
     """
-    subtitle('Volume')
+    subtitle('Volumes')
 
 
-def subtitle_create_network():
+def subtitle_create_networks():
     """
-    Subtitle when creating network
+    Subtitle when creating networks
     """
-    subtitle('Network')
+    subtitle('Networks')
 
 
 def subtitle_create_containers():
@@ -164,44 +147,6 @@ def subtitle_create_containers():
     Subtitle when creating containers
     """
     subtitle('Containers')
-
-
-@style
-def item(msg, indent=1):
-    """
-    Return a pastel formated list item with indentation.
-    One indent is two spaces.
-
-    :param msg: step message
-    :type msg: str
-    :param indent: number of idents
-    :type indent: int
-    :returns: `msg` formated
-    :rtype: str
-    """
-    item = '  '*indent + '- {msg}'.format(
-        msg=msg
-    )
-    return item
-
-
-@style
-def undecorated_item(msg, indent=1):
-    """
-    Return a pastel formated list item with indentation.
-    One indent is two spaces.
-
-    :param msg: step message
-    :type msg: str
-    :param indent: number of idents
-    :type indent: int
-    :returns: `msg` formated
-    :rtype: str
-    """
-    item = '  '*indent + '{msg}'.format(
-        msg=msg
-    )
-    return item
 
 
 @style_no_new_line
@@ -225,7 +170,7 @@ def step(msg, indent=1):
 
 def step_create_masternode_volume(volume):
     """
-    Custom step message for docker VOLUME creation
+    Custom step message for docker volumes creation
     """
     step('Creating <hy>{volume}</hy>'.format(
         volume=volume
@@ -234,7 +179,7 @@ def step_create_masternode_volume(volume):
 
 def step_create_masternode_network(network):
     """
-    Custom step message for docker NETWORK creatin
+    Custom step message for docker networks creatin
     """
     step('Creating <hy>{network}</hy>'.format(
         network=network
@@ -316,14 +261,14 @@ def status(name='', status='absent', id='', status_color='red'):
     :rtype: str
     """
     if id:
-        return '  {name} <fg={color}>{status}(</>{id}<fg={color}>)</>'.format(
+        return '  {name}\t<fg={color}>{status}(</>{id}<fg={color}>)</>'.format(
             name=name,
             status=status,
             color=status_color,
             id=id
         )
     else:
-        return '  {name} <fg={color}>{status}{id}</>'.format(
+        return '  {name}\t<fg={color}>{status}{id}</>'.format(
             name=name,
             status=status,
             color=status_color,

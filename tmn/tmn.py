@@ -18,18 +18,17 @@ def main(dockerurl):
     """
     Cli entrypoint.
 
-    :param dockerurl: url to the docker server
-    :type dockerurl: str
+    :param config: path to the configuration file
+    :type config: str
     """
-    masternode.connect(url=dockerurl)
-    if masternode.connected is False:
+
+    if not masternode.connect(url=dockerurl):
         display.error_docker()
         sys.exit()
 
 
 @click.command(help='Display Tomochain documentation link')
-@click.option('--open', is_flag=True, help='Open directly in your browser')
-def docs(open):
+def docs():
     """
     Link to the documentation
 
@@ -37,63 +36,37 @@ def docs(open):
     :type open: bool
     """
     url = 'https://docs.tomochain.com/'
-    if not open:
-        display.link_docs(url)
-    else:
-        display.link_docs_open(url)
-        click.launch(url)
-
-
-@click.command(help='List local Tomochain masternodes')
-def list():
-    """
-    List the currently existing Tomochain masternodes
-    """
-    display.title_list_masternodes()
-    masternode.list_masternodes()
+    display.link_docs(url)
 
 
 @click.command(help='Start your Tomochain masternode')
-@click.argument('name')
-def start(name):
+def start():
     """
     Start the containers needed to run a masternode
-
-    :param name: name of the masternode
-    :type name: str
     """
-    display.title_start_masternode(name)
-    masternode.start(name)
+    display.title_start_masternode()
+    masternode.start()
 
 
 @click.command(help='Stop your Tomochain masternode')
-@click.argument('name')
-def stop(name):
+def stop():
     """
     Stop the containers needed to run a masternode
-
-    :param name: name of the masternode
-    :type name: str
     """
-    display.title_stop_masternode(name)
-    masternode.stop(name)
+    display.title_stop_masternode()
+    masternode.stop()
 
 
 @click.command(help='Status of your Tomochain masternode')
-@click.argument('name')
-def status(name):
+def status():
     """
     Display the status of the masternode containers
-
-    :param name: name of the masternode
-    :type name: str
     """
-    display.title_status_masternode(name)
-    masternode.status(name)
+    display.title_status_masternode()
+    masternode.status()
 
 
 main.add_command(docs)
-main.add_command(list)
 main.add_command(start)
 main.add_command(stop)
 main.add_command(status)
