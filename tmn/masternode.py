@@ -31,6 +31,8 @@ def connect(url=None):
 
     :param url: url to the docker deamon
     :type url: str
+    :returns: is connected to Docker api
+    :rtype: bool
     """
     global _client
     if not url:
@@ -44,7 +46,7 @@ def _ping():
     """
     Try to ping the Docker daemon. Check if accessible.
 
-    :returns: is Docker running
+    :returns: is Docker api reachable
     :rtype: bool
     """
     try:
@@ -55,7 +57,8 @@ def _ping():
 
 def _create_volumes():
     """
-    Try to get the volumes defined in `VOLUMES`. If it fails, create them.
+    Try to get the volumes defined in `compose.volumes`.
+    If it fails, create them.
     """
     for volume in compose.volumes:
         display.step_create_masternode_volume(volume)
@@ -70,7 +73,8 @@ def _create_volumes():
 
 def _create_networks():
     """
-    Try to get the networks defined in `NETWORKS`. If it fails, create them.
+    Try to get the networks defined in `compose.networks`.
+    If it fails, create them.
     """
     for network in compose.networks:
         display.step_create_masternode_network(network)
@@ -85,7 +89,7 @@ def _create_networks():
 
 def _get_existing_containers():
     """
-    Get from docker the containers defined in `CONTAINERS`.
+    Get from docker the containers defined in `compose.containers`.
 
     :returns: The existing `docker.Container`
     :rtype: list
@@ -102,7 +106,7 @@ def _get_existing_containers():
 
 def _create_containers():
     """
-    Try to get the containers defined in `CONTAINERS`.
+    Try to get the containers defined in `compose.containers`.
     If it fails, create them.
 
     :returns: The created or existing `docker.Container`
@@ -198,6 +202,7 @@ def _status_containers(containers):
 def start():
     """
     Start a masternode. Includes:
+    - process components
     - creating volumes
     - creating networks
     - creating containers
@@ -218,6 +223,7 @@ def start():
 def stop():
     """
     Stop a masternode. Includes:
+    - process components
     - getting the list of containers
     - stoping them
     """
@@ -230,6 +236,7 @@ def stop():
 def status():
     """
     Retrieve masternode status. Includes:
+    - process components
     - getting the list of containers
     - displaying their status
     """

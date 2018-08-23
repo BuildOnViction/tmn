@@ -32,6 +32,9 @@ containers = {
 
 
 def process():
+    """
+    Compose the containers with their volumes, networks, environment variables
+    """
     for container in list(containers):
         # add environment variables
         try:
