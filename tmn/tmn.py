@@ -21,8 +21,8 @@ def main(dockerurl):
     :param config: path to the configuration file
     :type config: str
     """
-    masternode.connect(url=dockerurl)
-    if masternode.connected is False:
+
+    if not masternode.connect(url=dockerurl):
         display.error_docker()
         sys.exit()
 
