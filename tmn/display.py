@@ -290,13 +290,14 @@ def warning(msg):
     )
 
 
-def warning_ignoring_name():
+def warning_ignoring_start_options(name):
     """
-    Custom error when tmn is ignoring the start "name" option
+    Custom warning when tmn is ignoring the start options
     """
     warning(
-        'ignoring option <hy>--name</hy> as a masternode '
-        'is already configured.\n'
+        'masternode <hy>{}</hy> is already configured\n'.format(name)
+        + '           '
+        + 'ignoring start options\n'
     )
 
 
@@ -339,4 +340,24 @@ def error_start_not_initialized():
         'tmn don\'t manage any masternode yet\n'
         '         please use '
         '<hy>tmn start --name</hy> to get started'
+    )
+
+
+def error_start_option_required(option):
+    """
+    Custom error when `tmn start` is used with name but not the other options
+    """
+    error(
+        '<hy>{}</hy> is required when starting a new masternode'
+        .format(option)
+    )
+
+
+def error_validation_option(option, format):
+    """
+    Custom error when an option format is not valide
+    """
+    error(
+        '<hy>{}</hy> is not valid\n'.format(option)
+        + '         it should be a {}'.format(format)
     )

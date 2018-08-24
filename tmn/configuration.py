@@ -16,25 +16,30 @@ def init(new_name=None, net=None, pkey=None):
     conf_name = resources.user.read('name')
     if conf_name:
         if new_name:
-            display.warning_ignoring_name()
+            display.warning_ignoring_start_options(conf_name)
         name = conf_name
     else:
         if _validate_name(new_name):
-            resources.user.write('name', new_name)
             name = new_name
             create = True
         elif not new_name:
             display.error_start_not_initialized()
             sys.exit()
         else:
-            # TODO display error validation
-            pass
+            display.error_validation_option('--name',
+                                            '4 to 10 characters slug')
             sys.exit()
     if create:
-        # TODO validate net and pkey
-        if not net or not pkey:
+        if not net:
+            display.error_start_option_required('--net')
             sys.exit()
-            # TODO display error required
+        elif not pkey:
+            display.error_start_option_required('--pkey')
+            sys.exit()
+        if net and not _validate_pkey(pkey):
+            display.error_validation_option('--pkey',
+                                            '64 characters hex string')
+            sys.exit()
         else:
             if net == 'devnet':
                 compose.environment = networks.devnet
@@ -43,6 +48,7 @@ def init(new_name=None, net=None, pkey=None):
             elif net == 'mainnet':
                 compose.environment = networks.mainnet
             compose.environment['PRIVATE_KEY'] = pkey
+        resources.user.write('name', name)
 
 
 def _validate_name(name):
@@ -52,5 +58,19 @@ def _validate_name(name):
         and validators.length(name, min=4, max=10)
     ):
         return True
+    else:
+        return False
+
+
+def _validate_pkey(pkey):
+    if (
+        pkey
+        and validators.length(name, min=64, max=64)
+    ):
+        try:
+            int(pkey, 16)
+            return True
+        except ValueError:
+            return False
     else:
         return False
