@@ -36,7 +36,7 @@ def init(new_name=None, net=None, pkey=None):
         elif not pkey:
             display.error_start_option_required('--pkey')
             sys.exit()
-        if net and not _validate_pkey(pkey):
+        if not _validate_pkey(pkey):
             display.error_validation_option('--pkey',
                                             '64 characters hex string')
             sys.exit()
@@ -65,7 +65,7 @@ def _validate_name(name):
 def _validate_pkey(pkey):
     if (
         pkey
-        and validators.length(name, min=64, max=64)
+        and validators.length(pkey, min=64, max=64)
     ):
         try:
             int(pkey, 16)

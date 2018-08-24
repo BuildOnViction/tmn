@@ -36,7 +36,7 @@ def test_command_docs(runner):
     assert result.exit_code == 0
 
 
-def test_command_start(runner):
+def test_command_start_init(runner):
     result = runner.invoke(tmn.main, ['start'])
     lines = result.output.splitlines()
     assert lines[0] == 'Starting your masternode!'
