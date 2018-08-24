@@ -41,11 +41,18 @@ def docs():
 @click.option('--name',
               metavar='NAME',
               help='Your masternode\'s name')
-def start(name):
+@click.option('--net',
+              type=click.Choice(['testnet', 'devnet']),
+              help='The environment your masternode will connect to')
+@click.option('--pkey',
+              metavar='KEY',
+              help=('Private key of the account your masternode will collect '
+                    'rewards on'))
+def start(name, net, pkey):
     """
     Start the containers needed to run a masternode
     """
-    configuration.init(name)
+    configuration.init(name, net, pkey)
     display.title_start_masternode()
     masternode.start(configuration.name)
 
