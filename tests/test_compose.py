@@ -4,29 +4,24 @@ import pytest
 @pytest.fixture
 def test_data():
     from tmn import compose
-    compose.volumes = ['test']
-    compose.networks = ['test']
-    compose.environment = {'TEST': 'test'}
-    compose.containers = {
-        'alpine1': {
-            'image': 'alpine:latest',
-            'name': 'test',
-            'command': 'sleep 1000',
-            'environment': None,
-            'detach': True
-        },
-        'alpine2': {
-            'image': 'alpine:latest',
-            'name': 'test2',
-            'command': 'sleep 1000',
-            'environment': {'TEST': None, 'ALONE': None},
-            'detach': True
-        }
+    compose.environment = {'PRIVATE_KEY': 'test'}
+    compose.containers['test'] = {
+        'image': 'test',
+        'hostname': None,
+        'name': 'test',
+        'environment': {},
+        'network': 'tmn_default',
+        'volumes': {},
+        'detach': True
     }
     return compose
 
 
 def test_process(test_data):
-    test_data.process()
-    assert test_data.containers['alpine1']['environment'] is None
-    assert test_data.containers['alpine2']['environment']['TEST'] == 'test'
+    test_data.process('test')
+    assert 'test_' in test_data.containers['metrics']['hostname']
+    assert len(test_data.containers['metrics']['hostname']) == 11
+    assert 'test_' in (
+        test_data.containers['tomochain']['environment']['IDENTITY'])
+    assert test_data.containers['tomochain']['environment']['PRIVATE_KEY'] == (
+        'test')

@@ -18,6 +18,7 @@ docker = "^3.4"
 pytest = "^3.6"
 pastel = "^0.1.0"
 clint = "^0.5.1"
+validators = "^0.12.2"
 
 [tool.poetry.dev-dependencies]
 

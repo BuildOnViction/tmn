@@ -1,9 +1,10 @@
+import uuid
+
 volumes = ['chaindata']
 
 networks = ['tmn_default']
 
 environment = {
-    'NETSTATS_HOST': 'Test'
 }
 
 containers = {
@@ -11,16 +12,29 @@ containers = {
         'image': 'tomochain/infra-telegraf:devnet',
         'hostname': None,
         'name': 'metrics',
-        'environment': None,
+        'environment': {
+            'METRICS_ENDPOINT': None
+        },
         'network': 'tmn_default',
-        'volumes': None,
+        'volumes': {
+          '/var/run/docker.sock': {'bind': '/var/run/docker.sock',
+                                   'mode': 'ro'},
+          '/sys': {'bind': '/rootfs/sys', 'mode': 'ro'},
+          '/proc': {'bind': '/rootfs/proc', 'mode': 'ro'},
+          '/etc': {'bind': '/rootfs/etc', 'mode': 'ro'}
+        },
         'detach': True
     },
     'tomochain': {
         'image': 'tomochain/infra-tomochain:devnet',
         'name': 'tomochain',
         'environment': {
-            'NETSTATS_HOST': None
+            'IDENTITY': None,
+            'PRIVATE_KEY': None,
+            'BOOTNODES': None,
+            'NETSTATS_HOST': None,
+            'NETSTATS_PORT': None,
+            'WS_SECRET': None
         },
         'network': 'tmn_default',
         'volumes': {
@@ -31,22 +45,22 @@ containers = {
 }
 
 
-def process():
+def process(name):
     """
-    Compose the containers with their volumes, networks, environment variables
+    Compose the containers with their variables
     """
+    # custom
+    identity = '{}_{}'.format(name, uuid.uuid4().hex[:6])
+    containers['metrics']['hostname'] = identity
+    containers['tomochain']['environment']['IDENTITY'] = identity
     for container in list(containers):
         # add environment variables
-        try:
-            for variable in list(containers[container]['environment']):
-                try:
-                    containers[container]['environment'][variable] = (
-                        environment[variable])
-                except KeyError:
-                    # TODO add logging
-                    pass
-        except TypeError:
-            pass
+        for variable in list(containers[container]['environment']):
+            try:
+                containers[container]['environment'][variable] = (
+                    environment[variable])
+            except KeyError:
+                # TODO add logging
+                pass
         # rename containers
-        # containers[container]['name'] = '{}_{}'.format(name, container)
-        # containers.append(container)
+        containers[container]['name'] = '{}_{}'.format(name, container)

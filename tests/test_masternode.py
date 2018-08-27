@@ -17,7 +17,6 @@ def test_data():
             'detach': True
         }
     }
-    masternode.connect()
     return masternode
 
 
