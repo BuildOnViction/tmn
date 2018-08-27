@@ -38,7 +38,7 @@ def tmn():
 
 
 def test_version(runner, tmn):
-    version = '0.0.5'
+    version = '0.0.6'
     result = runner.invoke(tmn.main, ['--version'])
     assert result.output[-6:-1] == version
     assert package.__version__ == version
