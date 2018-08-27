@@ -199,7 +199,7 @@ def _status_containers(containers):
 
 
 @apierror
-def start():
+def start(name):
     """
     Start a masternode. Includes:
     - process components
@@ -208,7 +208,7 @@ def start():
     - creating containers
     - starting containers
     """
-    compose.process()
+    compose.process(name)
     display.subtitle_create_volumes()
     _create_volumes()
     display.subtitle_create_networks()
@@ -220,26 +220,26 @@ def start():
 
 
 @apierror
-def stop():
+def stop(name):
     """
     Stop a masternode. Includes:
     - process components
     - getting the list of containers
     - stoping them
     """
-    compose.process()
+    compose.process(name)
     containers = _get_existing_containers()
     _stop_containers(containers)
 
 
 @apierror
-def status():
+def status(name):
     """
     Retrieve masternode status. Includes:
     - process components
     - getting the list of containers
     - displaying their status
     """
-    compose.process()
+    compose.process(name)
     containers = _get_existing_containers()
     _status_containers(containers)
