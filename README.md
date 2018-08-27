@@ -42,3 +42,36 @@ Commands:
   status  Status of your Tomochain masternode
   stop    Stop your Tomochain masternode
 ```
+
+### First start
+
+On the first run you will need to provide some options to the start command.
+It will let you configure your Masternode.
+
+```
+name = tomochain-orion  # A name that represents you.
+                        # It will be the public name available on tomomaster
+                        # and on the network stat page.
+
+net = testnet           # The network you want to connect to.
+                        # Should be testnet or mainnet.
+
+pkey = a25...5f5        # The private key of the account you want your
+                        # masternode to use.
+                        # It will be used to receive rewards.
+
+tmn start --name $name --net $net --pkey $pkey
+```
+
+### Normal start
+
+Once your masternode has been configured one, you can use the start, stop and
+status command to interact with your masternode without any options.
+
+```
+tmn stop
+
+tmn start
+
+tmn status
+```
