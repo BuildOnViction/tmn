@@ -45,8 +45,6 @@ def init(new_name=None, net=None, pkey=None):
                 compose.environment = networks.devnet
             if net == 'testnet':
                 compose.environment = networks.testnet
-            elif net == 'mainnet':
-                compose.environment = networks.mainnet
             compose.environment['PRIVATE_KEY'] = pkey
         resources.user.write('name', name)
 

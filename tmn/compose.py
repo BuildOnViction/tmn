@@ -55,15 +55,12 @@ def process(name):
     containers['tomochain']['environment']['IDENTITY'] = identity
     for container in list(containers):
         # add environment variables
-        try:
-            for variable in list(containers[container]['environment']):
-                try:
-                    containers[container]['environment'][variable] = (
-                        environment[variable])
-                except KeyError:
-                    # TODO add logging
-                    pass
-        except TypeError:
-            pass
+        for variable in list(containers[container]['environment']):
+            try:
+                containers[container]['environment'][variable] = (
+                    environment[variable])
+            except KeyError:
+                # TODO add logging
+                pass
         # rename containers
         containers[container]['name'] = '{}_{}'.format(name, container)
