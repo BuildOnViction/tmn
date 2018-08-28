@@ -71,6 +71,21 @@ def _create_volumes():
     display.newline()
 
 
+def _remove_volumes():
+    """
+    Remove Volumes
+    """
+    for volume in compose.volumes:
+        display.step_remove_masternode_volume(volume)
+        try:
+            v = _client.volumes.get(volume)
+            v.remove(force=True)
+            display.step_close_status('removed')
+        except dockerpy.errors.NotFound:
+            display.step_close_status('absent')
+    display.newline()
+
+
 def _create_networks():
     """
     Try to get the networks defined in `compose.networks`.
@@ -84,6 +99,21 @@ def _create_networks():
         except dockerpy.errors.NotFound:
             _client.networks.create(network)
             display.step_close_created()
+    display.newline()
+
+
+def _remove_networks():
+    """
+    Remove networks
+    """
+    for network in compose.networks:
+        display.step_remove_masternode_network(network)
+        try:
+            n = _client.networks.get(network)
+            n.remove()
+            display.step_close_status('removed')
+        except dockerpy.errors.NotFound:
+            display.step_close_status('absent')
     display.newline()
 
 
@@ -149,6 +179,25 @@ def _start_containers(containers):
             container.start()
         container.reload()
         display.step_close_status(container.status)
+
+
+def _remove_containers(containers):
+    """
+    Remove given containers
+
+    :param containers: dict of name:`docker.Container`
+    :type containers: dict
+    """
+    if not containers:
+        display.warning_nothing_to_remove()
+    else:
+        display.newline()
+    for name, container in containers.items():
+        display.step_remove_masternode_container(container.name)
+        container.remove(force=True)
+        display.step_close_status('removed')
+    if containers:
+        display.newline()
 
 
 def _stop_containers(containers):
@@ -243,3 +292,23 @@ def status(name):
     compose.process(name)
     containers = _get_existing_containers()
     _status_containers(containers)
+
+
+@apierror
+def remove(name):
+    """
+    Remove masternode. Includes:
+    - process components
+    - stop containers
+    - remove containers, networks and volumes
+    - remove tmn persistent configuration
+    """
+    compose.process(name)
+    containers = _get_existing_containers()
+    display.subtitle_remove_containers()
+    _stop_containers(containers)
+    _remove_containers(containers)
+    display.subtitle_remove_networks()
+    _remove_networks()
+    display.subtitle_remove_volumes()
+    _remove_volumes()

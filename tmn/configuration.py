@@ -10,7 +10,6 @@ name = None
 
 
 def init(new_name=None, net=None, pkey=None):
-    # name
     global name
     create = False
     conf_name = resources.user.read('name')
@@ -47,6 +46,10 @@ def init(new_name=None, net=None, pkey=None):
                 compose.environment = networks.testnet
             compose.environment['PRIVATE_KEY'] = pkey
         resources.user.write('name', name)
+
+
+def remove():
+    resources.user.delete('name')
 
 
 def _validate_name(name):

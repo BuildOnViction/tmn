@@ -91,25 +91,32 @@ def title(msg):
     )
 
 
-def title_start_masternode():
+def title_start_masternode(name):
     """
     Title when starting a masternode
     """
-    title('Starting your masternode!')
+    title('Starting masternode <hy>{}</hy>:'.format(name))
 
 
-def title_stop_masternode():
+def title_stop_masternode(name):
     """
     Title when stopping a masternode
     """
-    title('Stopping your masternode!')
+    title('Stopping masternode <hy>{}</hy>:'.format(name))
 
 
-def title_status_masternode():
+def title_status_masternode(name):
     """
     Title when stopping a masternode
     """
-    title('Your masternode status:')
+    title('Masternode <hy>{}</hy> status:'.format(name))
+
+
+def title_remove_masternode(name):
+    """
+    Title when stopping a masternode
+    """
+    title('Removing masternode <hy>{}</hy>:'.format(name))
 
 
 @style
@@ -134,6 +141,13 @@ def subtitle_create_volumes():
     subtitle('Volumes')
 
 
+def subtitle_remove_volumes():
+    """
+    Subtitle when removing volumes
+    """
+    subtitle('Volumes')
+
+
 def subtitle_create_networks():
     """
     Subtitle when creating networks
@@ -141,9 +155,23 @@ def subtitle_create_networks():
     subtitle('Networks')
 
 
+def subtitle_remove_networks():
+    """
+    Subtitle when removing networks
+    """
+    subtitle('Networks')
+
+
 def subtitle_create_containers():
     """
     Subtitle when creating containers
+    """
+    subtitle('Containers')
+
+
+def subtitle_remove_containers():
+    """
+    Subtitle when removing containers
     """
     subtitle('Containers')
 
@@ -176,11 +204,29 @@ def step_create_masternode_volume(volume):
     ))
 
 
+def step_remove_masternode_volume(volume):
+    """
+    Custom step message for docker volumes removal
+    """
+    step('Removing <hy>{volume}</hy>'.format(
+        volume=volume
+    ))
+
+
 def step_create_masternode_network(network):
     """
     Custom step message for docker networks creatin
     """
     step('Creating <hy>{network}</hy>'.format(
+        network=network
+    ))
+
+
+def step_remove_masternode_network(network):
+    """
+    Custom step message for docker networks creatin
+    """
+    step('Removing <hy>{network}</hy>'.format(
         network=network
     ))
 
@@ -199,6 +245,15 @@ def step_start_masternode_container(container):
     Custom step message for docker container starting
     """
     step('Starting <hy>{container}</hy>'.format(
+        container=container
+    ))
+
+
+def step_remove_masternode_container(container):
+    """
+    Custom step message for docker container starting
+    """
+    step('Removing <hy>{container}</hy>'.format(
         container=container
     ))
 
@@ -228,6 +283,7 @@ def step_close(msg, color='green'):
     )
 
 
+# TODO only use step_close_status
 def step_close_created():
     """
     Custom 'created' closing step message
@@ -276,7 +332,7 @@ def status(name='', status='absent', id='', status_color='red'):
 
 
 @style
-def warning(msg):
+def warning(msg, newline=True):
     """
     Return a pastel formated string for warnings
 
@@ -285,7 +341,10 @@ def warning(msg):
     :returns: `msg` formated
     :rtype: str
     """
-    return '\n<warning>! warning:</warning> {msg}\n'.format(
+    before = ''
+    if newline:
+        before = '\n'
+    return before + '<warning>! warning:</warning> {msg}\n'.format(
         msg=msg
     )
 
@@ -298,6 +357,15 @@ def warning_ignoring_start_options(name):
         'masternode <hy>{}</hy> is already configured\n'.format(name)
         + '           '
         + 'ignoring start options\n'
+    )
+
+
+def warning_nothing_to_remove():
+    """
+    Custom warning when tmn is removing docker objects but it's empty
+    """
+    warning(
+        'nothing to remove', newline=False
     )
 
 
@@ -337,7 +405,7 @@ def error_start_not_initialized():
     Custom error when `tmn start` has never been used with the `--name` option
     """
     error(
-        'tmn don\'t manage any masternode yet\n'
+        'tmn doesn\'t manage any masternode yet\n'
         '         please use '
         '<hy>tmn start --name</hy> to get started'
     )
