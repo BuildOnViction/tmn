@@ -81,8 +81,7 @@ def status():
 @click.option('--confirm', is_flag=True)
 def remove(confirm):
     """
-    Remove the masternode completly (containers, networks volumes) after
-    backuping the chaindata volume
+    Remove the masternode completly (containers, networks volumes)
     """
     configuration.init()
     if not confirm:
@@ -91,7 +90,8 @@ def remove(confirm):
     display.title_remove_masternode(configuration.name)
     # TODO add confirmation
     masternode.remove(configuration.name)
-    configuration.remove()
+    configuration.remove_conf('name')
+    configuration.remove_conf('identity')
 
 
 main.add_command(docs)

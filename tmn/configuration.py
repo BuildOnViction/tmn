@@ -48,8 +48,16 @@ def init(new_name=None, net=None, pkey=None):
         resources.user.write('name', name)
 
 
-def remove():
-    resources.user.delete('name')
+def write_conf(conf, content):
+    resources.user.write(conf, content)
+
+
+def read_conf(conf):
+    return resources.user.read(conf)
+
+
+def remove_conf(conf):
+    resources.user.delete(conf)
 
 
 def _validate_name(name):
