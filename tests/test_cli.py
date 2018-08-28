@@ -9,13 +9,6 @@ def runner():
     return runner
 
 
-def test_ok(*args, **kwargs):
-    print('ok')
-    print(*args)
-    print(**kwargs)
-    return True
-
-
 @pytest.fixture
 def tmn():
     from tmn import tmn
@@ -42,20 +35,17 @@ def test_version(runner, tmn):
     result = runner.invoke(tmn.main, ['--version'])
     assert result.output[-6:-1] == version
     assert package.__version__ == version
-    tmn.configuration.resources.user.delete('name')
 
 
 def test_error_docker(runner, tmn):
     result = runner.invoke(tmn.main, ['--dockerurl', 'unix://test', 'docs'])
     assert '! error: could not access the docker daemon\nNone\n'
     assert result.exit_code != 0
-    tmn.configuration.resources.user.delete('name')
 
 
 def test_command(runner, tmn):
     result = runner.invoke(tmn.main)
     assert result.exit_code == 0
-    tmn.configuration.resources.user.delete('name')
 
 
 def test_command_docs(runner, tmn):
@@ -64,7 +54,6 @@ def test_command_docs(runner, tmn):
     link = 'https://docs.tomochain.com/\n'
     assert result.output == "{} {}".format(msg, link)
     assert result.exit_code == 0
-    tmn.configuration.resources.user.delete('name')
 
 
 def test_command_start_init_devnet(runner, tmn):
@@ -74,8 +63,8 @@ def test_command_start_init_devnet(runner, tmn):
         '0123456789012345678901234567890123456789012345678901234567890123'
     ])
     lines = result.output.splitlines()
-    assert 'Starting your' in lines[0]
-    tmn.configuration.resources.user.delete('name')
+    assert 'Starting ' in lines[0]
+    tmn.masternode.remove('test')
 
 
 def test_command_start_init_testnet(runner, tmn):
@@ -85,8 +74,8 @@ def test_command_start_init_testnet(runner, tmn):
         '0123456789012345678901234567890123456789012345678901234567890123'
     ])
     lines = result.output.splitlines()
-    assert 'Starting your' in lines[0]
-    tmn.configuration.resources.user.delete('name')
+    assert 'Starting ' in lines[0]
+    tmn.masternode.remove('test')
 
 
 def test_command_start_init_invalid_name(runner, tmn):
@@ -95,7 +84,6 @@ def test_command_start_init_invalid_name(runner, tmn):
     lines = result.output.splitlines()
     assert 'error' in lines[1]
     assert 'name is not valid' in lines[1]
-    tmn.configuration.resources.user.delete('name')
 
 
 def test_command_start_init_no_pkey(runner, tmn):
@@ -104,7 +92,6 @@ def test_command_start_init_no_pkey(runner, tmn):
     lines = result.output.splitlines()
     assert 'error' in lines[1]
     assert 'pkey is required' in lines[1]
-    tmn.configuration.resources.user.delete('name')
 
 
 def test_command_start_init_invalid_pkey_len(runner, tmn):
@@ -114,7 +101,6 @@ def test_command_start_init_invalid_pkey_len(runner, tmn):
     lines = result.output.splitlines()
     assert 'error' in lines[1]
     assert 'pkey is not valid' in lines[1]
-    tmn.configuration.resources.user.delete('name')
 
 
 def test_command_start_init_invalid_pkey_hex(runner, tmn):
@@ -124,7 +110,6 @@ def test_command_start_init_invalid_pkey_hex(runner, tmn):
     lines = result.output.splitlines()
     assert 'error' in lines[1]
     assert 'pkey is not valid' in lines[1]
-    tmn.configuration.resources.user.delete('name')
 
 
 def test_command_start_init_no_net(runner, tmn):
@@ -134,7 +119,6 @@ def test_command_start_init_no_net(runner, tmn):
     lines = result.output.splitlines()
     assert 'error' in lines[1]
     assert 'net is required' in lines[1]
-    tmn.configuration.resources.user.delete('name')
 
 
 def test_command_start_init_no_name(runner, tmn):
@@ -144,7 +128,6 @@ def test_command_start_init_no_name(runner, tmn):
     lines = result.output.splitlines()
     assert 'error' in lines[1]
     assert 'manage any masternode yet' in lines[1]
-    tmn.configuration.resources.user.delete('name')
 
 
 def test_command_start(runner, tmn):
@@ -156,7 +139,7 @@ def test_command_start(runner, tmn):
     result = runner.invoke(tmn.main, ['start'])
     lines = result.output.splitlines()
     assert 'Starting' in lines[0]
-    tmn.configuration.resources.user.delete('name')
+    tmn.masternode.remove('test')
 
 
 def test_command_start_ignore(runner, tmn):
@@ -168,7 +151,7 @@ def test_command_start_ignore(runner, tmn):
     result = runner.invoke(tmn.main, ['start', '--name', 'test'])
     lines = result.output.splitlines()
     assert 'warning' in lines[1]
-    tmn.configuration.resources.user.delete('name')
+    tmn.masternode.remove('test')
 
 
 def test_command_stop(runner, tmn):
@@ -179,9 +162,9 @@ def test_command_stop(runner, tmn):
     ])
     result = runner.invoke(tmn.main, ['stop'])
     lines = result.output.splitlines()
-    assert lines[0] == 'Stopping your masternode!'
+    assert 'Stopping ' in lines[0]
     assert result.exit_code == 0
-    tmn.configuration.resources.user.delete('name')
+    tmn.masternode.remove('test')
 
 
 def test_command_status(runner, tmn):
@@ -192,6 +175,6 @@ def test_command_status(runner, tmn):
     ])
     result = runner.invoke(tmn.main, ['status'])
     lines = result.output.splitlines()
-    assert lines[0] == 'Your masternode status:'
+    assert 'Masternode ' in lines[0]
     assert result.exit_code == 0
-    tmn.configuration.resources.user.delete('name')
+    tmn.masternode.remove('test')
