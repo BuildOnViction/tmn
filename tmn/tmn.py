@@ -90,8 +90,6 @@ def remove(confirm):
     display.title_remove_masternode(configuration.name)
     # TODO add confirmation
     masternode.remove(configuration.name)
-    configuration.remove_conf('name')
-    configuration.remove_conf('identity')
 
 
 main.add_command(docs)

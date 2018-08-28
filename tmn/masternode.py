@@ -2,6 +2,7 @@ import sys
 import docker as dockerpy
 from tmn import compose
 from tmn import display
+from tmn import configuration
 
 _client = None
 
@@ -312,3 +313,5 @@ def remove(name):
     _remove_networks()
     display.subtitle_remove_volumes()
     _remove_volumes()
+    configuration.remove_conf('name')
+    configuration.remove_conf('identity')
