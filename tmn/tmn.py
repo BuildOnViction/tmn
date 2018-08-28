@@ -77,13 +77,17 @@ def status():
     masternode.status(configuration.name)
 
 
-@click.command(help='Remove completly your Tomochain masternode')
-def remove():
+@click.command(help='Remove your Tomochain masternode')
+@click.option('--confirm', is_flag=True)
+def remove(confirm):
     """
-    Remove completly the masternode (containers, networks volumes) after
+    Remove the masternode completly (containers, networks volumes) after
     backuping the chaindata volume
     """
     configuration.init()
+    if not confirm:
+        display.warning_remove_masternode(configuration.name)
+        sys.exit()
     display.title_remove_masternode(configuration.name)
     # TODO add confirmation
     masternode.remove(configuration.name)

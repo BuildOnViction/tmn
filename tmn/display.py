@@ -369,6 +369,19 @@ def warning_nothing_to_remove():
     )
 
 
+def warning_remove_masternode(name):
+    """
+    Custom warning when tmn is removing masternode but no confirmation
+    """
+    warning(
+        'you are about to remove masternode <hy>{}</hy>\n'.format(name)
+        + '           '
+        + 'this will permanently delete its data\n'
+        + '           '
+        + 'to confirm use the <hy>--confirm</hy> flag'
+    )
+
+
 @style
 def error(msg):
     """
