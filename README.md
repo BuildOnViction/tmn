@@ -38,6 +38,7 @@ Options:
 
 Commands:
   docs    Display Tomochain documentation link
+  remove  Remove your Tomochain masternode
   start   Start your Tomochain masternode
   status  Status of your Tomochain masternode
   stop    Stop your Tomochain masternode
@@ -63,7 +64,7 @@ pkey = a25...5f5        # The private key of the account you want your
 tmn start --name $name --net $net --pkey $pkey
 ```
 
-### Normal start
+### After first start
 
 Once your masternode has been configured one, you can use the start, stop and
 status command to interact with your masternode without any options.
@@ -74,4 +75,13 @@ tmn stop
 tmn start
 
 tmn status
+```
+
+### Removing
+
+If you want to completely remove your masternode, you can use the `remove` command.
+Be aware that it will delete all data and lose your unique identity.
+
+```
+tmn remove
 ```

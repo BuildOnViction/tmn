@@ -1,4 +1,5 @@
 import uuid
+from tmn import configuration
 
 volumes = ['chaindata']
 
@@ -50,7 +51,11 @@ def process(name):
     Compose the containers with their variables
     """
     # custom
-    identity = '{}_{}'.format(name, uuid.uuid4().hex[:6])
+    if configuration.read_conf('identity'):
+        identity = configuration.read_conf('identity')
+    else:
+        identity = '{}_{}'.format(name, uuid.uuid4().hex[:6])
+        configuration.write_conf('identity', identity)
     containers['metrics']['hostname'] = identity
     containers['tomochain']['environment']['IDENTITY'] = identity
     for container in list(containers):
