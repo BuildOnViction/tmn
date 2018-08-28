@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "tmn"
-version = "0.0.7"
+version = "0.0.8"
 description = ""
 readme = "README.md"
 homepage = "https://tomochain.com"
