@@ -66,7 +66,7 @@ tmn start --name $name --net $net --pkey $pkey
 
 ### After first start
 
-Once your masternode has been configured one, you can use the start, stop and
+Once your masternode has been configured, you can use the start, stop and
 status command to interact with your masternode without any options.
 
 ```
