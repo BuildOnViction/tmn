@@ -10,7 +10,16 @@ name = None
 
 
 def init(new_name=None, net=None, pkey=None):
-    # name
+    """
+    Init a configuration for a new masternode
+
+    :param new_name: new name of the masternode
+    :type new_name: str
+    :param net: network to use
+    :type net: str
+    :param pkey: private key to use as account for the masternode
+    :type pkey: str
+    """
     global name
     create = False
     conf_name = resources.user.read('name')
@@ -49,7 +58,49 @@ def init(new_name=None, net=None, pkey=None):
         resources.user.write('name', name)
 
 
+def write_conf(conf, content):
+    """
+    Write a configuration to a file
+
+    :param conf: name of the configuration
+    :type conf: str
+    :param content: content
+    :type content: str
+    """
+    resources.user.write(conf, content)
+
+
+def read_conf(conf):
+    """
+    Read a configuration from a file
+
+    :param conf: name of the configuration
+    :type conf: str
+    :returns: the content of the configuration
+    :rtype: str
+    """
+    return resources.user.read(conf)
+
+
+def remove_conf(conf):
+    """
+    remove a configuration file
+
+    :param conf: name of the configuration
+    :type conf: str
+    """
+    resources.user.delete(conf)
+
+
 def _validate_name(name):
+    """
+    Validate a name string
+
+    :param name: name string
+    :type conf: str
+    :returns: is valid
+    :rtype: bool
+    """
     if (
         name
         and validators.slug(name)
@@ -61,6 +112,14 @@ def _validate_name(name):
 
 
 def _validate_pkey(pkey):
+    """
+    Validate a pkey string
+
+    :param name: pkey string
+    :type conf: str
+    :returns: is valid
+    :rtype: bool
+    """
     if (
         pkey
         and validators.length(pkey, min=64, max=64)
