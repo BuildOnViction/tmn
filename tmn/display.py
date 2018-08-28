@@ -112,6 +112,13 @@ def title_status_masternode(name):
     title('Masternode <hy>{}</hy> status:'.format(name))
 
 
+def title_inspect_masternode(name):
+    """
+    Title when stopping a masternode
+    """
+    title('Masternode <hy>{}</hy> details:'.format(name))
+
+
 def title_remove_masternode(name):
     """
     Title when stopping a masternode
@@ -174,6 +181,38 @@ def subtitle_remove_containers():
     Subtitle when removing containers
     """
     subtitle('Containers')
+
+
+@style
+def detail(msg, content, indent=1):
+    """
+    Return a pastel formated detail
+
+    :param msg: detail message
+    :type msg: str
+    :param content: detail content
+    :type content: str
+    :returns: `msg` formated
+    :rtype: str
+    """
+    return ('  '*indent
+            + '{msg}:\n'.format(msg=msg)
+            + '  '*indent
+            + '<hy>{content}</hy>'.format(content=content))
+
+
+def detail_identity(content):
+    """
+    Custom detail message for the masternode identity
+    """
+    detail('Unique identity', content)
+
+
+def detail_coinbase(content):
+    """
+    Custom detail message for the masternode coinbase address
+    """
+    detail('Coinbase address (account public key)', content)
 
 
 @style_no_new_line

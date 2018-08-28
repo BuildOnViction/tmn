@@ -248,6 +248,32 @@ def _status_containers(containers):
         display.status(**display_kwargs)
 
 
+def _get_coinbase():
+    """
+    Retrieve the coinbase address from the account used by the masternode
+
+    :returns: coinbase address
+    :rtype: str
+    """
+    container = _client.containers.get(compose.containers['tomochain']['name'])
+    return '0x' + container.exec_run(
+        'tomo account list --keystore keystore'
+    ).output.decode("utf-8").replace('}', '{').split("{")[1]
+
+
+def _get_identity():
+    """
+    Retrieve the masternode identity
+
+    :returns: identity
+    :rtype: str
+    """
+    container = _client.containers.get(compose.containers['tomochain']['name'])
+    return container.exec_run(
+        '/bin/sh -c "echo $IDENTITY"'
+    ).output.decode("utf-8")
+
+
 @apierror
 def start(name):
     """
@@ -327,3 +353,20 @@ def remove(name):
     _remove_volumes()
     configuration.remove_conf('name')
     configuration.remove_conf('identity')
+
+
+@apierror
+def details(name):
+    """
+    Remove masternode. Includes:
+    - process components
+    - stop containers
+    - remove containers, networks and volumes
+    - remove tmn persistent configuration
+
+    :param name: name of the masternode
+    :type name: str
+    """
+    compose.process(name)
+    display.detail_identity(_get_identity())
+    display.detail_coinbase(_get_coinbase())
