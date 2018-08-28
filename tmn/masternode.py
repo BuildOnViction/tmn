@@ -257,6 +257,9 @@ def start(name):
     - creating networks
     - creating containers
     - starting containers
+
+    :param name: name of the masternode
+    :type name: str
     """
     compose.process(name)
     display.subtitle_create_volumes()
@@ -276,6 +279,9 @@ def stop(name):
     - process components
     - getting the list of containers
     - stoping them
+
+    :param name: name of the masternode
+    :type name: str
     """
     compose.process(name)
     containers = _get_existing_containers()
@@ -289,6 +295,9 @@ def status(name):
     - process components
     - getting the list of containers
     - displaying their status
+
+    :param name: name of the masternode
+    :type name: str
     """
     compose.process(name)
     containers = _get_existing_containers()
@@ -303,6 +312,9 @@ def remove(name):
     - stop containers
     - remove containers, networks and volumes
     - remove tmn persistent configuration
+
+    :param name: name of the masternode
+    :type name: str
     """
     compose.process(name)
     containers = _get_existing_containers()
