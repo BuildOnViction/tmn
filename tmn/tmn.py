@@ -67,14 +67,24 @@ def stop():
     masternode.stop(configuration.name)
 
 
-@click.command(help='Status of your Tomochain masternode')
+@click.command(help='Show the status of your Tomochain masternode')
 def status():
     """
-    Display the status of the masternode containers
+    Show the status of the masternode containers
     """
     configuration.init()
     display.title_status_masternode(configuration.name)
     masternode.status(configuration.name)
+
+
+@click.command(help='Show details about your Tomochain masternode')
+def inspect():
+    """
+    Show details about the tomochain masternode
+    """
+    configuration.init()
+    display.title_inspect_masternode(configuration.name)
+    masternode.details(configuration.name)
 
 
 @click.command(help='Remove your Tomochain masternode')
@@ -88,7 +98,6 @@ def remove(confirm):
         display.warning_remove_masternode(configuration.name)
         sys.exit()
     display.title_remove_masternode(configuration.name)
-    # TODO add confirmation
     masternode.remove(configuration.name)
 
 
@@ -96,4 +105,5 @@ main.add_command(docs)
 main.add_command(start)
 main.add_command(stop)
 main.add_command(status)
+main.add_command(inspect)
 main.add_command(remove)

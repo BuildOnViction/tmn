@@ -38,6 +38,7 @@ containers = {
             'WS_SECRET': None
         },
         'network': 'tmn_default',
+        'ports': {'30303/udp': 30303, '30303/tcp': 30303},
         'volumes': {
             'chaindata': {'bind': '/tomochain/data', 'mode': 'rw'}
         },
@@ -49,6 +50,9 @@ containers = {
 def process(name):
     """
     Compose the containers with their variables
+
+    :param name: masternode name
+    :type name: str
     """
     # custom
     if configuration.read_conf('identity'):
