@@ -37,17 +37,18 @@ Options:
   --help           Show this message and exit.
 
 Commands:
-  docs    Display Tomochain documentation link
-  remove  Remove your Tomochain masternode
-  start   Start your Tomochain masternode
-  status  Status of your Tomochain masternode
-  stop    Stop your Tomochain masternode
+  docs     Display Tomochain documentation link
+  inspect  Show details about your Tomochain masternode
+  remove   Remove your Tomochain masternode
+  start    Start your Tomochain masternode
+  status   Show the status of your Tomochain masternode
+  stop     Stop your Tomochain masternode
 ```
 
 ### First start
 
 On the first run you will need to provide some options to the start command.
-It will let you configure your Masternode.
+It will let you configure your node.
 
 ```
 name = tomochain-orion  # A name that represents you.
@@ -66,8 +67,8 @@ tmn start --name $name --net $net --pkey $pkey
 
 ### After first start
 
-Once your masternode has been configured, you can use the start, stop and
-status command to interact with your masternode without any options.
+Once your node has been configured, you can use the start, stop and
+status command to interact with your node without any options.
 
 ```
 tmn stop
@@ -79,9 +80,18 @@ tmn status
 
 ### Removing
 
-If you want to completely remove your masternode, you can use the `remove` command.
+If you want to completely remove your node, you can use the `remove` command.
 Be aware that it will delete all data and lose your unique identity.
 
 ```
 tmn remove
+```
+
+## Applying your node
+
+With a running node, you can now apply it as a masternode on TomoMaster.
+You can get the details of your node required to apply directly from `tmn`.
+
+```
+tmn inspect
 ```
