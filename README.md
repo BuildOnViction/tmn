@@ -18,6 +18,8 @@ All you need to run your own masternode
 pip3 install --user tmn
 ```
 
+If you are using macOS, the default user python3 path my not be in your `$PATH` 
+
 ## Update
 
 ```
