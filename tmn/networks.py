@@ -20,14 +20,14 @@ testnet = {
 devnet = {
     'METRICS_ENDPOINT': 'https://metrics.devnet.tomochain.com',
     'BOOTNODES': (
-        'enode://a6019582d6ac469f17ed30fd0633386a1f1aa95f1630fb81d6ee7'
-        '7bf69a84a31bbc0daaa199c00b9ab2d9833cdd994a9107a78661e852ad82f'
-        '53a87d8177121f@13.251.164.190:30304,enode://b5ed5473a99c4348c'
-        '22ec9a52acfbcd82546d7f55c4f77ce7efb206f8a79a1e138e2f42868a6d3'
-        '5a8e22667871ae4bbc8dd5a41ff1b5b9ddf5412aa3c98b06c7@13.251.164'
-        '.190:30304,enode://94ca4250a7330191ead65958982a786b050244632e'
-        '15e932c24d042cac58bf9403924c24e798883e22eff57d729f1ad346055a3'
-        '6a243a66ca2f62d7e2d76e689@13.251.164.190:30303'
+        'enode://f3d3d5d6cd0fdde8996722ff5b5a92f331029b2dcbdb9748f50db1'
+        '421851a939eb660bf81a7ec7f359454aa0fd65fe4c03ae5c6bb2382b34dfaa'
+        'ca7eb6ecaf4e@52.77.194.164:30301,enode://34b923ddfcba1bfafdd1a'
+        'c7a030436f9fbdc565919189f5e62c8cadd798c239b5807a26ab7f6b96a442'
+        '00eb0399d1ebc2d9c1be94d2a774c8cc7660ff4c10367@13.228.93.232:30'
+        '301,enode://e2604862d18049e025f294d63d537f9f54309ff09e45ed69ff'
+        '4f18c984831f5ef45370053355301e3a4da95aba2698c6116f4d2a347e5a5e'
+        '0a3152ac0ae0f574@18.136.42.72:30301'
     ),
     'NETSTATS_HOST': 'stats.devnet.tomochain.com',
     'NETSTATS_PORT': '443',
