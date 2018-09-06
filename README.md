@@ -18,6 +18,12 @@ All you need to run your own masternode
 pip3 install --user tmn
 ```
 
+If you are using macOS, make sure that the user python3 path is in your `$PATH`.
+
+They are in `~/Library/Python/[python version number]/bin`.
+
+For example, with python `3.6` and `bash`, add `PATH=$PATH:~/Library/Python/3.6/bin` to your `~/.bashrc`.
+
 ## Update
 
 ```
