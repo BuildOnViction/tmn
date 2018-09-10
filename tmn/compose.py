@@ -10,7 +10,7 @@ environment = {
 
 containers = {
     'metrics': {
-        'image': 'tomochain/infra-telegraf:devnet',
+        'image': 'tomochain/telegraf:latest',
         'hostname': None,
         'name': 'metrics',
         'environment': {
@@ -27,7 +27,7 @@ containers = {
         'detach': True
     },
     'tomochain': {
-        'image': 'tomochain/infra-tomochain:devnet',
+        'image': 'tomochain/infra-tomochain:latest',
         'name': 'tomochain',
         'environment': {
             'IDENTITY': None,
