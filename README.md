@@ -5,7 +5,10 @@
 | Master | [![Build Status](https://travis-ci.org/tomochain/masternode.svg?branch=master)](https://travis-ci.org/tomochain/masternode?branch=master) | [![Coverage Status](https://coveralls.io/repos/github/tomochain/masternode/badge.svg?branch=master)](https://coveralls.io/github/tomochain/masternode?branch=master) |
 | Develop | [![Build Status](https://travis-ci.org/tomochain/masternode.svg?branch=develop)](https://travis-ci.org/tomochain/masternode?branch=develop) | [![Coverage Status](https://coveralls.io/repos/github/tomochain/masternode/badge.svg?branch=develop)](https://coveralls.io/github/tomochain/masternode?branch=develop) |
 
-All you need to run your own masternode
+If you are consulting this repo, it's probably because you want to run a masternode.
+This repo holds the source code of our cli helper `tmn`.
+
+For complete guidelines on running a full node and applying it as a masternode, please refer to the [documentation](https://docs.tomochain.com/get-started/run-node/).
 
 ## Requirements
 
