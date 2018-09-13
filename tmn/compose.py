@@ -27,12 +27,13 @@ containers = {
         'detach': True
     },
     'tomochain': {
-        'image': 'tomochain/infra-tomochain:latest',
+        'image': 'tomochain/node:latest',
         'name': 'tomochain',
         'environment': {
             'IDENTITY': None,
             'PRIVATE_KEY': None,
             'BOOTNODES': None,
+            'NETWORK_ID': None,
             'NETSTATS_HOST': None,
             'NETSTATS_PORT': None,
             'WS_SECRET': None

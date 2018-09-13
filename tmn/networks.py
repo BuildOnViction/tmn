@@ -12,6 +12,7 @@ testnet = {
     ),
     'NETSTATS_HOST': 'stats.testnet.tomochain.com',
     'NETSTATS_PORT': '443',
+    'NETWORK_ID': '89',
     'WS_SECRET': (
         'anna-coal-flee-carrie-zip-hhhh-tarry-laue-felon-rhine'
     )
@@ -31,6 +32,7 @@ devnet = {
     ),
     'NETSTATS_HOST': 'stats.devnet.tomochain.com',
     'NETSTATS_PORT': '443',
+    'NETWORK_ID': '90',
     'WS_SECRET': (
         'torn-fcc-caper-drool-jelly-zip-din-fraud-rater-darn'
     )
