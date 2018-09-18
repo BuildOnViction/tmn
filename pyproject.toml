@@ -12,7 +12,7 @@ authors = [
 ]
 
 [tool.poetry.dependencies]
-python = "^3.6"
+python = "^3.5"
 click = "^6.7"
 docker = "^3.4"
 pastel = "^0.1.0"
