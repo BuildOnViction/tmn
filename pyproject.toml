@@ -1,8 +1,9 @@
 [tool.poetry]
 name = "tmn"
 version = "0.1.1"
-description = ""
+description = "Quickstart your masternode"
 readme = "README.md"
+license = "GPL-3.0+"
 homepage = "https://tomochain.com"
 repository = "https://github.com/tomochain/masternode"
 documentation = "https://github.com/tomochain/masternode/blob/master/README.md"
