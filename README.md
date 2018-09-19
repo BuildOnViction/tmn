@@ -14,7 +14,7 @@ For complete guidelines on running a full node and applying it as a masternode, 
 
 ## Requirements
 
-- Python >= 3.6
+- Python >= 3.5
 - Docker
 
 ## Installation
@@ -71,12 +71,13 @@ net = testnet           # The network you want to connect to.
 
 pkey = a25...5f5        # The private key of the account you want your
                         # masternode to use.
-                        # It will be used to receive rewards.
+                        # It will be used to transactions fees
+                        # Please use a separate new account for security reasons
 
 tmn start --name $name --net $net --pkey $pkey
 ```
 
-### After first start
+### After the first start
 
 Once your node has been configured, you can use the start, stop and
 status command to interact with your node without any options.
