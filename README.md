@@ -71,7 +71,7 @@ net = testnet           # The network you want to connect to.
 
 pkey = a25...5f5        # The private key of the account you want your
                         # masternode to use.
-                        # It will be used to transactions fees
+                        # It will be used to receive transactions fees
                         # Please use a separate new account for security reasons
 
 tmn start --name $name --net $net --pkey $pkey
