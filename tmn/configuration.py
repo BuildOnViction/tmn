@@ -104,7 +104,7 @@ def _validate_name(name):
     if (
         name
         and validators.slug(name)
-        and validators.length(name, min=4, max=10)
+        and validators.length(name, min=4, max=30)
     ):
         return True
     else:
