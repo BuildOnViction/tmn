@@ -1,4 +1,4 @@
-from typing import Dict
+from typing import Dict, Union
 
 import docker
 
@@ -42,7 +42,7 @@ class Service:
         "add a new volume to the service"
         self.volumes[source] = {'bind': target, 'mode': mode}
 
-    def create(self):
+    def create(self) -> bool:
         "create the service container"
         try:
             if self.container:
@@ -61,7 +61,7 @@ class Service:
         except docker.errors.APIError:
             return False
 
-    def start(self):
+    def start(self) -> bool:
         "start the service container"
         try:
             if self.container:
@@ -76,5 +76,55 @@ class Service:
                     return True
             else:
                 return False
+        except docker.errors.APIError:
+            return False
+
+    def status(self) -> Union[str, bool]:
+        "return the status of the service container"
+        try:
+            if self.container:
+                self.container.reload()
+                return self.container.status
+            else:
+                return 'absent'
+        except docker.errors.APIError:
+            return False
+
+    def execute(self, command: str) -> Union[str, bool]:
+        "return the result of a command on the service container"
+        try:
+            if self.container:
+                self.container.reload()
+                return self.container.exec_run(
+                    '/bin/sh -c "{}"'.format(command)
+                ).output.decode("utf-8")
+            else:
+                return False
+        except docker.errors.APIError:
+            return False
+
+    def stop(self) -> Union[str, bool]:
+        "stop the service container"
+        try:
+            if self.container:
+                self.container.reload()
+                if self.container.status in ['created', 'exited', 'dead']:
+                    return True
+                else:
+                    self.container.stop()
+                    return True
+            else:
+                return False
+        except docker.errors.APIError:
+            return False
+
+    def remove(self) -> bool:
+        "stop the service container"
+        try:
+            if self.container:
+                self.container.remove(force=True)
+                return True
+            else:
+                return True
         except docker.errors.APIError:
             return False

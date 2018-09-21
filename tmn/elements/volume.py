@@ -23,7 +23,7 @@ class Volume:
         except docker.errors.APIError:
             return False
 
-    def delete(self) -> bool:
+    def remove(self) -> bool:
         "delete docker volume"
         try:
             try:

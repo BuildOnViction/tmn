@@ -23,7 +23,7 @@ class Network:
         except docker.errors.APIError:
             return False
 
-    def delete(self) -> bool:
+    def remove(self) -> bool:
         "delete docker network"
         try:
             try:
