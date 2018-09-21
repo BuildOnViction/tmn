@@ -103,7 +103,7 @@ class Service:
         except docker.errors.APIError:
             return False
 
-    def stop(self) -> Union[str, bool]:
+    def stop(self) -> bool:
         "stop the service container"
         try:
             if self.container:
