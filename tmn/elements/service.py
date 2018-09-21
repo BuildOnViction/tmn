@@ -14,6 +14,7 @@ class Service:
         network: str = None,
         environment: Dict[str] = {},
         volumes: Dict[Dict] = {},
+        ports: Dict[Dict] = {},
         docker_url: str = None
     ) -> None:
         self.image = {'image': image}
@@ -21,6 +22,7 @@ class Service:
         self.environment = {'environment': environment}
         self.network = network
         self.volumes = volumes
+        self.ports = ports
         self.hostname = hostname
         self.detach = {'detach': True}
         if not docker_url:
@@ -41,6 +43,10 @@ class Service:
     def add_volume(self, source: str, target: str, mode: str = 'rw') -> None:
         "add a new volume to the service"
         self.volumes[source] = {'bind': target, 'mode': mode}
+
+    def add_port(self, source: str, target: str) -> None:
+        "add a new port mapping to the service"
+        self.ports[source] = target
 
     def create(self) -> bool:
         "create the service container"
