@@ -12,25 +12,25 @@ class Service:
         name: str,
         hostname: str = None,
         network: str = None,
-        environment: Dict[str] = {},
-        volumes: Dict[Dict] = {},
-        ports: Dict[Dict] = {},
+        environment: Dict[str, str] = {},
+        volumes: Dict[str, Dict[str, str]] = {},
+        ports: Dict[str, Dict[str, str]] = {},
         docker_url: str = None
     ) -> None:
-        self.image = {'image': image}
-        self.name = {'name': name}
-        self.environment = {'environment': environment}
+        self.container = False
+        self.image = image
+        self.name = name
+        self.environment = environment
         self.network = network
         self.volumes = volumes
         self.ports = ports
         self.hostname = hostname
-        self.detach = {'detach': True}
         if not docker_url:
             self._client = docker.from_env()
         else:
             self._client = docker.DockerClient(base_url=docker_url)
         try:
-            self.container = docker.containers.get(self.name)
+            self.container = self._client.containers.get(self.name)
         except docker.errors.NotFound:
             pass
         except docker.errors.APIError:
@@ -54,14 +54,15 @@ class Service:
             if self.container:
                 return True
             else:
-                self.client.images.pull(self.image)
-                self.client.container.create(
+                self._client.images.pull(self.image)
+                self._client.containers.create(
                     image=self.image,
                     name=self.name,
                     hostname=self.hostname,
                     network=self.network,
                     environment=self.environment,
-                    volumes=self.volumes
+                    volumes=self.volumes,
+                    detach=True
                 )
                 return True
         except docker.errors.APIError:

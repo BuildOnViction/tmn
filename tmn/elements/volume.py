@@ -18,7 +18,7 @@ class Volume:
                 self._client.volumes.get(self.name)
                 return True
             except docker.errors.NotFound:
-                self._client.networks.create(self.network)
+                self._client.volumes.create(self.name)
                 return True
         except docker.errors.APIError:
             return False
