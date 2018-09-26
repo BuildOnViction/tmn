@@ -1,4 +1,8 @@
+import logging
+
 import docker
+
+logger = logging.getLogger('tmn')
 
 
 class Volume:
@@ -6,31 +10,38 @@ class Volume:
 
     def __init__(self, name: str, docker_url: str = None):
         self.name = name
+        self.volume = None
         if not docker_url:
             self._client = docker.from_env()
         else:
             self._client = docker.DockerClient(base_url=docker_url)
+        try:
+            self.volume = self._client.volumes.get(self.name)
+        except docker.errors.NotFound as e:
+            logger.debug('volume {} not yet created ({})'
+                         .format(self.name, e))
+        except docker.errors.APIError as e:
+            logger.error(e)
 
     def create(self) -> bool:
         "create docker volumes"
         try:
-            try:
-                self._client.volumes.get(self.name)
+            if self.volume:
                 return True
-            except docker.errors.NotFound:
+            else:
                 self._client.volumes.create(self.name)
                 return True
-        except docker.errors.APIError:
+        except docker.errors.APIError as e:
+            logger.error(e)
             return False
 
     def remove(self) -> bool:
         "delete docker volume"
         try:
-            try:
-                v = self._client.volumes.get(self.name)
-                v.remove(force=True)
+            if self.volume:
+                self.volume.remove(force=True)
                 return True
-            except docker.errors.NotFound:
+            else:
                 return True
-        except docker.errors.APIError:
-            return False
+        except docker.errors.APIError as e:
+            logger.error(e)

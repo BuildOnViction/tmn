@@ -1,6 +1,9 @@
+import logging
 from typing import Dict, Union
 
 import docker
+
+logger = logging.getLogger('tmn')
 
 
 class Service:
@@ -8,8 +11,8 @@ class Service:
 
     def __init__(
         self,
-        image: str,
         name: str,
+        image: str = None,
         hostname: str = None,
         network: str = None,
         environment: Dict[str, str] = {},
@@ -31,10 +34,11 @@ class Service:
             self._client = docker.DockerClient(base_url=docker_url)
         try:
             self.container = self._client.containers.get(self.name)
-        except docker.errors.NotFound:
-            pass
-        except docker.errors.APIError:
-            pass
+        except docker.errors.NotFound as e:
+            logger.debug('container {} not yet created ({})'
+                         .format(self.name, e))
+        except docker.errors.APIError as e:
+            logger.error(e)
 
     def add_environment(self, name: str, value: str) -> None:
         "add a new environment to the service"
@@ -55,7 +59,7 @@ class Service:
                 return True
             else:
                 self._client.images.pull(self.image)
-                self._client.containers.create(
+                self.container = self._client.containers.create(
                     image=self.image,
                     name=self.name,
                     hostname=self.hostname,
@@ -65,8 +69,8 @@ class Service:
                     detach=True
                 )
                 return True
-        except docker.errors.APIError:
-            return False
+        except docker.errors.APIError as e:
+            logger.error(e)
 
     def start(self) -> bool:
         "start the service container"
@@ -83,8 +87,8 @@ class Service:
                     return True
             else:
                 return False
-        except docker.errors.APIError:
-            return False
+        except docker.errors.APIError as e:
+            logger.error(e)
 
     def status(self) -> Union[str, bool]:
         "return the status of the service container"
@@ -94,8 +98,8 @@ class Service:
                 return self.container.status
             else:
                 return 'absent'
-        except docker.errors.APIError:
-            return False
+        except docker.errors.APIError as e:
+            logger.error(e)
 
     def execute(self, command: str) -> Union[str, bool]:
         "return the result of a command on the service container"
@@ -107,8 +111,8 @@ class Service:
                 ).output.decode("utf-8")
             else:
                 return False
-        except docker.errors.APIError:
-            return False
+        except docker.errors.APIError as e:
+            logger.error(e)
 
     def stop(self) -> bool:
         "stop the service container"
@@ -122,8 +126,8 @@ class Service:
                     return True
             else:
                 return False
-        except docker.errors.APIError:
-            return False
+        except docker.errors.APIError as e:
+            logger.error(e)
 
     def remove(self) -> bool:
         "stop the service container"
@@ -133,5 +137,16 @@ class Service:
                 return True
             else:
                 return True
-        except docker.errors.APIError:
-            return False
+        except docker.errors.APIError as e:
+            logger.error(e)
+
+    def update(self) -> bool:
+        "update the service container"
+        try:
+            if self.container:
+                self.container.remove(force=True)
+                return self.create() and self.start()
+            else:
+                return False
+        except docker.errors.APIError as e:
+            logger.error(e)

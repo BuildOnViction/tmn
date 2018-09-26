@@ -1,131 +1,109 @@
+import logging
 import sys
+import uuid
+
 from clint import resources
-import validators
+from slugify import slugify
+
 from tmn import display
+from tmn.elements.network import Network
+from tmn.elements.service import Service
+from tmn.elements.volume import Volume
+from tmn.environments import environments
 
+logger = logging.getLogger('tmn')
 resources.init('tomochain', 'tmn')
-name = None
 
 
-def init(new_name=None, net=None, pkey=None):
-    """
-    Init a configuration for a new masternode
+class Configuration:
+    """docstring for Configuration."""
 
-    :param new_name: new name of the masternode
-    :type new_name: str
-    :param net: network to use
-    :type net: str
-    :param pkey: private key to use as account for the masternode
-    :type pkey: str
-    """
-    global name
-    create = False
-    conf_name = resources.user.read('name')
-    if conf_name:
-        if new_name:
-            display.warning_ignoring_start_options(conf_name)
-        name = conf_name
-    else:
-        if _validate_name(new_name):
-            name = new_name
-            create = True
-        elif not new_name:
-            display.error_start_not_initialized()
-            sys.exit()
+    def __init__(self, name: str, net: str, pkey: str) -> None:
+        self.networks = {}
+        self.services = {}
+        self.volumes = {}
+        self.id = self._new_id()
+        self.name = name
+        self.net = net
+        self.pkey = pkey
+        if resources.user.read('name'):
+            self._load()
         else:
-            display.error_validation_option('--name',
-                                            '4 to 10 characters slug')
+            self._create()
+        self._compose()
+
+    def _new_id(self) -> str:
+        return uuid.uuid4().hex[:6]
+
+    def _load(self) -> None:
+        if self.name or self.net or self.pkey:
+            display.warning_ignoring_start_options(self.name)
+        self.name = resources.user.read('name')
+        self.net = resources.user.read('net')
+        self.pkey = resources.user.read('pkey')
+
+    def _create(self) -> None:
+        if not self.name:
+            display.error_start_option_required('--name')
             sys.exit()
-    if create:
-        if not net:
+        elif not self.net:
             display.error_start_option_required('--net')
             sys.exit()
-        elif not pkey:
+        elif not self.pkey:
             display.error_start_option_required('--pkey')
             sys.exit()
-        if not _validate_pkey(pkey):
-            display.error_validation_option('--pkey',
-                                            '64 characters hex string')
+        self._validate()
+        resources.user.write('id', self.id)
+        resources.user.write('name', self.name)
+        resources.user.write('net', self.net)
+
+    def _compose(self) -> None:
+        self.networks['tmn'] = Network(
+            name='{}_tmn'.format(self.name)
+        )
+        self.volumes['chaindata'] = Volume(
+            name='{}_chaindata'.format(self.name)
+        )
+        self.services['metrics'] = Service(
+            name='{}_metrics'.format(self.name),
+            hostname='{}_{}'.format(self.name, self.id),
+            image='tomochain/telegraf:testnet',
+            network=self.networks['tmn'].name,
+            volumes={
+                '/var/run/docker.sock': {
+                    'bind': '/var/run/docker.sock', 'mode': 'ro'
+                },
+                '/sys': {'bind': '/rootfs/sys', 'mode': 'ro'},
+                '/proc': {'bind': '/rootfs/proc', 'mode': 'ro'},
+                '/etc': {'bind': '/rootfs/etc', 'mode': 'ro'}
+            }
+        )
+        self.services['tomochain'] = Service(
+            name='{}_tomochain'.format(self.name),
+            image='tomochain/node:testnet',
+            network=self.networks['tmn'].name,
+            environment={'IDENTITY': '{}_{}'.format(self.name, self.id)},
+            volumes={
+                self.volumes['chaindata'].name: {
+                    'bind': '/tomochain/data', 'mode': 'rw'
+                }
+            },
+            ports={'30303/udp': 30303, '30303/tcp': 30303}
+        )
+        for container, variables in environments[self.net].items():
+            for variable, value in variables.items():
+                self.services[container].add_environment(
+                    name=variable,
+                    value=value
+                )
+
+    def _validate(self) -> None:
+        self.name = slugify(self.name)
+        if len(self.name) < 5 or len(self.name) > 30:
+            display.error_validation_option('--name', '5 to 30 characters '
+                                            'slug')
             sys.exit()
-        else:
-            if net == 'devnet':
-                compose.environment = networks.devnet
-            if net == 'testnet':
-                compose.environment = networks.testnet
-            compose.environment['PRIVATE_KEY'] = pkey
-        resources.user.write('name', name)
-
-
-def write_conf(conf, content):
-    """
-    Write a configuration to a file
-
-    :param conf: name of the configuration
-    :type conf: str
-    :param content: content
-    :type content: str
-    """
-    resources.user.write(conf, content)
-
-
-def read_conf(conf):
-    """
-    Read a configuration from a file
-
-    :param conf: name of the configuration
-    :type conf: str
-    :returns: the content of the configuration
-    :rtype: str
-    """
-    return resources.user.read(conf)
-
-
-def remove_conf(conf):
-    """
-    remove a configuration file
-
-    :param conf: name of the configuration
-    :type conf: str
-    """
-    resources.user.delete(conf)
-
-
-def _validate_name(name):
-    """
-    Validate a name string
-
-    :param name: name string
-    :type conf: str
-    :returns: is valid
-    :rtype: bool
-    """
-    if (
-        name
-        and validators.slug(name)
-        and validators.length(name, min=4, max=30)
-    ):
-        return True
-    else:
-        return False
-
-
-def _validate_pkey(pkey):
-    """
-    Validate a pkey string
-
-    :param name: pkey string
-    :type conf: str
-    :returns: is valid
-    :rtype: bool
-    """
-    if (
-        pkey
-        and validators.length(pkey, min=64, max=64)
-    ):
-        try:
-            int(pkey, 16)
-            return True
-        except ValueError:
-            return False
-    else:
-        return False
+        if len(self.pkey) != 64:
+            display.error_validation_option('--pkey', '64 characters hex '
+                                            'string')
+            sys.exit()

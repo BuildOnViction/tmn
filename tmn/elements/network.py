@@ -1,4 +1,8 @@
+import logging
+
 import docker
+
+logger = logging.getLogger('tmn')
 
 
 class Network:
@@ -6,31 +10,37 @@ class Network:
 
     def __init__(self, name: str, docker_url: str = None):
         self.name = name
+        self.network = None
         if not docker_url:
             self._client = docker.from_env()
         else:
             self._client = docker.DockerClient(base_url=docker_url)
+        try:
+            self.network = self._client.networks.get(self.name)
+        except docker.errors.NotFound as e:
+            logger.debug('network {} not yet created ({})'
+                         .format(self.name, e))
+        except docker.errors.APIError as e:
+            logger.error(e)
 
     def create(self) -> bool:
         "create docker network"
         try:
-            try:
-                self._client.networks.get(self.name)
+            if self.network:
                 return True
-            except docker.errors.NotFound:
+            else:
                 self._client.networks.create(self.name)
                 return True
-        except docker.errors.APIError:
-            return False
+        except docker.errors.APIError as e:
+            logger.error(e)
 
     def remove(self) -> bool:
         "delete docker network"
         try:
-            try:
-                n = self._client.networks.get(self.name)
-                n.remove()
+            if self.network:
+                self.volume.remove()
                 return True
-            except docker.errors.NotFound:
+            else:
                 return True
-        except docker.errors.APIError:
-            return False
+        except docker.errors.APIError as e:
+            logger.error(e)
