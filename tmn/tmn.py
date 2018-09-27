@@ -90,6 +90,38 @@ def stop() -> None:
     display.newline()
 
 
+@click.command(help='Show the status of your Tomochain masternode')
+def status():
+    "Show the status of the masternode containers"
+    configuration = Configuration()
+    display.title_status_masternode(configuration.name)
+    for _, service in configuration.services.items():
+        status = service.status()
+        if status and status == 'absent':
+            display.status(
+                name=service.name
+            )
+        if status and status in ['running']:
+            display.status(
+                name=service.name,
+                status=status,
+                id=service.container.short_id,
+                status_color='green'
+            )
+        elif status:
+            display.status(
+                name=service.name,
+                status=status,
+                id=service.container.short_id,
+            )
+        else:
+            display.status(
+                name=service.name,
+                status='error'
+            )
+    display.newline()
+
+
 @click.command(help='Remove your Tomochain masternode')
 @click.option('--confirm', is_flag=True)
 def remove(confirm: bool) -> None:
@@ -141,4 +173,5 @@ def remove(confirm: bool) -> None:
 main.add_command(docs)
 main.add_command(start)
 main.add_command(stop)
+main.add_command(status)
 main.add_command(remove)

@@ -362,11 +362,10 @@ def status(name='', status='absent', id='', status_color='red'):
             id=id
         )
     else:
-        return '  {name}\t<fg={color}>{status}{id}</>'.format(
+        return '  {name}\t<fg={color}>{status}</>'.format(
             name=name,
             status=status,
             color=status_color,
-            id=id
         )
 
 
