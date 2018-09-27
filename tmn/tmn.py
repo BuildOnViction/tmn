@@ -76,6 +76,20 @@ def start(name: str, net: str, pkey: str) -> None:
     display.newline()
 
 
+@click.command(help='Stop your Tomochain masternode')
+def stop() -> None:
+    "Stop the masternode containers"
+    configuration = Configuration()
+    display.title_stop_masternode(configuration.name)
+    for _, service in configuration.services.items():
+        display.step_stop_container(service.name)
+        if service.stop():
+            display.step_close('✔')
+        else:
+            display.step_close('✗', 'red')
+    display.newline()
+
+
 @click.command(help='Remove your Tomochain masternode')
 @click.option('--confirm', is_flag=True)
 def remove(confirm: bool) -> None:
@@ -126,4 +140,5 @@ def remove(confirm: bool) -> None:
 
 main.add_command(docs)
 main.add_command(start)
+main.add_command(stop)
 main.add_command(remove)
