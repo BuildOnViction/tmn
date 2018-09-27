@@ -29,7 +29,7 @@ class Configuration:
         if resources.user.read('name'):
             self._load()
         else:
-            self._create()
+            self._write()
         self._compose()
 
     def _new_id(self) -> str:
@@ -42,7 +42,7 @@ class Configuration:
         self.net = resources.user.read('net')
         self.pkey = resources.user.read('pkey')
 
-    def _create(self) -> None:
+    def _write(self) -> None:
         if not self.name:
             display.error_start_option_required('--name')
             sys.exit()
