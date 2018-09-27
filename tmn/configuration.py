@@ -18,7 +18,8 @@ resources.init('tomochain', 'tmn')
 class Configuration:
     """docstring for Configuration."""
 
-    def __init__(self, name: str, net: str, pkey: str) -> None:
+    def __init__(self, name: str = None, net: str = None,
+                 pkey: str = None, start: bool = False) -> None:
         self.networks = {}
         self.services = {}
         self.volumes = {}
@@ -28,8 +29,11 @@ class Configuration:
         self.pkey = pkey
         if resources.user.read('name'):
             self._load()
-        else:
+        elif start:
             self._write()
+        else:
+            display.error_start_not_initialized()
+            sys.exit()
         self._compose()
 
     def _new_id(self) -> str:
@@ -107,3 +111,8 @@ class Configuration:
             display.error_validation_option('--pkey', '64 characters hex '
                                             'string')
             sys.exit()
+
+    def remove(self) -> None:
+        resources.user.delete('id')
+        resources.user.delete('name')
+        resources.user.delete('net')

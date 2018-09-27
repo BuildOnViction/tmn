@@ -38,9 +38,10 @@ class Network:
         "delete docker network"
         try:
             if self.network:
-                self.volume.remove()
+                self.network.remove()
                 return True
             else:
                 return True
         except docker.errors.APIError as e:
             logger.error(e)
+            return False

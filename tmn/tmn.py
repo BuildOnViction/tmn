@@ -1,4 +1,5 @@
 import logging
+import sys
 
 import click
 
@@ -35,7 +36,7 @@ def docs() -> None:
                                              'on'))
 def start(name: str, net: str, pkey: str) -> None:
     "Start the containers needed to run a masternode"
-    configuration = Configuration(name=name, net=net, pkey=pkey)
+    configuration = Configuration(name=name, net=net, pkey=pkey, start=True)
     display.title_start_masternode(configuration.name)
     # volumes
     display.subtitle_create_volumes()
@@ -55,7 +56,7 @@ def start(name: str, net: str, pkey: str) -> None:
         else:
             display.step_close('✗', 'red')
     display.newline()
-    # containers
+    # container
     # create
     display.subtitle_create_containers()
     for _, value in configuration.services.items():
@@ -75,5 +76,54 @@ def start(name: str, net: str, pkey: str) -> None:
     display.newline()
 
 
+@click.command(help='Remove your Tomochain masternode')
+@click.option('--confirm', is_flag=True)
+def remove(confirm: bool) -> None:
+    "Remove the masternode (containers, networks volumes)"
+    configuration = Configuration()
+    if not confirm:
+        display.warning_remove_masternode(configuration.name)
+        sys.exit()
+    display.title_remove_masternode(configuration.name)
+    display.subtitle_remove_containers()
+    # containers
+    # stop
+    for _, service in configuration.services.items():
+        display.step_stop_container(service.name)
+        if service.stop():
+            display.step_close('✔')
+        else:
+            display.step_close('✗', 'red')
+    display.newline()
+    # remove
+    for _, service in configuration.services.items():
+        display.step_remove_container(service.name)
+        if service.remove():
+            display.step_close('✔')
+        else:
+            display.step_close('✗', 'red')
+    display.newline()
+    # networks
+    display.subtitle_remove_networks()
+    for _, network in configuration.networks.items():
+        display.step_remove_network(network.name)
+        if network.remove():
+            display.step_close('✔')
+        else:
+            display.step_close('✗', 'red')
+    display.newline()
+    # volumes
+    display.subtitle_remove_volumes()
+    for _, volume in configuration.volumes.items():
+        display.step_remove_volume(volume.name)
+        if volume.remove():
+            display.step_close('✔')
+        else:
+            display.step_close('✗', 'red')
+    display.newline()
+    configuration.remove()
+
+
 main.add_command(docs)
 main.add_command(start)
+main.add_command(remove)

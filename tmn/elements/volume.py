@@ -45,3 +45,4 @@ class Volume:
                 return True
         except docker.errors.APIError as e:
             logger.error(e)
+            return False

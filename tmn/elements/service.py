@@ -71,6 +71,7 @@ class Service:
                 return True
         except docker.errors.APIError as e:
             logger.error(e)
+            return False
 
     def start(self) -> bool:
         "start the service container"
@@ -89,6 +90,7 @@ class Service:
                 return False
         except docker.errors.APIError as e:
             logger.error(e)
+            return False
 
     def status(self) -> Union[str, bool]:
         "return the status of the service container"
@@ -100,6 +102,7 @@ class Service:
                 return 'absent'
         except docker.errors.APIError as e:
             logger.error(e)
+            return False
 
     def execute(self, command: str) -> Union[str, bool]:
         "return the result of a command on the service container"
@@ -113,6 +116,7 @@ class Service:
                 return False
         except docker.errors.APIError as e:
             logger.error(e)
+            return False
 
     def stop(self) -> bool:
         "stop the service container"
@@ -125,9 +129,10 @@ class Service:
                     self.container.stop()
                     return True
             else:
-                return False
+                return True
         except docker.errors.APIError as e:
             logger.error(e)
+            return False
 
     def remove(self) -> bool:
         "stop the service container"
@@ -139,6 +144,7 @@ class Service:
                 return True
         except docker.errors.APIError as e:
             logger.error(e)
+            return False
 
     def update(self) -> bool:
         "update the service container"
@@ -150,3 +156,4 @@ class Service:
                 return False
         except docker.errors.APIError as e:
             logger.error(e)
+            return False
