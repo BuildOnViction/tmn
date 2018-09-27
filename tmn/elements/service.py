@@ -11,14 +11,14 @@ class Service:
 
     def __init__(
         self,
+        client: docker.DockerClient,
         name: str,
         image: str = None,
         hostname: str = None,
         network: str = None,
         environment: Dict[str, str] = {},
         volumes: Dict[str, Dict[str, str]] = {},
-        ports: Dict[str, Dict[str, str]] = {},
-        docker_url: str = None
+        ports: Dict[str, Dict[str, str]] = {}
     ) -> None:
         self.container = False
         self.image = image
@@ -28,12 +28,9 @@ class Service:
         self.volumes = volumes
         self.ports = ports
         self.hostname = hostname
-        if not docker_url:
-            self._client = docker.from_env()
-        else:
-            self._client = docker.DockerClient(base_url=docker_url)
+        self.client = client
         try:
-            self.container = self._client.containers.get(self.name)
+            self.container = self.client.containers.get(self.name)
         except docker.errors.NotFound as e:
             logger.debug('container {} not yet created ({})'
                          .format(self.name, e))
@@ -58,8 +55,8 @@ class Service:
             if self.container:
                 return True
             else:
-                self._client.images.pull(self.image)
-                self.container = self._client.containers.create(
+                self.client.images.pull(self.image)
+                self.container = self.client.containers.create(
                     image=self.image,
                     name=self.name,
                     hostname=self.hostname,

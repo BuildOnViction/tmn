@@ -2,6 +2,7 @@ import logging
 import sys
 import uuid
 
+import docker
 from clint import resources
 from slugify import slugify
 
@@ -19,7 +20,8 @@ class Configuration:
     """docstring for Configuration."""
 
     def __init__(self, name: str = None, net: str = None,
-                 pkey: str = None, start: bool = False) -> None:
+                 pkey: str = None, start: bool = False,
+                 docker_url: str = None) -> None:
         self.networks = {}
         self.services = {}
         self.volumes = {}
@@ -27,6 +29,16 @@ class Configuration:
         self.name = name
         self.net = net
         self.pkey = pkey
+        if not docker_url:
+            self.client = docker.from_env()
+        else:
+            self.client = docker.DockerClient(base_url=docker_url)
+        try:
+            self.client.ping()
+        except Exception as e:
+            logger.error(e)
+            display.error_docker()
+            sys.exit()
         if resources.user.read('name'):
             self._load()
         elif start:
@@ -63,10 +75,12 @@ class Configuration:
 
     def _compose(self) -> None:
         self.networks['tmn'] = Network(
-            name='{}_tmn'.format(self.name)
+            name='{}_tmn'.format(self.name),
+            client=self.client
         )
         self.volumes['chaindata'] = Volume(
-            name='{}_chaindata'.format(self.name)
+            name='{}_chaindata'.format(self.name),
+            client=self.client
         )
         self.services['metrics'] = Service(
             name='{}_metrics'.format(self.name),
@@ -80,7 +94,8 @@ class Configuration:
                 '/sys': {'bind': '/rootfs/sys', 'mode': 'ro'},
                 '/proc': {'bind': '/rootfs/proc', 'mode': 'ro'},
                 '/etc': {'bind': '/rootfs/etc', 'mode': 'ro'}
-            }
+            },
+            client=self.client
         )
         self.services['tomochain'] = Service(
             name='{}_tomochain'.format(self.name),
@@ -92,7 +107,8 @@ class Configuration:
                     'bind': '/tomochain/data', 'mode': 'rw'
                 }
             },
-            ports={'30303/udp': 30303, '30303/tcp': 30303}
+            ports={'30303/udp': 30303, '30303/tcp': 30303},
+            client=self.client
         )
         for container, variables in environments[self.net].items():
             for variable, value in variables.items():

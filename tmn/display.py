@@ -322,28 +322,6 @@ def step_close(msg, color='green'):
     )
 
 
-# TODO only use step_close_status
-def step_close_created():
-    """
-    Custom 'created' closing step message
-    """
-    step_close('created')
-
-
-def step_close_exists():
-    """
-    Custom 'exists' closing step message
-    """
-    step_close('exists')
-
-
-def step_close_status(status):
-    """
-    Custom 'status' closing step message
-    """
-    step_close(status)
-
-
 @style
 def status(name='', status='absent', id='', status_color='red'):
     """
@@ -395,15 +373,6 @@ def warning_ignoring_start_options(name):
         'masternode <hy>{}</hy> is already configured\n'.format(name)
         + '           '
         + 'ignoring start options\n'
-    )
-
-
-def warning_nothing_to_remove():
-    """
-    Custom warning when tmn is removing docker objects but it's empty
-    """
-    warning(
-        'nothing to remove', newline=False
     )
 
 

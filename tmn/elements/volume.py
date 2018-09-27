@@ -8,15 +8,12 @@ logger = logging.getLogger('tmn')
 class Volume:
     """docstring for Volume."""
 
-    def __init__(self, name: str, docker_url: str = None) -> None:
+    def __init__(self, client: docker.DockerClient, name: str) -> None:
         self.name = name
         self.volume = None
-        if not docker_url:
-            self._client = docker.from_env()
-        else:
-            self._client = docker.DockerClient(base_url=docker_url)
+        self.client = client
         try:
-            self.volume = self._client.volumes.get(self.name)
+            self.volume = self.client.volumes.get(self.name)
         except docker.errors.NotFound as e:
             logger.debug('volume {} not yet created ({})'
                          .format(self.name, e))
@@ -29,7 +26,7 @@ class Volume:
             if self.volume:
                 return True
             else:
-                self._client.volumes.create(self.name)
+                self.client.volumes.create(self.name)
                 return True
         except docker.errors.APIError as e:
             logger.error(e)

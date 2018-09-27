@@ -8,17 +8,21 @@ from tmn import __version__
 from tmn.configuration import Configuration
 
 logger = logging.getLogger('tmn')
+docker_url = None
 
 
 @click.group(help=('Tomo MasterNode (tmn) is a cli tool to help you run a Tomo'
                    'chain masternode'))
 @click.option('--debug', is_flag=True, help='Enable debug mode')
+@click.option('--docker', metavar='URL', help='Url to the docker server')
 @click.version_option(version=__version__)
-def main(debug: bool) -> None:
+def main(debug: bool, docker: str) -> None:
     "Cli entrypoint"
+    global docker_url
     if debug:
         logger.setLevel('DEBUG')
         logger.debug('Debugging enabled')
+    docker_url = docker
 
 
 @click.command(help='Display Tomochain documentation link')
@@ -36,7 +40,8 @@ def docs() -> None:
                                              'on'))
 def start(name: str, net: str, pkey: str) -> None:
     "Start the containers needed to run a masternode"
-    configuration = Configuration(name=name, net=net, pkey=pkey, start=True)
+    configuration = Configuration(name=name, net=net, pkey=pkey, start=True,
+                                  docker_url=docker_url)
     display.title_start_masternode(configuration.name)
     # volumes
     display.subtitle_create_volumes()
@@ -79,7 +84,7 @@ def start(name: str, net: str, pkey: str) -> None:
 @click.command(help='Stop your Tomochain masternode')
 def stop() -> None:
     "Stop the masternode containers"
-    configuration = Configuration()
+    configuration = Configuration(docker_url=docker_url)
     display.title_stop_masternode(configuration.name)
     for _, service in configuration.services.items():
         display.step_stop_container(service.name)
@@ -93,7 +98,7 @@ def stop() -> None:
 @click.command(help='Show the status of your Tomochain masternode')
 def status():
     "Show the status of the masternode containers"
-    configuration = Configuration()
+    configuration = Configuration(docker_url=docker_url)
     display.title_status_masternode(configuration.name)
     for _, service in configuration.services.items():
         status = service.status()
@@ -127,7 +132,7 @@ def inspect():
     """
     Show details about the tomochain masternode
     """
-    configuration = Configuration()
+    configuration = Configuration(docker_url=docker_url)
     display.title_inspect_masternode(configuration.name)
     identity = configuration.services['tomochain'].execute(
         'echo $IDENTITY'
@@ -150,7 +155,7 @@ def inspect():
 @click.option('--confirm', is_flag=True)
 def remove(confirm: bool) -> None:
     "Remove the masternode (containers, networks volumes)"
-    configuration = Configuration()
+    configuration = Configuration(docker_url=docker_url)
     if not confirm:
         display.warning_remove_masternode(configuration.name)
         sys.exit()
