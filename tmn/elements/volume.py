@@ -8,7 +8,7 @@ logger = logging.getLogger('tmn')
 class Volume:
     """docstring for Volume."""
 
-    def __init__(self, name: str, docker_url: str = None):
+    def __init__(self, name: str, docker_url: str = None) -> None:
         self.name = name
         self.volume = None
         if not docker_url:

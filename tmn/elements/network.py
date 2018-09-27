@@ -8,7 +8,7 @@ logger = logging.getLogger('tmn')
 class Network:
     """docstring for Network."""
 
-    def __init__(self, name: str, docker_url: str = None):
+    def __init__(self, name: str, docker_url: str = None) -> None:
         self.name = name
         self.network = None
         if not docker_url:
