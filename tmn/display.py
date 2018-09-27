@@ -12,310 +12,197 @@ pastel.add_style('error', 'red')
 help_url = 'https://docs.tomochain.com/get-started/run-node'
 
 
-def newline(number=1):
-    """
-    Print newlines
-
-    :param number: the number of newlines to print
-    :type number: int
-    """
+def newline(number: int = 1) -> None:
+    "Print newlines"
     print('\n'*number, end='')
 
 
 def style(function):
-    """
-    Print and colorize strings with `pastel`
-
-    :param function: function to decorate
-    :type function: function
-    :returns: decorated function
-    :rtype: function
-    """
-    def wrapper(*args, **kwargs):
+    "Print and colorize strings with `pastel`"
+    def wrapper(*args, **kwargs) -> None:
         print(pastel.colorize(function(*args, **kwargs)))
     return wrapper
 
 
 def style_no_new_line(function):
-    """
-    Print and colorize strings with `pastel`. Don't add a new line at the end.
-
-    Decorator to print and colorize strings with `pastel`.
-    Don't add a new line at the end.
-
-    :param function: function to decorate
-    :type function: function
-    :returns: decorated function
-    :rtype: function
-    """
-    def wrapper(*args):
+    "Print and colorize strings with `pastel`. No newline."
+    def wrapper(*args) -> None:
         print(pastel.colorize(function(*args)), end='', flush=True)
     return wrapper
 
 
 @style
-def link(msg, url):
-    """
-    Return a pastel formated string for browser links
-
-    :param msg: message
-    :type msg: str
-    :param url: website url
-    :type url: str
-    """
+def link(msg: str, url: str) -> str:
+    "Return a pastel formated string for browser links"
     return '<hg>{msg}</hg> <link>{url}</link>'.format(
         msg=msg,
         url=url
     )
 
 
-def link_docs():
-    """
-    Custom link message for documentation
-    """
+def link_docs() -> None:
+    "Custom link message for documentation"
     link('Documentation on running a masternode:', help_url)
 
 
 @style
-def title(msg):
-    """
-    Return a pastel formated title string
-
-    :param msg: title message
-    :type msg: str
-    :returns: subtitle formated
-    :rtype: str
-    """
+def title(msg: str) -> str:
+    "Return a pastel formated title string"
     return '<hg>{msg}</hg>\n'.format(
         msg=msg
     )
 
 
-def title_start_masternode(name):
-    """
-    Title when starting a masternode
-    """
+def title_start_masternode(name: str) -> None:
+    "Title when starting a masternode"
     title('Starting masternode <hy>{}</hy>:'.format(name))
 
 
-def title_stop_masternode(name):
-    """
-    Title when stopping a masternode
-    """
+def title_stop_masternode(name: str) -> None:
+    "Title when stopping a masternode"
     title('Stopping masternode <hy>{}</hy>:'.format(name))
 
 
-def title_status_masternode(name):
-    """
-    Title when stopping a masternode
-    """
+def title_status_masternode(name: str) -> None:
+    "Title when stopping a masternode"
     title('Masternode <hy>{}</hy> status:'.format(name))
 
 
-def title_inspect_masternode(name):
-    """
-    Title when stopping a masternode
-    """
+def title_inspect_masternode(name: str) -> None:
+    "Title when stopping a masternode"
     title('Masternode <hy>{}</hy> details:'.format(name))
 
 
-def title_remove_masternode(name):
-    """
-    Title when stopping a masternode
-    """
+def title_remove_masternode(name: str) -> None:
+    "Title when stopping a masternode"
     title('Removing masternode <hy>{}</hy>:'.format(name))
 
 
 @style
-def subtitle(msg):
-    """
-    Return a pastel formated subtitle string
-
-    :param msg: subtitle message
-    :type msg: str
-    :returns: subtitle formated
-    :rtype: str
-    """
+def subtitle(msg: str) -> str:
+    "Return a pastel formated subtitle string"
     return '<und>{msg}</und>\n'.format(
         msg=msg
     )
 
 
-def subtitle_create_volumes():
-    """
-    Subtitle when creating volumes
-    """
+def subtitle_create_volumes() -> None:
+    "Subtitle when creating volumes"
     subtitle('Volumes')
 
 
-def subtitle_remove_volumes():
-    """
-    Subtitle when removing volumes
-    """
+def subtitle_remove_volumes() -> None:
+    "Subtitle when removing volumes"
     subtitle('Volumes')
 
 
-def subtitle_create_networks():
-    """
-    Subtitle when creating networks
-    """
+def subtitle_create_networks() -> None:
+    "Subtitle when creating networks"
     subtitle('Networks')
 
 
-def subtitle_remove_networks():
-    """
-    Subtitle when removing networks
-    """
+def subtitle_remove_networks() -> None:
+    "Subtitle when removing networks"
     subtitle('Networks')
 
 
-def subtitle_create_containers():
-    """
-    Subtitle when creating containers
-    """
+def subtitle_create_containers() -> None:
+    "Subtitle when creating containers"
     subtitle('Containers')
 
 
-def subtitle_remove_containers():
-    """
-    Subtitle when removing containers
-    """
+def subtitle_remove_containers() -> None:
+    "Subtitle when removing containers"
     subtitle('Containers')
 
 
 @style
-def detail(msg, content, indent=1):
-    """
-    Return a pastel formated detail
-
-    :param msg: detail message
-    :type msg: str
-    :param content: detail content
-    :type content: str
-    :returns: `msg` formated
-    :rtype: str
-    """
+def detail(msg, content: str, indent: int = 1) -> str:
+    "Return a pastel formated detail"
     return ('  '*indent
             + '{msg}:\n'.format(msg=msg)
             + '  '*indent
             + '<hy>{content}</hy>'.format(content=content))
 
 
-def detail_identity(content):
-    """
-    Custom detail message for the masternode identity
-    """
+def detail_identity(content: str) -> None:
+    "Custom detail message for the masternode identity"
     detail('Unique identity', content)
 
 
-def detail_coinbase(content):
-    """
-    Custom detail message for the masternode coinbase address
-    """
+def detail_coinbase(content: str) -> None:
+    "Custom detail message for the masternode coinbase address"
     detail('Coinbase address (account public key)', content)
 
 
 @style_no_new_line
-def step(msg, indent=1):
-    """
-    Return a pastel formated step with indentation.
-    One indent is two spaces.
-
-    :param msg: step message
-    :type msg: str
-    :param indent: number of idents
-    :type indent: int
-    :returns: `msg` formated
-    :rtype: str
-    """
+def step(msg: str, indent: int = 1) -> str:
+    "Return a pastel formated step with indentation."
     step = '  '*indent + '- {msg}... '.format(
         msg=msg
     )
     return step
 
 
-def step_create_volume(name):
-    """
-    Custom step message for docker volumes creation
-    """
+def step_create_volume(name: str) -> None:
+    "Custom step message for docker volumes creation"
     step('Creating <hy>{name}</hy>'.format(
         name=name
     ))
 
 
-def step_remove_volume(name):
-    """
-    Custom step message for docker volumes removal
-    """
+def step_remove_volume(name: str) -> None:
+    "Custom step message for docker volumes removal"
     step('Removing <hy>{name}</hy>'.format(
         name=name
     ))
 
 
-def step_create_network(name):
-    """
-    Custom step message for docker networks creation
-    """
+def step_create_network(name: str) -> None:
+    "Custom step message for docker networks creation"
     step('Creating <hy>{name}</hy>'.format(
         name=name
     ))
 
 
-def step_remove_network(name):
-    """
-    Custom step message for docker networks creation
-    """
+def step_remove_network(name: str) -> None:
+    "Custom step message for docker networks creation"
     step('Removing <hy>{name}</hy>'.format(
         name=name
     ))
 
 
-def step_create_container(name):
-    """
-    Custom step message for docker container creation
-    """
+def step_create_container(name: str) -> None:
+    "Custom step message for docker container creation"
     step('Creating <hy>{name}</hy>'.format(
         name=name
     ))
 
 
-def step_start_container(name):
-    """
-    Custom step message for docker container starting
-    """
+def step_start_container(name: str) -> None:
+    "Custom step message for docker container starting"
     step('Starting <hy>{name}</hy>'.format(
         name=name
     ))
 
 
-def step_remove_container(name):
-    """
-    Custom step message for docker container starting
-    """
+def step_remove_container(name: str) -> None:
+    "Custom step message for docker container starting"
     step('Removing <hy>{name}</hy>'.format(
         name=name
     ))
 
 
-def step_stop_container(name):
-    """
-    Custom step message for docker container stopping
-    """
+def step_stop_container(name: str) -> None:
+    "Custom step message for docker container stopping"
     step('Stopping <hy>{name}</hy>'.format(
         name=name
     ))
 
 
 @style
-def step_close(msg, color='green'):
-    """
-    Return a pastel formated end of step
-
-    :param msg: task status of the step
-    :type msg: str
-    :returns: `msg` formated
-    :rtype: str
-    """
+def step_close(msg: str, color: str = 'green') -> str:
+    "Return a pastel formated end of step"
     return '<fg={color}>{msg}</>'.format(
         msg=msg,
         color=color
@@ -323,15 +210,9 @@ def step_close(msg, color='green'):
 
 
 @style
-def status(name='', status='absent', id='', status_color='red'):
-    """
-    Return a pastel formated end of step
-
-    :param msg: task status of the step
-    :type msg: str
-    :returns: `msg` formated
-    :rtype: str
-    """
+def status(name: str = '', status: str = 'absent', id: str = '',
+           status_color: str = 'red') -> str:
+    "Return a pastel formated end of step"
     if id:
         return '  {name}\t<fg={color}>{status}(</>{id}<fg={color}>)</>'.format(
             name=name,
@@ -348,15 +229,8 @@ def status(name='', status='absent', id='', status_color='red'):
 
 
 @style
-def warning(msg, newline=True):
-    """
-    Return a pastel formated string for warnings
-
-    :param msg: error message
-    :type msg: str
-    :returns: `msg` formated
-    :rtype: str
-    """
+def warning(msg: str, newline: bool = True) -> str:
+    "Return a pastel formated string for warnings"
     before = ''
     if newline:
         before = '\n'
@@ -365,10 +239,8 @@ def warning(msg, newline=True):
     )
 
 
-def warning_ignoring_start_options(name):
-    """
-    Custom warning when tmn is ignoring the start options
-    """
+def warning_ignoring_start_options(name: str) -> None:
+    "Custom warning when tmn is ignoring the start options"
     warning(
         'masternode <hy>{}</hy> is already configured\n'.format(name)
         + '           '
@@ -376,10 +248,8 @@ def warning_ignoring_start_options(name):
     )
 
 
-def warning_remove_masternode(name):
-    """
-    Custom warning when tmn is removing masternode but no confirmation
-    """
+def warning_remove_masternode(name: str) -> None:
+    "Custom warning when tmn is removing masternode but no confirmation"
     warning(
         'you are about to remove masternode <hy>{}</hy>\n'.format(name)
         + '           '
@@ -390,15 +260,8 @@ def warning_remove_masternode(name):
 
 
 @style
-def error(msg):
-    """
-    Return a pastel formated string for errors
-
-    :param msg: error message
-    :type msg: str
-    :returns: `msg` formated
-    :rtype: str
-    """
+def error(msg: str) -> str:
+    "Return a pastel formated string for errors"
     return (
         '\n<error>! error:</error> {msg}\n'.format(msg=msg)
         + '         '
@@ -406,24 +269,18 @@ def error(msg):
     )
 
 
-def error_docker():
-    """
-    Custom error when docker is not accessible
-    """
+def error_docker() -> None:
+    "Custom error when docker is not accessible"
     error('could not access the docker daemon')
 
 
-def error_docker_api():
-    """
-    Custom error when docker is not accessible
-    """
+def error_docker_api() -> None:
+    "Custom error when docker is not accessible"
     error('something went wrong while doing stuff with docker')
 
 
-def error_start_not_initialized():
-    """
-    Custom error when `tmn start` has never been used with the `--name` option
-    """
+def error_start_not_initialized() -> None:
+    "Custom error when `tmn start` has never been used with `--name` option"
     error(
         'tmn doesn\'t manage any masternode yet\n'
         '         please use '
@@ -431,20 +288,16 @@ def error_start_not_initialized():
     )
 
 
-def error_start_option_required(option):
-    """
-    Custom error when `tmn start` is used with name but not the other options
-    """
+def error_start_option_required(option: str) -> None:
+    "Custom error when `tmn start` is used with name but not the other options"
     error(
         '<hy>{}</hy> is required when starting a new masternode'
         .format(option)
     )
 
 
-def error_validation_option(option, format):
-    """
-    Custom error when an option format is not valide
-    """
+def error_validation_option(option: str, format: str) -> None:
+    "Custom error when an option format is not valide"
     error(
         '<hy>{}</hy> is not valid\n'.format(option)
         + '         it should be a {}'.format(format)
