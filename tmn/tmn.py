@@ -122,6 +122,30 @@ def status():
     display.newline()
 
 
+@click.command(help='Show details about your Tomochain masternode')
+def inspect():
+    """
+    Show details about the tomochain masternode
+    """
+    configuration = Configuration()
+    display.title_inspect_masternode(configuration.name)
+    identity = configuration.services['tomochain'].execute(
+        'echo $IDENTITY'
+    ) or 'container not running'
+    display.detail_identity(identity)
+    display.newline()
+    coinbase = configuration.services['tomochain'].execute(
+        'tomo account list --keystore keystore 2> /dev/null | head -n 1 | cut '
+        '-d"{" -f 2 | cut -d"}" -f 1'
+    )
+    if coinbase:
+        coinbase = '0x{}'.format(coinbase)
+    else:
+        coinbase = 'container not running'
+    display.detail_coinbase(coinbase)
+    display.newline()
+
+
 @click.command(help='Remove your Tomochain masternode')
 @click.option('--confirm', is_flag=True)
 def remove(confirm: bool) -> None:
@@ -174,4 +198,5 @@ main.add_command(docs)
 main.add_command(start)
 main.add_command(stop)
 main.add_command(status)
+main.add_command(inspect)
 main.add_command(remove)
