@@ -14,11 +14,11 @@ authors = [
 
 [tool.poetry.dependencies]
 python = "^3.5"
-click = "^6.7"
 docker = "^3.4"
 pastel = "^0.1.0"
 clint = "^0.5.1"
-validators = "^0.12.2"
+python-slugify = "^1.2"
+click = "^7.0"
 
 [tool.poetry.dev-dependencies]
 
