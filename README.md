@@ -5,7 +5,7 @@
 | Master | [![Build Status](https://travis-ci.org/tomochain/tmn.svg?branch=master)](https://travis-ci.org/tomochain/tmn) | [![Coverage Status](https://coveralls.io/repos/github/tomochain/tmn/badge.svg?branch=master)](https://coveralls.io/github/tomochain/tmn?branch=master) |
 | Develop | [![Build Status](https://travis-ci.org/tomochain/tmn.svg?branch=develop)](https://travis-ci.org/tomochain/tmn) | [![Coverage Status](https://coveralls.io/repos/github/tomochain/tmn/badge.svg?branch=develop)](https://coveralls.io/github/tomochain/tmn?branch=develop) |
 
-Tomo MasterNode (tmn) is a cli tool to help you run a Tomochain masternode
+Tomo MasterNode (tmn) is a cli tool to help you run a TomoChain masternode
 
 ## Running and applying a masternode
 
@@ -45,7 +45,7 @@ We communicate about updates on our [Gitter channel](https://gitter.im/tomochain
 ```
 Usage: tmn [OPTIONS] COMMAND [ARGS]...
 
-  Tomo MasterNode (tmn) is a cli tool to help you run a Tomochain masternode
+  Tomo MasterNode (tmn) is a cli tool to help you run a TomoChain masternode
 
 Options:
   --debug       Enable debug mode
@@ -54,12 +54,12 @@ Options:
   --help        Show this message and exit.
 
 Commands:
-  docs     Display Tomochain documentation link
-  inspect  Show details about your Tomochain masternode
-  remove   Remove your Tomochain masternode
-  start    Start your Tomochain masternode
-  status   Show the status of your Tomochain masternode
-  stop     Stop your Tomochain masternode
+  docs     Display TomoChain documentation link
+  inspect  Show details about your TomoChain masternode
+  remove   Remove your TomoChain masternode
+  start    Start your TomoChain masternode
+  status   Show the status of your TomoChain masternode
+  stop     Stop your TomoChain masternode
   update   Update your masternode
 ```
 

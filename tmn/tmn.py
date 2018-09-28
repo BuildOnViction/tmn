@@ -25,13 +25,13 @@ def main(debug: bool, docker: str) -> None:
     docker_url = docker
 
 
-@click.command(help='Display Tomochain documentation link')
+@click.command(help='Display TomoChain documentation link')
 def docs() -> None:
     "Link to the documentation"
     display.link_docs()
 
 
-@click.command(help='Start your Tomochain masternode')
+@click.command(help='Start your TomoChain masternode')
 @click.option('--name', metavar='NAME', help='Your masternode\'s name')
 @click.option('--net', type=click.Choice(['testnet', 'devnet']),
               help='The environment your masternode will connect to')
@@ -81,7 +81,7 @@ def start(name: str, net: str, pkey: str) -> None:
     display.newline()
 
 
-@click.command(help='Stop your Tomochain masternode')
+@click.command(help='Stop your TomoChain masternode')
 def stop() -> None:
     "Stop the masternode containers"
     configuration = Configuration(docker_url=docker_url)
@@ -95,7 +95,7 @@ def stop() -> None:
     display.newline()
 
 
-@click.command(help='Show the status of your Tomochain masternode')
+@click.command(help='Show the status of your TomoChain masternode')
 def status() -> None:
     "Show the status of the masternode containers"
     configuration = Configuration(docker_url=docker_url)
@@ -127,7 +127,7 @@ def status() -> None:
     display.newline()
 
 
-@click.command(help='Show details about your Tomochain masternode')
+@click.command(help='Show details about your TomoChain masternode')
 def inspect() -> None:
     "Show details about the tomochain masternode"
     configuration = Configuration(docker_url=docker_url)
@@ -190,7 +190,7 @@ def update() -> None:
     display.newline()
 
 
-@click.command(help='Remove your Tomochain masternode')
+@click.command(help='Remove your TomoChain masternode')
 @click.option('--confirm', is_flag=True)
 def remove(confirm: bool) -> None:
     "Remove the masternode (containers, networks volumes)"
