@@ -64,17 +64,22 @@ def title_stop_masternode(name: str) -> None:
 
 
 def title_status_masternode(name: str) -> None:
-    "Title when stopping a masternode"
+    "Title when viewing a masternode status"
     title('Masternode <hy>{}</hy> status:'.format(name))
 
 
 def title_inspect_masternode(name: str) -> None:
-    "Title when stopping a masternode"
+    "Title when inspecting a masternode"
     title('Masternode <hy>{}</hy> details:'.format(name))
 
 
+def title_update_masternode(name: str) -> None:
+    "Title when updating a masternode"
+    title('Updating masternode <hy>{}</hy>:'.format(name))
+
+
 def title_remove_masternode(name: str) -> None:
-    "Title when stopping a masternode"
+    "Title when removing a masternode"
     title('Removing masternode <hy>{}</hy>:'.format(name))
 
 
