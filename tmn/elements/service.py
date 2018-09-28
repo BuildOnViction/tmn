@@ -18,16 +18,20 @@ class Service:
         network: str = None,
         environment: Dict[str, str] = {},
         volumes: Dict[str, Dict[str, str]] = {},
-        ports: Dict[str, Dict[str, str]] = {}
+        ports: Dict[str, Dict[str, str]] = {},
+        log_driver: str = 'json-file',
+        log_opts: Dict[str, str] = {'max-size': '3g'}
     ) -> None:
         self.container = False
         self.image = image
         self.name = name
         self.environment = environment
         self.network = network
+        self.hostname = hostname
         self.volumes = volumes
         self.ports = ports
-        self.hostname = hostname
+        self.log_driver = log_driver
+        self.log_opts = log_opts
         self.client = client
         try:
             self.container = self.client.containers.get(self.name)
@@ -63,6 +67,8 @@ class Service:
                     network=self.network,
                     environment=self.environment,
                     volumes=self.volumes,
+                    log_config={'type': self.log_driver,
+                                'config': self.log_opts},
                     detach=True
                 )
                 return True
