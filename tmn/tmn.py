@@ -96,7 +96,7 @@ def stop() -> None:
 
 
 @click.command(help='Show the status of your Tomochain masternode')
-def status():
+def status() -> None:
     "Show the status of the masternode containers"
     configuration = Configuration(docker_url=docker_url)
     display.title_status_masternode(configuration.name)
@@ -128,10 +128,8 @@ def status():
 
 
 @click.command(help='Show details about your Tomochain masternode')
-def inspect():
-    """
-    Show details about the tomochain masternode
-    """
+def inspect() -> None:
+    "Show details about the tomochain masternode"
     configuration = Configuration(docker_url=docker_url)
     display.title_inspect_masternode(configuration.name)
     identity = configuration.services['tomochain'].execute(
@@ -148,6 +146,47 @@ def inspect():
     else:
         coinbase = 'container not running'
     display.detail_coinbase(coinbase)
+    display.newline()
+
+
+@click.command(help='Update your masternode')
+def update() -> None:
+    "Update the tomochain masternode with the lastest images"
+    configuration = Configuration(docker_url=docker_url)
+    display.title_update_masternode(configuration.name)
+    display.subtitle_remove_containers()
+    # containers
+    # stop
+    for _, service in configuration.services.items():
+        display.step_stop_container(service.name)
+        if service.stop():
+            display.step_close('✔')
+        else:
+            display.step_close('✗', 'red')
+    display.newline()
+    # remove
+    for _, service in configuration.services.items():
+        display.step_remove_container(service.name)
+        if service.remove():
+            display.step_close('✔')
+        else:
+            display.step_close('✗', 'red')
+    display.newline()
+    # create
+    for _, value in configuration.services.items():
+        display.step_create_container(value.name)
+        if value.create():
+            display.step_close('✔')
+        else:
+            display.step_close('✗', 'red')
+    display.newline()
+    # start
+    for _, value in configuration.services.items():
+        display.step_start_container(value.name)
+        if value.start():
+            display.step_close('✔')
+        else:
+            display.step_close('✗', 'red')
     display.newline()
 
 
@@ -204,4 +243,5 @@ main.add_command(start)
 main.add_command(stop)
 main.add_command(status)
 main.add_command(inspect)
+main.add_command(update)
 main.add_command(remove)

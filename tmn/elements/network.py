@@ -38,6 +38,7 @@ class Network:
         try:
             if self.network:
                 self.network.remove()
+                self.network = None
                 return True
             else:
                 return True

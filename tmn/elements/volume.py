@@ -37,6 +37,7 @@ class Volume:
         try:
             if self.volume:
                 self.volume.remove(force=True)
+                self.volume = None
                 return True
             else:
                 return True

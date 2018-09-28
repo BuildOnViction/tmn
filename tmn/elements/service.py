@@ -136,6 +136,7 @@ class Service:
         try:
             if self.container:
                 self.container.remove(force=True)
+                self.container = None
                 return True
             else:
                 return True

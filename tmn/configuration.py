@@ -57,6 +57,13 @@ class Configuration:
         self.name = resources.user.read('name')
         self.net = resources.user.read('net')
         self.pkey = resources.user.read('pkey')
+        # this is a dirty fix for retro compatiblity
+        # can be removed in some future version
+        # old `tmn` don't write the `net` option to disk
+        # when comming from an old version, net is not defined
+        # this screw with the update command
+        if not self.net:
+            pass
 
     def _write(self) -> None:
         if not self.name:
@@ -110,6 +117,19 @@ class Configuration:
             ports={'30303/udp': 30303, '30303/tcp': 30303},
             client=self.client
         )
+        #######################################################################
+        # this is a dirty fix for retro compatiblity                          #
+        # can be removed in some future version                               #
+        # old `tmn` don't write the `net` option to disk                      #
+        # when comming from an old version, net is not defined                #
+        # it screw with the update command                                    #
+        #######################################################################
+        if not self.net:
+            if self.services['tomochain'].image.split(':')[1] == 'testnet':
+                self.net = 'testnet'
+            else:
+                self.net = 'devnet'
+        #######################################################################
         for container, variables in environments[self.net].items():
             for variable, value in variables.items():
                 self.services[container].add_environment(
