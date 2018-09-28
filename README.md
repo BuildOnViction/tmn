@@ -1,11 +1,11 @@
 # tmn <a href="https://gitter.im/tomochain/tmn"><img align="right" src="https://badges.gitter.im/gitterHQ/gitter.png"></a>
 
-| Branch  | Status | Coverage | 
+| Branch  | Status | Coverage |
 | --- | --- | --- |
 | Master | [![Build Status](https://travis-ci.org/tomochain/tmn.svg?branch=master)](https://travis-ci.org/tomochain/tmn) | [![Coverage Status](https://coveralls.io/repos/github/tomochain/tmn/badge.svg?branch=master)](https://coveralls.io/github/tomochain/tmn?branch=master) |
 | Develop | [![Build Status](https://travis-ci.org/tomochain/tmn.svg?branch=develop)](https://travis-ci.org/tomochain/tmn) | [![Coverage Status](https://coveralls.io/repos/github/tomochain/tmn/badge.svg?branch=develop)](https://coveralls.io/github/tomochain/tmn?branch=develop) |
 
-Tomo MasterNode (tmn) is a cli tool to help you run a Tomochain masternode
+Tomo MasterNode (tmn) is a cli tool to help you run a TomoChain masternode
 
 ## Running and applying a masternode
 
@@ -31,29 +31,36 @@ For example, with python `3.6` and `bash`, add `PATH=$PATH:~/Library/Python/3.6/
 
 ## Update
 
+To update `tmn, use pip3 directly.
+
 ```
 pip3 install -U tmn
 ```
+
+If you want to update the version of the TomoChain masternode run by tmn, directly use `tmn update`.
+We communicate about updates on our [Gitter channel](https://gitter.im/tomochain/tmn).
 
 ## Usage
 
 ```
 Usage: tmn [OPTIONS] COMMAND [ARGS]...
 
-  Tomo MasterNode (tmn) is a cli tool to help you run a Tomochain masternode
+  Tomo MasterNode (tmn) is a cli tool to help you run a TomoChain masternode
 
 Options:
-  --dockerurl URL  Url to the docker server
-  --version        Show the version and exit.
-  --help           Show this message and exit.
+  --debug       Enable debug mode
+  --docker URL  Url to the docker server
+  --version     Show the version and exit.
+  --help        Show this message and exit.
 
 Commands:
-  docs     Display Tomochain documentation link
-  inspect  Show details about your Tomochain masternode
-  remove   Remove your Tomochain masternode
-  start    Start your Tomochain masternode
-  status   Show the status of your Tomochain masternode
-  stop     Stop your Tomochain masternode
+  docs     Display TomoChain documentation link
+  inspect  Show details about your TomoChain masternode
+  remove   Remove your TomoChain masternode
+  start    Start your TomoChain masternode
+  status   Show the status of your TomoChain masternode
+  stop     Stop your TomoChain masternode
+  update   Update your masternode
 ```
 
 ### First start
@@ -88,6 +95,10 @@ tmn stop
 tmn start
 
 tmn status
+
+tmn inspect
+
+tmn update
 ```
 
 ### Removing
