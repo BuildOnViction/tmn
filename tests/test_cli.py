@@ -98,6 +98,8 @@ def test_command_start_init_devnet(runner, tmn):
     ])
     lines = result.output.splitlines()
     assert 'Starting masternode test1:' in lines
+    for line in lines:
+        assert '✗' not in line
     _clean(tmn)
 
 
@@ -109,6 +111,8 @@ def test_command_start_init_testnet(runner, tmn):
     ])
     lines = result.output.splitlines()
     assert 'Starting masternode test1:' in lines
+    for line in lines:
+        assert '✗' not in line
     _clean(tmn)
 
 
@@ -167,6 +171,8 @@ def test_command_start(runner, tmn):
     result = runner.invoke(tmn.main, ['start'])
     lines = result.output.splitlines()
     assert 'Starting masternode test1:' in lines
+    for line in lines:
+        assert '✗' not in line
     _clean(tmn)
 
 
@@ -191,6 +197,8 @@ def test_command_stop(runner, tmn):
     result = runner.invoke(tmn.main, ['stop'])
     lines = result.output.splitlines()
     assert 'Stopping masternode test1:' in lines
+    for line in lines:
+        assert '✗' not in line
     _clean(tmn)
 
 
@@ -203,4 +211,30 @@ def test_command_status(runner, tmn):
     result = runner.invoke(tmn.main, ['status'])
     lines = result.output.splitlines()
     assert 'Masternode test1 status:' in lines
+    _clean(tmn)
+
+
+def test_command_inspect(runner, tmn):
+    runner.invoke(tmn.main, [
+        'start', '--name', 'test1', '--net',
+        'devnet', '--pkey',
+        '0123456789012345678901234567890123456789012345678901234567890123'
+    ])
+    result = runner.invoke(tmn.main, ['inspect'])
+    lines = result.output.splitlines()
+    assert 'Masternode test1 details:' in lines
+    _clean(tmn)
+
+
+def test_command_update(runner, tmn):
+    runner.invoke(tmn.main, [
+        'start', '--name', 'test1', '--net',
+        'devnet', '--pkey',
+        '0123456789012345678901234567890123456789012345678901234567890123'
+    ])
+    result = runner.invoke(tmn.main, ['update'])
+    lines = result.output.splitlines()
+    assert 'Updating masternode test1:' in lines
+    for line in lines:
+        assert '✗' not in line
     _clean(tmn)
