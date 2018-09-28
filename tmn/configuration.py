@@ -58,13 +58,17 @@ class Configuration:
         self.name = resources.user.read('name')
         self.net = resources.user.read('net')
         self.pkey = resources.user.read('pkey')
-        # this is a dirty fix for retro compatiblity
-        # can be removed in some future version
-        # old `tmn` don't write the `net` option to disk
-        # when comming from an old version, net is not defined
-        # this screw with the update command
-        if not self.net:
-            pass
+        #######################################################################
+        # this is a dirty fix for retro compatiblity                          #
+        # can be removed in some future version                               #
+        # old `tmn` don't write the `id` option to disk                       #
+        # screw with `tmn update`                                             #
+        # this will ensure it's present                                       #
+        #######################################################################
+        if not self.id:
+            self.id = self._new_id()
+            resources.user.write('id', self.id)
+        #######################################################################
 
     def _write(self) -> None:
         if not self.name:
