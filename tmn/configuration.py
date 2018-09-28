@@ -25,10 +25,10 @@ class Configuration:
         self.networks = {}
         self.services = {}
         self.volumes = {}
-        self.id = self._new_id()
         self.name = name
         self.net = net
         self.pkey = pkey
+        self.id = None
         if not docker_url:
             self.client = docker.from_env()
         else:
@@ -54,6 +54,7 @@ class Configuration:
     def _load(self) -> None:
         if self.name or self.net or self.pkey:
             display.warning_ignoring_start_options(self.name)
+        self.id = resources.user.read('id')
         self.name = resources.user.read('name')
         self.net = resources.user.read('net')
         self.pkey = resources.user.read('pkey')
@@ -76,6 +77,7 @@ class Configuration:
             display.error_start_option_required('--pkey')
             sys.exit()
         self._validate()
+        self.id = self._new_id()
         resources.user.write('id', self.id)
         resources.user.write('name', self.name)
         resources.user.write('net', self.net)
