@@ -1,104 +1,241 @@
+import logging
 import sys
+
 import click
-from tmn import __version__
+
 from tmn import display
-from tmn import masternode
-from tmn import configuration
+from tmn import __version__
+from tmn.configuration import Configuration
 
-conf = None
+logger = logging.getLogger('tmn')
+docker_url = None
 
 
-@click.group(help='Tomo MasterNode (tmn) is a cli tool to help you run a '
-             + 'Tomochain masternode')
-@click.option('--dockerurl',
-              metavar='URL',
-              help='Url to the docker server')
+@click.group(help=('Tomo MasterNode (tmn) is a cli tool to help you run a Tomo'
+                   'chain masternode'))
+@click.option('--debug', is_flag=True, help='Enable debug mode')
+@click.option('--docker', metavar='URL', help='Url to the docker server')
 @click.version_option(version=__version__)
-def main(dockerurl):
-    """
-    Cli entrypoint.
-
-    :param config: path to the configuration file
-    :type config: str
-    """
-    if not masternode.connect(url=dockerurl):
-        display.error_docker()
-        sys.exit()
+def main(debug: bool, docker: str) -> None:
+    "Cli entrypoint"
+    global docker_url
+    if debug:
+        logger.setLevel('DEBUG')
+        logger.debug('Debugging enabled')
+    docker_url = docker
 
 
-@click.command(help='Display Tomochain documentation link')
-def docs():
-    """
-    Link to the documentation
-
-    :param open: open the link in your navigator
-    :type open: bool
-    """
+@click.command(help='Display TomoChain documentation link')
+def docs() -> None:
+    "Link to the documentation"
     display.link_docs()
 
 
-@click.command(help='Start your Tomochain masternode')
-@click.option('--name',
-              metavar='NAME',
-              help='Your masternode\'s name')
-@click.option('--net',
-              type=click.Choice(['testnet', 'devnet']),
+@click.command(help='Start your TomoChain masternode')
+@click.option('--name', metavar='NAME', help='Your masternode\'s name')
+@click.option('--net', type=click.Choice(['testnet', 'devnet']),
               help='The environment your masternode will connect to')
-@click.option('--pkey',
-              metavar='KEY',
-              help=('Private key of the account your masternode will collect '
-                    'rewards on'))
-def start(name, net, pkey):
-    """
-    Start the containers needed to run a masternode
-    """
-    configuration.init(name, net, pkey)
+@click.option('--pkey', metavar='KEY', help=('Private key of the account your '
+                                             'masternode will collect rewards '
+                                             'on'))
+def start(name: str, net: str, pkey: str) -> None:
+    "Start the containers needed to run a masternode"
+    configuration = Configuration(name=name, net=net, pkey=pkey, start=True,
+                                  docker_url=docker_url)
     display.title_start_masternode(configuration.name)
-    masternode.start(configuration.name)
+    # volumes
+    display.subtitle_create_volumes()
+    for _, value in configuration.volumes.items():
+        display.step_create_volume(value.name)
+        if value.create():
+            display.step_close('✔')
+        else:
+            display.step_close('✗', 'red')
+    display.newline()
+    # networks
+    display.subtitle_create_networks()
+    for _, value in configuration.networks.items():
+        display.step_create_network(value.name)
+        if value.create():
+            display.step_close('✔')
+        else:
+            display.step_close('✗', 'red')
+    display.newline()
+    # container
+    # create
+    display.subtitle_create_containers()
+    for _, value in configuration.services.items():
+        display.step_create_container(value.name)
+        if value.create():
+            display.step_close('✔')
+        else:
+            display.step_close('✗', 'red')
+    display.newline()
+    # start
+    for _, value in configuration.services.items():
+        display.step_start_container(value.name)
+        if value.start():
+            display.step_close('✔')
+        else:
+            display.step_close('✗', 'red')
+    display.newline()
 
 
-@click.command(help='Stop your Tomochain masternode')
-def stop():
-    """
-    Stop the containers needed to run a masternode
-    """
-    configuration.init()
+@click.command(help='Stop your TomoChain masternode')
+def stop() -> None:
+    "Stop the masternode containers"
+    configuration = Configuration(docker_url=docker_url)
     display.title_stop_masternode(configuration.name)
-    masternode.stop(configuration.name)
+    for _, service in configuration.services.items():
+        display.step_stop_container(service.name)
+        if service.stop():
+            display.step_close('✔')
+        else:
+            display.step_close('✗', 'red')
+    display.newline()
 
 
-@click.command(help='Show the status of your Tomochain masternode')
-def status():
-    """
-    Show the status of the masternode containers
-    """
-    configuration.init()
+@click.command(help='Show the status of your TomoChain masternode')
+def status() -> None:
+    "Show the status of the masternode containers"
+    configuration = Configuration(docker_url=docker_url)
     display.title_status_masternode(configuration.name)
-    masternode.status(configuration.name)
+    for _, service in configuration.services.items():
+        status = service.status()
+        if status and status == 'absent':
+            display.status(
+                name=service.name
+            )
+        if status and status in ['running']:
+            display.status(
+                name=service.name,
+                status=status,
+                id=service.container.short_id,
+                status_color='green'
+            )
+        elif status:
+            display.status(
+                name=service.name,
+                status=status,
+                id=service.container.short_id,
+            )
+        else:
+            display.status(
+                name=service.name,
+                status='error'
+            )
+    display.newline()
 
 
-@click.command(help='Show details about your Tomochain masternode')
-def inspect():
-    """
-    Show details about the tomochain masternode
-    """
-    configuration.init()
+@click.command(help='Show details about your TomoChain masternode')
+def inspect() -> None:
+    "Show details about the tomochain masternode"
+    configuration = Configuration(docker_url=docker_url)
     display.title_inspect_masternode(configuration.name)
-    masternode.details(configuration.name)
+    identity = configuration.services['tomochain'].execute(
+        'echo $IDENTITY'
+    ) or 'container not running'
+    display.detail_identity(identity)
+    display.newline()
+    coinbase = configuration.services['tomochain'].execute(
+        'tomo account list --keystore keystore 2> /dev/null | head -n 1 | cut '
+        '-d"{" -f 2 | cut -d"}" -f 1'
+    )
+    if coinbase:
+        coinbase = '0x{}'.format(coinbase)
+    else:
+        coinbase = 'container not running'
+    display.detail_coinbase(coinbase)
+    display.newline()
 
 
-@click.command(help='Remove your Tomochain masternode')
+@click.command(help='Update your masternode')
+def update() -> None:
+    "Update the tomochain masternode with the lastest images"
+    configuration = Configuration(docker_url=docker_url)
+    display.title_update_masternode(configuration.name)
+    display.subtitle_remove_containers()
+    # containers
+    # stop
+    for _, service in configuration.services.items():
+        display.step_stop_container(service.name)
+        if service.stop():
+            display.step_close('✔')
+        else:
+            display.step_close('✗', 'red')
+    display.newline()
+    # remove
+    for _, service in configuration.services.items():
+        display.step_remove_container(service.name)
+        if service.remove():
+            display.step_close('✔')
+        else:
+            display.step_close('✗', 'red')
+    display.newline()
+    # create
+    for _, value in configuration.services.items():
+        display.step_create_container(value.name)
+        if value.create():
+            display.step_close('✔')
+        else:
+            display.step_close('✗', 'red')
+    display.newline()
+    # start
+    for _, value in configuration.services.items():
+        display.step_start_container(value.name)
+        if value.start():
+            display.step_close('✔')
+        else:
+            display.step_close('✗', 'red')
+    display.newline()
+
+
+@click.command(help='Remove your TomoChain masternode')
 @click.option('--confirm', is_flag=True)
-def remove(confirm):
-    """
-    Remove the masternode completly (containers, networks volumes)
-    """
-    configuration.init()
+def remove(confirm: bool) -> None:
+    "Remove the masternode (containers, networks volumes)"
+    configuration = Configuration(docker_url=docker_url)
     if not confirm:
         display.warning_remove_masternode(configuration.name)
         sys.exit()
     display.title_remove_masternode(configuration.name)
-    masternode.remove(configuration.name)
+    display.subtitle_remove_containers()
+    # containers
+    # stop
+    for _, service in configuration.services.items():
+        display.step_stop_container(service.name)
+        if service.stop():
+            display.step_close('✔')
+        else:
+            display.step_close('✗', 'red')
+    display.newline()
+    # remove
+    for _, service in configuration.services.items():
+        display.step_remove_container(service.name)
+        if service.remove():
+            display.step_close('✔')
+        else:
+            display.step_close('✗', 'red')
+    display.newline()
+    # networks
+    display.subtitle_remove_networks()
+    for _, network in configuration.networks.items():
+        display.step_remove_network(network.name)
+        if network.remove():
+            display.step_close('✔')
+        else:
+            display.step_close('✗', 'red')
+    display.newline()
+    # volumes
+    display.subtitle_remove_volumes()
+    for _, volume in configuration.volumes.items():
+        display.step_remove_volume(volume.name)
+        if volume.remove():
+            display.step_close('✔')
+        else:
+            display.step_close('✗', 'red')
+    display.newline()
+    configuration.remove()
 
 
 main.add_command(docs)
@@ -106,4 +243,5 @@ main.add_command(start)
 main.add_command(stop)
 main.add_command(status)
 main.add_command(inspect)
+main.add_command(update)
 main.add_command(remove)

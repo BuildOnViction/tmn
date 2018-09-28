@@ -1,5 +1,10 @@
 import pytest
+
+import docker
+
 import tmn as package
+
+client = docker.from_env()
 
 
 @pytest.fixture
@@ -12,35 +17,64 @@ def runner():
 @pytest.fixture
 def tmn():
     from tmn import tmn
-    tmn.configuration.networks.devnet = {
-        'METRICS_ENDPOINT': 'https://test.com',
-        'BOOTNODES': (
-            'enode://a601958testc469f17ed30fd0633386a1f1aa95f1630fb81d6ee7'
-            '7bf69a84a31bbc0daaa199c00b9ab2d9833cdd994a9107a78661e852ad82f'
-            '53a87d8177121f@127.0.0.1:30304'
-        ),
-        'NETSTATS_HOST': 'test.com',
-        'NETSTATS_PORT': '443',
-        'WS_SECRET': (
-            'test'
-        )
+    from tmn.environments import environments
+    from tmn import configuration
+    environments['devnet'] = {
+        'tomochain': {
+            'BOOTNODES': (
+                'test'
+            ),
+            'NETSTATS_HOST': 'test.com',
+            'NETSTATS_PORT': '443',
+            'NETWORK_ID': '90',
+            'WS_SECRET': (
+                'test'
+            )
+        },
+        'metrics': {
+            'METRICS_ENDPOINT': 'https://test.com'
+        }
     }
-    tmn.configuration.networks.testnet = tmn.configuration.networks.devnet
-    tmn.configuration.resources.init('tomochain', 'tomo_tests')
+    environments['testnet'] = environments['devnet']
+    configuration.resources.init('tomochain', 'tomo_tests')
     return tmn
 
 
+def _clean(tmn):
+    from tmn import configuration
+    try:
+        client.containers.get('test1_tomochain').remove(force=True)
+    except Exception:
+        pass
+    try:
+        client.containers.get('test1_metrics').remove(force=True)
+    except Exception:
+        pass
+    try:
+        client.volumes.get('test1_chaindata').remove(force=True)
+    except Exception:
+        pass
+    try:
+        client.networks.get('test1_tmn').remove()
+    except Exception:
+        pass
+    configuration.resources.init('tomochain', 'tomo_tests')
+    configuration.resources.user.delete('id')
+    configuration.resources.user.delete('name')
+    configuration.resources.user.delete('net')
+
+
 def test_version(runner, tmn):
-    version = '0.1.3'
+    version = '0.2.0'
     result = runner.invoke(tmn.main, ['--version'])
     assert result.output[-6:-1] == version
     assert package.__version__ == version
 
 
 def test_error_docker(runner, tmn):
-    result = runner.invoke(tmn.main, ['--dockerurl', 'unix://test', 'docs'])
+    result = runner.invoke(tmn.main, ['--docker', 'unix://test', 'docs'])
     assert '! error: could not access the docker daemon\nNone\n'
-    assert result.exit_code != 0
+    assert result.exit_code == 0
 
 
 def test_command(runner, tmn):
@@ -51,74 +85,71 @@ def test_command(runner, tmn):
 def test_command_docs(runner, tmn):
     result = runner.invoke(tmn.main, ['docs'])
     msg = 'Documentation on running a masternode:'
-    link = 'https://docs.tomochain.com/\n'
+    link = 'https://docs.tomochain.com/get-started/run-node\n'
     assert result.output == "{} {}".format(msg, link)
     assert result.exit_code == 0
 
 
 def test_command_start_init_devnet(runner, tmn):
     result = runner.invoke(tmn.main, [
-        'start', '--name', 'test', '--net',
+        'start', '--name', 'test1', '--net',
         'devnet', '--pkey',
         '0123456789012345678901234567890123456789012345678901234567890123'
     ])
     lines = result.output.splitlines()
-    assert 'Starting ' in lines[0]
-    tmn.masternode.remove('test')
+    assert 'Starting masternode test1:' in lines
+    for line in lines:
+        assert '✗' not in line
+    _clean(tmn)
 
 
 def test_command_start_init_testnet(runner, tmn):
     result = runner.invoke(tmn.main, [
-        'start', '--name', 'test', '--net',
+        'start', '--name', 'test1', '--net',
         'testnet', '--pkey',
         '0123456789012345678901234567890123456789012345678901234567890123'
     ])
     lines = result.output.splitlines()
-    assert 'Starting ' in lines[0]
-    tmn.masternode.remove('test')
+    assert 'Starting masternode test1:' in lines
+    for line in lines:
+        assert '✗' not in line
+    _clean(tmn)
 
 
 def test_command_start_init_invalid_name(runner, tmn):
     result = runner.invoke(tmn.main, [
-        'start', '--name', 'tes', '--net', 'devnet'])
+        'start', '--name', 'tes', '--net', 'devnet', '--pkey', '1234'])
     lines = result.output.splitlines()
     assert 'error' in lines[1]
-    assert 'name is not valid' in lines[1]
+    assert '! error: --name is not valid' in lines
+    _clean(tmn)
 
 
 def test_command_start_init_no_pkey(runner, tmn):
     result = runner.invoke(tmn.main, [
-        'start', '--name', 'test', '--net', 'devnet'])
+        'start', '--name', 'test1', '--net', 'devnet'])
     lines = result.output.splitlines()
-    assert 'error' in lines[1]
-    assert 'pkey is required' in lines[1]
+    assert ('! error: --pkey is required when starting a new '
+            'masternode') in lines
+    _clean(tmn)
 
 
 def test_command_start_init_invalid_pkey_len(runner, tmn):
     result = runner.invoke(tmn.main, [
-        'start', '--name', 'test', '--net', 'devnet', '--pkey',
+        'start', '--name', 'test1', '--net', 'devnet', '--pkey',
         '0123456789012345678901234567890123456789012345678901234567890'])
     lines = result.output.splitlines()
-    assert 'error' in lines[1]
-    assert 'pkey is not valid' in lines[1]
-
-
-def test_command_start_init_invalid_pkey_hex(runner, tmn):
-    result = runner.invoke(tmn.main, [
-        'start', '--name', 'test', '--net', 'devnet', '--pkey',
-        '0123456789012345678901234567890123456789012345678901234567890zzz'])
-    lines = result.output.splitlines()
-    assert 'error' in lines[1]
-    assert 'pkey is not valid' in lines[1]
+    assert '! error: --pkey is not valid' in lines
+    _clean(tmn)
 
 
 def test_command_start_init_no_net(runner, tmn):
     result = runner.invoke(tmn.main, [
-        'start', '--name', 'test', '--pkey',
+        'start', '--name', 'test1', '--pkey',
         '0123456789012345678901234567890123456789012345678901234567890123'])
     lines = result.output.splitlines()
-    assert 'error' in lines[1]
-    assert 'net is required' in lines[1]
+    assert '! error: --net is required when starting a new masternode' in lines
+    _clean(tmn)
 
 
 def test_command_start_init_no_name(runner, tmn):
@@ -126,55 +157,84 @@ def test_command_start_init_no_name(runner, tmn):
         'start', '--pkey',
         '0123456789012345678901234567890123456789012345678901234567890123'])
     lines = result.output.splitlines()
-    assert 'error' in lines[1]
-    assert 'manage any masternode yet' in lines[1]
+    assert ('! error: --name is required when starting a new '
+            'masternode') in lines
+    _clean(tmn)
 
 
 def test_command_start(runner, tmn):
-    result = runner.invoke(tmn.main, [
-        'start', '--name', 'test', '--net',
+    runner.invoke(tmn.main, [
+        'start', '--name', 'test1', '--net',
         'devnet', '--pkey',
         '0123456789012345678901234567890123456789012345678901234567890123'
     ])
     result = runner.invoke(tmn.main, ['start'])
     lines = result.output.splitlines()
-    assert 'Starting' in lines[0]
-    tmn.masternode.remove('test')
+    assert 'Starting masternode test1:' in lines
+    for line in lines:
+        assert '✗' not in line
+    _clean(tmn)
 
 
 def test_command_start_ignore(runner, tmn):
     result = runner.invoke(tmn.main, [
-        'start', '--name', 'test', '--net',
+        'start', '--name', 'test1', '--net',
         'devnet', '--pkey',
         '0123456789012345678901234567890123456789012345678901234567890123'
     ])
     result = runner.invoke(tmn.main, ['start', '--name', 'test'])
     lines = result.output.splitlines()
-    assert 'warning' in lines[1]
-    tmn.masternode.remove('test')
+    assert '! warning: masternode test is already configured' in lines
+    _clean(tmn)
 
 
 def test_command_stop(runner, tmn):
     runner.invoke(tmn.main, [
-        'start', '--name', 'test', '--net',
+        'start', '--name', 'test1', '--net',
         'devnet', '--pkey',
         '0123456789012345678901234567890123456789012345678901234567890123'
     ])
     result = runner.invoke(tmn.main, ['stop'])
     lines = result.output.splitlines()
-    assert 'Stopping ' in lines[0]
-    assert result.exit_code == 0
-    tmn.masternode.remove('test')
+    assert 'Stopping masternode test1:' in lines
+    for line in lines:
+        assert '✗' not in line
+    _clean(tmn)
 
 
 def test_command_status(runner, tmn):
     runner.invoke(tmn.main, [
-        'start', '--name', 'test', '--net',
+        'start', '--name', 'test1', '--net',
         'devnet', '--pkey',
         '0123456789012345678901234567890123456789012345678901234567890123'
     ])
     result = runner.invoke(tmn.main, ['status'])
     lines = result.output.splitlines()
-    assert 'Masternode ' in lines[0]
-    assert result.exit_code == 0
-    tmn.masternode.remove('test')
+    assert 'Masternode test1 status:' in lines
+    _clean(tmn)
+
+
+def test_command_inspect(runner, tmn):
+    runner.invoke(tmn.main, [
+        'start', '--name', 'test1', '--net',
+        'devnet', '--pkey',
+        '0123456789012345678901234567890123456789012345678901234567890123'
+    ])
+    result = runner.invoke(tmn.main, ['inspect'])
+    lines = result.output.splitlines()
+    assert 'Masternode test1 details:' in lines
+    _clean(tmn)
+
+
+def test_command_update(runner, tmn):
+    runner.invoke(tmn.main, [
+        'start', '--name', 'test1', '--net',
+        'devnet', '--pkey',
+        '0123456789012345678901234567890123456789012345678901234567890123'
+    ])
+    result = runner.invoke(tmn.main, ['update'])
+    lines = result.output.splitlines()
+    assert 'Updating masternode test1:' in lines
+    for line in lines:
+        assert '✗' not in line
+    _clean(tmn)
