@@ -1,3 +1,5 @@
+import sys
+
 import pastel
 
 pastel.add_style('hg', 'green')
@@ -212,6 +214,22 @@ def step_close(msg: str, color: str = 'green') -> str:
         msg=msg,
         color=color
     )
+
+
+def step_close_ok() -> None:
+    "Custom close message when all ok"
+    msg = 'ok'
+    if sys.stdout.encoding == 'UTF-8':
+        msg = '✔'
+    step_close(msg)
+
+
+def step_close_nok() -> None:
+    "Custom close message when all ok"
+    msg = 'error'
+    if sys.stdout.encoding == 'UTF-8':
+        msg = '✗'
+    step_close(msg, 'red')
 
 
 @style
