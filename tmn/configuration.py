@@ -119,7 +119,7 @@ class Configuration:
             },
             volumes={
                 self.volumes['chaindata'].name: {
-                    'bind': '/tomochain/data', 'mode': 'rw'
+                    'bind': '/tomochain', 'mode': 'rw'
                 }
             },
             ports={'30303/udp': 30303, '30303/tcp': 30303},
