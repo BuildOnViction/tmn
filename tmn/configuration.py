@@ -27,7 +27,7 @@ class Configuration:
         self.volumes = {}
         self.name = name
         self.net = net
-        self.pkey = pkey
+        self.pkey = pkey or ''
         self.id = None
         if not docker_url:
             self.client = docker.from_env()
@@ -113,7 +113,10 @@ class Configuration:
             name='{}_tomochain'.format(self.name),
             image='tomochain/node:testnet',
             network=self.networks['tmn'].name,
-            environment={'IDENTITY': '{}_{}'.format(self.name, self.id)},
+            environment={
+                'IDENTITY': '{}_{}'.format(self.name, self.id),
+                'PRIVATE_KEY': '{}'.format(self.pkey)
+            },
             volumes={
                 self.volumes['chaindata'].name: {
                     'bind': '/tomochain/data', 'mode': 'rw'
