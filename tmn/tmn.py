@@ -48,18 +48,18 @@ def start(name: str, net: str, pkey: str) -> None:
     for _, value in configuration.volumes.items():
         display.step_create_volume(value.name)
         if value.create():
-            display.step_close('✔')
+            display.step_close_ok()
         else:
-            display.step_close('✗', 'red')
+            display.step_close_nok()
     display.newline()
     # networks
     display.subtitle_create_networks()
     for _, value in configuration.networks.items():
         display.step_create_network(value.name)
         if value.create():
-            display.step_close('✔')
+            display.step_close_ok()
         else:
-            display.step_close('✗', 'red')
+            display.step_close_nok()
     display.newline()
     # container
     # create
@@ -67,17 +67,17 @@ def start(name: str, net: str, pkey: str) -> None:
     for _, value in configuration.services.items():
         display.step_create_container(value.name)
         if value.create():
-            display.step_close('✔')
+            display.step_close_ok()
         else:
-            display.step_close('✗', 'red')
+            display.step_close_nok()
     display.newline()
     # start
     for _, value in configuration.services.items():
         display.step_start_container(value.name)
         if value.start():
-            display.step_close('✔')
+            display.step_close_ok()
         else:
-            display.step_close('✗', 'red')
+            display.step_close_nok()
     display.newline()
 
 
@@ -89,9 +89,9 @@ def stop() -> None:
     for _, service in configuration.services.items():
         display.step_stop_container(service.name)
         if service.stop():
-            display.step_close('✔')
+            display.step_close_ok()
         else:
-            display.step_close('✗', 'red')
+            display.step_close_nok()
     display.newline()
 
 
@@ -160,33 +160,33 @@ def update() -> None:
     for _, service in configuration.services.items():
         display.step_stop_container(service.name)
         if service.stop():
-            display.step_close('✔')
+            display.step_close_ok()
         else:
-            display.step_close('✗', 'red')
+            display.step_close_nok()
     display.newline()
     # remove
     for _, service in configuration.services.items():
         display.step_remove_container(service.name)
         if service.remove():
-            display.step_close('✔')
+            display.step_close_ok()
         else:
-            display.step_close('✗', 'red')
+            display.step_close_nok()
     display.newline()
     # create
     for _, value in configuration.services.items():
         display.step_create_container(value.name)
         if value.create():
-            display.step_close('✔')
+            display.step_close_ok()
         else:
-            display.step_close('✗', 'red')
+            display.step_close_nok()
     display.newline()
     # start
     for _, value in configuration.services.items():
         display.step_start_container(value.name)
         if value.start():
-            display.step_close('✔')
+            display.step_close_ok()
         else:
-            display.step_close('✗', 'red')
+            display.step_close_nok()
     display.newline()
 
 
@@ -205,35 +205,35 @@ def remove(confirm: bool) -> None:
     for _, service in configuration.services.items():
         display.step_stop_container(service.name)
         if service.stop():
-            display.step_close('✔')
+            display.step_close_ok()
         else:
-            display.step_close('✗', 'red')
+            display.step_close_nok()
     display.newline()
     # remove
     for _, service in configuration.services.items():
         display.step_remove_container(service.name)
         if service.remove():
-            display.step_close('✔')
+            display.step_close_ok()
         else:
-            display.step_close('✗', 'red')
+            display.step_close_nok()
     display.newline()
     # networks
     display.subtitle_remove_networks()
     for _, network in configuration.networks.items():
         display.step_remove_network(network.name)
         if network.remove():
-            display.step_close('✔')
+            display.step_close_ok()
         else:
-            display.step_close('✗', 'red')
+            display.step_close_nok()
     display.newline()
     # volumes
     display.subtitle_remove_volumes()
     for _, volume in configuration.volumes.items():
         display.step_remove_volume(volume.name)
         if volume.remove():
-            display.step_close('✔')
+            display.step_close_ok()
         else:
-            display.step_close('✗', 'red')
+            display.step_close_nok()
     display.newline()
     configuration.remove()
 
