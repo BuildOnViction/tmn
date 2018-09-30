@@ -27,7 +27,7 @@ class Configuration:
         self.volumes = {}
         self.name = name
         self.net = net
-        self.pkey = pkey
+        self.pkey = pkey or ''
         self.id = None
         if not docker_url:
             self.client = docker.from_env()
@@ -57,7 +57,6 @@ class Configuration:
         self.id = resources.user.read('id')
         self.name = resources.user.read('name')
         self.net = resources.user.read('net')
-        self.pkey = resources.user.read('pkey')
         #######################################################################
         # this is a dirty fix for retro compatiblity                          #
         # can be removed in some future version                               #
@@ -114,10 +113,13 @@ class Configuration:
             name='{}_tomochain'.format(self.name),
             image='tomochain/node:testnet',
             network=self.networks['tmn'].name,
-            environment={'IDENTITY': '{}_{}'.format(self.name, self.id)},
+            environment={
+                'IDENTITY': '{}_{}'.format(self.name, self.id),
+                'PRIVATE_KEY': '{}'.format(self.pkey)
+            },
             volumes={
                 self.volumes['chaindata'].name: {
-                    'bind': '/tomochain/data', 'mode': 'rw'
+                    'bind': '/tomochain', 'mode': 'rw'
                 }
             },
             ports={'30303/udp': 30303, '30303/tcp': 30303},
