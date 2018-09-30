@@ -57,7 +57,6 @@ class Configuration:
         self.id = resources.user.read('id')
         self.name = resources.user.read('name')
         self.net = resources.user.read('net')
-        self.pkey = resources.user.read('pkey')
         #######################################################################
         # this is a dirty fix for retro compatiblity                          #
         # can be removed in some future version                               #
