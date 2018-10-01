@@ -325,3 +325,18 @@ def error_validation_option(option: str, format: str) -> None:
         '<hy>{}</hy> is not valid\n'.format(option)
         + '         it should be a {}'.format(format)
     )
+
+
+def error_breaking_change() -> None:
+    "Custom error when breaking changes need to recreate the node"
+    error(
+        'latest update introduced some non-retrocompatible changes\n'
+        '         '
+        'please recreate your node by deleting it\n'
+        '         '
+        '<hy>tmn remove --confirm</hy>\n'
+        '         '
+        'and creating it back with the same options as the old one\n'
+        '         '
+        '<hy>tmn start --name ... --net ... --pkey ...</hy>'
+    )
