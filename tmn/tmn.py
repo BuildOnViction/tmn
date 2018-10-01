@@ -197,7 +197,7 @@ def remove(confirm: bool) -> None:
     configuration = Configuration(docker_url=docker_url)
     if not confirm:
         display.warning_remove_masternode(configuration.name)
-        sys.exit()
+        sys.exit('\n')
     display.title_remove_masternode(configuration.name)
     display.subtitle_remove_containers()
     # containers

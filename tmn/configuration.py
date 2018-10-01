@@ -38,14 +38,14 @@ class Configuration:
         except Exception as e:
             logger.error(e)
             display.error_docker()
-            sys.exit()
+            sys.exit('\n')
         if resources.user.read('name'):
             self._load()
         elif start:
             self._write()
         else:
             display.error_start_not_initialized()
-            sys.exit()
+            sys.exit('\n')
         self._compose()
 
     def _new_id(self) -> str:
@@ -72,13 +72,13 @@ class Configuration:
     def _write(self) -> None:
         if not self.name:
             display.error_start_option_required('--name')
-            sys.exit()
+            sys.exit('\n')
         elif not self.net:
             display.error_start_option_required('--net')
-            sys.exit()
+            sys.exit('\n')
         elif not self.pkey:
             display.error_start_option_required('--pkey')
-            sys.exit()
+            sys.exit('\n')
         self._validate()
         self.id = self._new_id()
         resources.user.write('id', self.id)
@@ -150,11 +150,11 @@ class Configuration:
         if len(self.name) < 5 or len(self.name) > 30:
             display.error_validation_option('--name', '5 to 30 characters '
                                             'slug')
-            sys.exit()
+            sys.exit('\n')
         if len(self.pkey) != 64:
             display.error_validation_option('--pkey', '64 characters hex '
                                             'string')
-            sys.exit()
+            sys.exit('\n')
 
     def remove(self) -> None:
         resources.user.delete('id')
