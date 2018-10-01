@@ -29,6 +29,7 @@ class Configuration:
         self.net = net
         self.pkey = pkey or ''
         self.id = None
+        self.force_recreate = False
         if not docker_url:
             self.client = docker.from_env()
         else:
@@ -53,20 +54,20 @@ class Configuration:
 
     def _load(self) -> None:
         if self.name or self.net or self.pkey:
-            display.warning_ignoring_start_options(self.name)
+            display.warning_ignoring_start_options(resources.user.read('name'))
         self.id = resources.user.read('id')
         self.name = resources.user.read('name')
         self.net = resources.user.read('net')
         #######################################################################
         # this is a dirty fix for retro compatiblity                          #
         # can be removed in some future version                               #
-        # old `tmn` don't write the `id` option to disk                       #
+        # old `tmn` don't write the `id` or `net` option to disk              #
         # screw with `tmn update`                                             #
-        # this will ensure it's present                                       #
+        # will ask to recreate as this is a breaking change                   #
         #######################################################################
-        if not self.id:
-            self.id = self._new_id()
-            resources.user.write('id', self.id)
+        if not self.id or not self.net:
+            self.force_recreate = True
+            self.net = 'devnet'
         #######################################################################
 
     def _write(self) -> None:
@@ -94,10 +95,11 @@ class Configuration:
             name='{}_chaindata'.format(self.name),
             client=self.client
         )
+        tag = 'testnet' if self.net == 'testnet' else 'latest'
         self.services['metrics'] = Service(
             name='{}_metrics'.format(self.name),
             hostname='{}_{}'.format(self.name, self.id),
-            image='tomochain/telegraf:testnet',
+            image='tomochain/telegraf:{}'.format(tag),
             network=self.networks['tmn'].name,
             volumes={
                 '/var/run/docker.sock': {
@@ -111,7 +113,7 @@ class Configuration:
         )
         self.services['tomochain'] = Service(
             name='{}_tomochain'.format(self.name),
-            image='tomochain/node:testnet',
+            image='tomochain/node:{}'.format(tag),
             network=self.networks['tmn'].name,
             environment={
                 'IDENTITY': '{}_{}'.format(self.name, self.id),
@@ -125,19 +127,6 @@ class Configuration:
             ports={'30303/udp': 30303, '30303/tcp': 30303},
             client=self.client
         )
-        #######################################################################
-        # this is a dirty fix for retro compatiblity                          #
-        # can be removed in some future version                               #
-        # old `tmn` don't write the `net` option to disk                      #
-        # when comming from an old version, net is not defined                #
-        # it screw with the update command                                    #
-        #######################################################################
-        if not self.net:
-            if self.services['tomochain'].image.split(':')[1] == 'testnet':
-                self.net = 'testnet'
-            else:
-                self.net = 'devnet'
-        #######################################################################
         for container, variables in environments[self.net].items():
             for variable, value in variables.items():
                 self.services[container].add_environment(

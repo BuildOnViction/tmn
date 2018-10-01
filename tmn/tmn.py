@@ -42,6 +42,9 @@ def start(name: str, net: str, pkey: str) -> None:
     "Start the containers needed to run a masternode"
     configuration = Configuration(name=name, net=net, pkey=pkey, start=True,
                                   docker_url=docker_url)
+    if configuration.force_recreate:
+        display.error_breaking_change()
+        sys.exit('\n')
     display.title_start_masternode(configuration.name)
     # volumes
     display.subtitle_create_volumes()
@@ -85,6 +88,9 @@ def start(name: str, net: str, pkey: str) -> None:
 def stop() -> None:
     "Stop the masternode containers"
     configuration = Configuration(docker_url=docker_url)
+    if configuration.force_recreate:
+        display.error_breaking_change()
+        sys.exit('\n')
     display.title_stop_masternode(configuration.name)
     for _, service in configuration.services.items():
         display.step_stop_container(service.name)
@@ -99,6 +105,9 @@ def stop() -> None:
 def status() -> None:
     "Show the status of the masternode containers"
     configuration = Configuration(docker_url=docker_url)
+    if configuration.force_recreate:
+        display.error_breaking_change()
+        sys.exit('\n')
     display.title_status_masternode(configuration.name)
     for _, service in configuration.services.items():
         status = service.status()
@@ -131,6 +140,9 @@ def status() -> None:
 def inspect() -> None:
     "Show details about the tomochain masternode"
     configuration = Configuration(docker_url=docker_url)
+    if configuration.force_recreate:
+        display.error_breaking_change()
+        sys.exit('\n')
     display.title_inspect_masternode(configuration.name)
     identity = configuration.services['tomochain'].execute(
         'echo $IDENTITY'
@@ -153,6 +165,9 @@ def inspect() -> None:
 def update() -> None:
     "Update the tomochain masternode with the lastest images"
     configuration = Configuration(docker_url=docker_url)
+    if configuration.force_recreate:
+        display.error_breaking_change()
+        sys.exit('\n')
     display.title_update_masternode(configuration.name)
     display.subtitle_remove_containers()
     # containers
