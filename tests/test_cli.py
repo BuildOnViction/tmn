@@ -184,7 +184,7 @@ def test_command_start_ignore(runner, tmn):
     ])
     result = runner.invoke(tmn.main, ['start', '--name', 'test'])
     lines = result.output.splitlines()
-    assert '! warning: masternode test is already configured' in lines
+    assert '! warning: masternode test1 is already configured' in lines
     _clean(tmn)
 
 
