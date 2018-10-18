@@ -96,6 +96,12 @@ class Configuration:
             client=self.client
         )
         tag = 'testnet' if self.net == 'testnet' else 'latest'
+        if self.net == 'testnet':
+            tag = 'testnet'
+            logging_endpoint = 'udp://13.251.123.159:12201'
+        else:
+            tag = 'latest'
+            logging_endpoint = 'udp://13.251.123.159:12201'
         self.services['metrics'] = Service(
             name='{}_metrics'.format(self.name),
             hostname='{}_{}'.format(self.name, self.id),
@@ -109,6 +115,8 @@ class Configuration:
                 '/proc': {'bind': '/rootfs/proc', 'mode': 'ro'},
                 '/etc': {'bind': '/rootfs/etc', 'mode': 'ro'}
             },
+            log_driver='gelf',
+            log_opts={'gelf-address': logging_endpoint},
             client=self.client
         )
         self.services['tomochain'] = Service(
