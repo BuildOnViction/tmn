@@ -27,7 +27,7 @@ If you are using macOS, make sure that the user python3 path is in your `$PATH`.
 
 They are in `~/Library/Python/[python version number]/bin`.
 
-For example, with python `3.6` and `bash`, add `PATH=$PATH:~/Library/Python/3.6/bin` to your `~/.bashrc`.
+For example, with python `3.6` and `bash`, add `PATH=$PATH:$HOME/Library/Python/3.6/bin` to your `$HOME/.bashrc`.
 
 ## Update
 
