@@ -2,9 +2,10 @@ import logging
 import sys
 import uuid
 
-import docker
 from clint import resources
+from eth_keys import keys
 from slugify import slugify
+import docker
 
 from tmn import display
 from tmn.elements.network import Network
@@ -49,8 +50,9 @@ class Configuration:
             sys.exit('\n')
         self._compose()
 
-    def _new_id(self) -> str:
-        return uuid.uuid4().hex[:6]
+    def _get_address(self) -> str:
+        pk = keys.PrivateKey(bytes.fromhex(self.pkey))
+        return pk.public_key.to_address()[2:]
 
     def _load(self) -> None:
         if self.name or self.net or self.pkey:
@@ -81,7 +83,7 @@ class Configuration:
             display.error_start_option_required('--pkey')
             sys.exit('\n')
         self._validate()
-        self.id = self._new_id()
+        self.id = self._get_address()
         resources.user.write('id', self.id)
         resources.user.write('name', self.name)
         resources.user.write('net', self.net)
@@ -98,7 +100,7 @@ class Configuration:
         tag = 'testnet' if self.net == 'testnet' else 'latest'
         self.services['metrics'] = Service(
             name='{}_metrics'.format(self.name),
-            hostname='{}_{}'.format(self.name, self.id),
+            hostname='{}'.format(self.id),
             image='tomochain/telegraf:{}'.format(tag),
             network=self.networks['tmn'].name,
             volumes={
@@ -116,7 +118,7 @@ class Configuration:
             image='tomochain/node:{}'.format(tag),
             network=self.networks['tmn'].name,
             environment={
-                'IDENTITY': '{}_{}'.format(self.name, self.id),
+                'IDENTITY': '{}'.format(self.name),
                 'PRIVATE_KEY': '{}'.format(self.pkey)
             },
             volumes={
@@ -141,6 +143,12 @@ class Configuration:
                                             'slug')
             sys.exit('\n')
         if len(self.pkey) != 64:
+            display.error_validation_option('--pkey', '64 characters hex '
+                                            'string')
+            sys.exit('\n')
+        try:
+            bytes.fromhex(self.pkey)
+        except ValueError:
             display.error_validation_option('--pkey', '64 characters hex '
                                             'string')
             sys.exit('\n')
