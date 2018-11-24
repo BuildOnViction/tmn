@@ -1,6 +1,5 @@
 import logging
 import sys
-import uuid
 
 from clint import resources
 from eth_keys import keys
