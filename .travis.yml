@@ -11,7 +11,7 @@ services:
 before_install:
   - pip install poetry
 install:
-  - poetry develop
+  - poetry install
 
 script:
   - flake8 .
