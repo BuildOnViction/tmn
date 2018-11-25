@@ -251,3 +251,17 @@ def test_command_update(runner, tmn):
     for line in lines:
         assert '✗' not in line
     _clean(tmn)
+
+
+def test_command_remove(runner, tmn):
+    runner.invoke(tmn.main, [
+        'start', '--name', 'test1', '--net',
+        'devnet', '--pkey',
+        '0123456789012345678901234567890123456789012345678901234567890123'
+    ])
+    result = runner.invoke(tmn.main, ['remove', '--confirm'])
+    lines = result.output.splitlines()
+    assert 'Removing masternode test1:' in lines
+    for line in lines:
+        assert '✗' not in line
+    _clean(tmn)
