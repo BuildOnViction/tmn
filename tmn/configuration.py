@@ -96,7 +96,12 @@ class Configuration:
             name='{}_chaindata'.format(self.name),
             client=self.client
         )
-        tag = 'testnet' if self.net == 'testnet' else 'latest'
+        if self.net == 'mainnet':
+            tag = 'stable'
+        elif self.net == 'testnet':
+            tag = 'testnet'
+        else:
+            tag = 'latest'
         self.services['metrics'] = Service(
             name='{}_metrics'.format(self.name),
             hostname='{}'.format(self.id),
