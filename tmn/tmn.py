@@ -33,7 +33,7 @@ def docs() -> None:
 
 @click.command(help='Start your TomoChain masternode')
 @click.option('--name', metavar='NAME', help='Your masternode\'s name')
-@click.option('--net', type=click.Choice(['testnet', 'devnet']),
+@click.option('--net', type=click.Choice(['mainnet', 'testnet', 'devnet']),
               help='The environment your masternode will connect to')
 @click.option('--pkey', metavar='KEY', help=('Private key of the account your '
                                              'masternode will collect rewards '

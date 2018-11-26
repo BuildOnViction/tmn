@@ -65,7 +65,7 @@ def _clean(tmn):
 
 
 def test_version(runner, tmn):
-    version = '0.2.5'
+    version = '0.3.0'
     result = runner.invoke(tmn.main, ['--version'])
     assert result.output[-6:-1] == version
     assert package.__version__ == version
@@ -107,6 +107,19 @@ def test_command_start_init_testnet(runner, tmn):
     result = runner.invoke(tmn.main, [
         'start', '--name', 'test1', '--net',
         'testnet', '--pkey',
+        '0123456789012345678901234567890123456789012345678901234567890123'
+    ])
+    lines = result.output.splitlines()
+    assert 'Starting masternode test1:' in lines
+    for line in lines:
+        assert '✗' not in line
+    _clean(tmn)
+
+
+def test_command_start_init_mainnet(runner, tmn):
+    result = runner.invoke(tmn.main, [
+        'start', '--name', 'test1', '--net',
+        'mainnet', '--pkey',
         '0123456789012345678901234567890123456789012345678901234567890123'
     ])
     lines = result.output.splitlines()
@@ -235,6 +248,20 @@ def test_command_update(runner, tmn):
     result = runner.invoke(tmn.main, ['update'])
     lines = result.output.splitlines()
     assert 'Updating masternode test1:' in lines
+    for line in lines:
+        assert '✗' not in line
+    _clean(tmn)
+
+
+def test_command_remove(runner, tmn):
+    runner.invoke(tmn.main, [
+        'start', '--name', 'test1', '--net',
+        'devnet', '--pkey',
+        '0123456789012345678901234567890123456789012345678901234567890123'
+    ])
+    result = runner.invoke(tmn.main, ['remove', '--confirm'])
+    lines = result.output.splitlines()
+    assert 'Removing masternode test1:' in lines
     for line in lines:
         assert '✗' not in line
     _clean(tmn)

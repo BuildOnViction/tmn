@@ -1,6 +1,6 @@
 import logging
 
-__version__ = '0.2.5'
+__version__ = '0.3.0'
 
 handler = logging.StreamHandler()
 handler.setFormatter(logging.Formatter('[%(levelname)s] %(message)s'))

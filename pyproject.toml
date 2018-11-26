@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "tmn"
-version = "0.2.5"
+version = "0.3.0"
 description = "Quickstart your masternode"
 readme = "README.md"
 license = "GPL-3.0+"
@@ -19,6 +19,8 @@ pastel = "^0.1.0"
 clint = "^0.5.1"
 python-slugify = "^1.2"
 click = "^7.0"
+eth-keys = "^0.1.0-beta.1"
+eth-hash = {version = "^0.2.0", extras = ["pycryptodome"]}
 
 [tool.poetry.dev-dependencies]
 
