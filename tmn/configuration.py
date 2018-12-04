@@ -21,7 +21,7 @@ class Configuration:
 
     def __init__(self, name: str = None, net: str = None,
                  pkey: str = None, start: bool = False,
-                 docker_url: str = None) -> None:
+                 docker_url: str = None, api: bool = False) -> None:
         self.networks = {}
         self.services = {}
         self.volumes = {}
@@ -34,6 +34,7 @@ class Configuration:
             self.client = docker.from_env()
         else:
             self.client = docker.DockerClient(base_url=docker_url)
+        self.api = 'True' if api else 'False'
         try:
             self.client.ping()
         except Exception as e:
@@ -59,6 +60,7 @@ class Configuration:
         self.id = resources.user.read('id')
         self.name = resources.user.read('name')
         self.net = resources.user.read('net')
+        self.api = resources.user.read('api')
         #######################################################################
         # this is a dirty fix for retro compatiblity                          #
         # can be removed in some future version                               #
@@ -86,6 +88,7 @@ class Configuration:
         resources.user.write('id', self.id)
         resources.user.write('name', self.name)
         resources.user.write('net', self.net)
+        resources.user.write('api', self.api)
 
     def _compose(self) -> None:
         self.networks['tmn'] = Network(
@@ -101,7 +104,12 @@ class Configuration:
         elif self.net == 'testnet':
             tag = 'testnet'
         else:
-            tag = 'latest'
+            tag = 'devnet'
+        if self.api == 'True':  # this is dirty, should be refactored
+            tomochain_ports = {'30303/udp': 30303, '30303/tcp': 30303,
+                               8545: 8545, 8546: 8546}
+        else:
+            tomochain_ports = {'30303/udp': 30303, '30303/tcp': 30303}
         self.services['metrics'] = Service(
             name='{}_metrics'.format(self.name),
             hostname='{}'.format(self.id),
@@ -130,7 +138,7 @@ class Configuration:
                     'bind': '/tomochain', 'mode': 'rw'
                 }
             },
-            ports={'30303/udp': 30303, '30303/tcp': 30303},
+            ports=tomochain_ports,
             client=self.client
         )
         for container, variables in environments[self.net].items():
