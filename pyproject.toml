@@ -13,7 +13,7 @@ authors = [
 ]
 
 [tool.poetry.dependencies]
-python = "^3.5.3"
+python = ">=3.5.3"
 docker = "3.5.0"
 pastel = "^0.1.0"
 clint = "^0.5.1"
