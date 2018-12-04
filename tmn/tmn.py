@@ -38,10 +38,11 @@ def docs() -> None:
 @click.option('--pkey', metavar='KEY', help=('Private key of the account your '
                                              'masternode will collect rewards '
                                              'on'))
-def start(name: str, net: str, pkey: str) -> None:
+@click.option('--api', is_flag=True)
+def start(name: str, net: str, pkey: str, api: bool) -> None:
     "Start the containers needed to run a masternode"
     configuration = Configuration(name=name, net=net, pkey=pkey, start=True,
-                                  docker_url=docker_url)
+                                  docker_url=docker_url, api=api)
     if configuration.force_recreate:
         display.error_breaking_change()
         sys.exit('\n')
