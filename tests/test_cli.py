@@ -85,7 +85,7 @@ def test_command(runner, tmn):
 def test_command_docs(runner, tmn):
     result = runner.invoke(tmn.main, ['docs'])
     msg = 'Documentation on running a masternode:'
-    link = 'https://docs.tomochain.com/get-started/run-node\n'
+    link = 'https://docs.tomochain.com/masternode/tmn/\n'
     assert result.output == "{} {}".format(msg, link)
     assert result.exit_code == 0
 
