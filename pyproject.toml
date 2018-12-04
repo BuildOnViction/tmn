@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "tmn"
-version = "0.3.2"
+version = "0.4.0"
 description = "Quickstart your masternode"
 readme = "README.md"
 license = "GPL-3.0+"
