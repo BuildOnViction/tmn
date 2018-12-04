@@ -104,7 +104,7 @@ class Configuration:
         elif self.net == 'testnet':
             tag = 'testnet'
         else:
-            tag = 'devnet'
+            tag = 'latest'
         if self.api == 'True':  # this is dirty, should be refactored
             tomochain_ports = {'30303/udp': 30303, '30303/tcp': 30303,
                                8545: 8545, 8546: 8546}
@@ -127,7 +127,9 @@ class Configuration:
         )
         self.services['tomochain'] = Service(
             name='{}_tomochain'.format(self.name),
-            image='tomochain/node:{}'.format(tag),
+            image='tomochain/node:{}'.format(
+                'devnet' if tag == 'latest' else tag
+            ),
             network=self.networks['tmn'].name,
             environment={
                 'IDENTITY': '{}'.format(self.name),
