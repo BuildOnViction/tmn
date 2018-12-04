@@ -10,11 +10,11 @@ Tomo MasterNode (tmn) is a cli tool to help you run a TomoChain masternode
 ## Running and applying a masternode
 
 If you are consulting this repo, it's probably because you want to run a masternode.
-For complete guidelines on running a full node and applying it as a masternode, please refer to the [documentation](https://docs.tomochain.com/get-started/run-node/).
+For complete guidelines on running a masternode candidate, please refer to the [documentation](https://docs.tomochain.com/masternode/requirements/).
 
 ## Requirements
 
-- Python >= 3.5
+- Python >= 3.5.3
 - Docker
 
 ## Installation
@@ -23,11 +23,15 @@ For complete guidelines on running a full node and applying it as a masternode, 
 pip3 install --user tmn
 ```
 
-If you are using macOS, make sure that the user python3 path is in your `$PATH`.
+Make sure to have the user's python binaries folder in your `$PATH`.
 
-They are in `~/Library/Python/[python version number]/bin`.
+**For GNU/Linux**:
 
-For example, with python `3.6` and `bash`, add `PATH=$PATH:$HOME/Library/Python/3.6/bin` to your `$HOME/.bashrc`.
+`echo "PATH=$PATH:$HOME/.local/bin/" > $HOME/.bashrc`
+
+**For macOS**:
+
+`echo "PATH=$PATH:$HOME/Library/Python/3.6/bin" > $HOME/.bashrc`
 
 ## Update
 
@@ -83,6 +87,13 @@ pkey = a25...5f5        # The private key of the account you want your
 
 tmn start --name $name --net $net --pkey $pkey
 ```
+
+
+**Note**:
+
+You can expose the RPC and WS api by appending the flag `--api`.
+Be warned that it should not be directly exposed to outside.
+It is your responsability to firewall those ports for internal use or reverse proxy it with an http server like nginx.
 
 ### After the first start
 

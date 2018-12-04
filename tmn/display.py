@@ -11,7 +11,7 @@ pastel.add_style('und', options=['underscore'])
 pastel.add_style('warning', 'yellow')
 pastel.add_style('error', 'red')
 
-help_url = 'https://docs.tomochain.com/get-started/run-node'
+help_url = 'https://docs.tomochain.com/masternode/tmn/'
 
 
 def newline(number: int = 1) -> None:

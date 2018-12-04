@@ -1,20 +1,20 @@
 [tool.poetry]
 name = "tmn"
-version = "0.3.2"
+version = "0.4.0"
 description = "Quickstart your masternode"
 readme = "README.md"
 license = "GPL-3.0+"
 homepage = "https://tomochain.com"
-repository = "https://github.com/tomochain/masternode"
-documentation = "https://github.com/tomochain/masternode/blob/master/README.md"
+repository = "https://github.com/tomochain/tmn"
+documentation = "https://docs.tomochain.com/masternode/tmn/"
 keywords = ["tomochain", "blockchain", "masternode", "node"]
 authors = [
   "Etienne Napoleone <etienne@tomochain.com>"
 ]
 
 [tool.poetry.dependencies]
-python = "^3.5.3"
-docker = "3.5.0"
+python = ">=3.5.3"
+docker = "^3.5.0"
 pastel = "^0.1.0"
 clint = "^0.5.1"
 python-slugify = "^1.2"
