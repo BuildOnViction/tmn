@@ -48,15 +48,16 @@ environments = {
     'devnet': {
         'tomochain': {
             'BOOTNODES': (
-                'enode://f3d3d5d6cd0fdde8996722ff5b5a92f331029b2dcbdb9748f50db'
-                '1421851a939eb660bf81a7ec7f359454aa0fd65fe4c03ae5c6bb2382b34df'
-                'aaca7eb6ecaf4e@52.77.194.164:30301,enode://34b923ddfcba1bfafd'
-                'd1ac7a030436f9fbdc565919189f5e62c8cadd798c239b5807a26ab7f6b96'
-                'a44200eb0399d1ebc2d9c1be94d2a774c8cc7660ff4c10367@13.228.93.2'
-                '32:30301,enode://e2604862d18049e025f294d63d537f9f54309ff09e45'
-                'ed69ff4f18c984831f5ef45370053355301e3a4da95aba2698c6116f4d2a3'
-                '47e5a5e0a3152ac0ae0f574@18.136.42.72:30301'
+                'enode://5bec42d41c9eb291c1d20c9ac92bd9c86a4954189b6592b0833e5'
+                'c28e389b59e3992efed119a2782d9b95ba7aa78e7f71813067cd6734fadff'
+                '322f7dd6fc3b3c@104.248.99.234:30301,enode://89028bc15e9dda643'
+                'bc4b9a1a6352896dd3bce7411543b0b160a9eb95093ddbe1f5eda5999e38a'
+                '4874bfa6a00fb3526cc2fb9b4feb2a3f7cc80ef8016e05c493@104.248.99'
+                '.235:30301,enode://ea8f1eb1a2a695960bfa6df52094c635e173c65e5f'
+                'c120501672c0d21900d826d6c1c5a07d64ad36509ec5e7306d7a2c3398398'
+                'f34f3e279b91c487c2b3a9537@104.248.99.233:30301'
             ),
+
             'NETSTATS_HOST': 'stats.devnet.tomochain.com',
             'NETSTATS_PORT': '443',
             'NETWORK_ID': '90',
