@@ -57,7 +57,6 @@ environments = {
                 'c120501672c0d21900d826d6c1c5a07d64ad36509ec5e7306d7a2c3398398'
                 'f34f3e279b91c487c2b3a9537@104.248.99.233:30301'
             ),
-
             'NETSTATS_HOST': 'stats.devnet.tomochain.com',
             'NETSTATS_PORT': '443',
             'NETWORK_ID': '90',
