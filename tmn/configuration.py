@@ -107,7 +107,7 @@ class Configuration:
             tag = 'latest'
         if self.api == 'True':  # this is dirty, should be refactored
             tomochain_ports = {'30303/udp': 30303, '30303/tcp': 30303,
-                               8545: 8545, 8546: 8546}
+                               '8545/tcp': 8545, '8546/tcp': 8546}
         else:
             tomochain_ports = {'30303/udp': 30303, '30303/tcp': 30303}
         self.services['metrics'] = Service(
