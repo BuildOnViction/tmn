@@ -67,6 +67,7 @@ class Service:
                     network=self.network,
                     environment=self.environment,
                     volumes=self.volumes,
+                    ports=self.ports,
                     log_config={'type': self.log_driver,
                                 'config': self.log_opts},
                     detach=True
