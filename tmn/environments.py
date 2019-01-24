@@ -18,9 +18,6 @@ environments = {
                 'getty-site-pablo-auger-room-sos-blair-shin-whiz-delhi'
             )
         },
-        'metrics': {
-            'METRICS_ENDPOINT': 'https://metrics.tomochain.com'
-        }
     },
     'testnet': {
         'tomochain': {
@@ -41,9 +38,6 @@ environments = {
                 'anna-coal-flee-carrie-zip-hhhh-tarry-laue-felon-rhine'
             )
         },
-        'metrics': {
-            'METRICS_ENDPOINT': 'https://metrics.testnet.tomochain.com'
-        }
     },
     'devnet': {
         'tomochain': {
@@ -64,8 +58,5 @@ environments = {
                 'torn-fcc-caper-drool-jelly-zip-din-fraud-rater-darn'
             )
         },
-        'metrics': {
-            'METRICS_ENDPOINT': 'https://metrics.devnet.tomochain.com'
-        }
     }
 }
