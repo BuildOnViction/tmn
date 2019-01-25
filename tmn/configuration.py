@@ -2,7 +2,6 @@ import logging
 import sys
 
 from clint import resources
-from eth_keys import keys
 from slugify import slugify
 import docker
 
@@ -48,10 +47,6 @@ class Configuration:
             display.error_start_not_initialized()
             sys.exit('\n')
         self._compose()
-
-    def _get_address(self) -> str:
-        pk = keys.PrivateKey(bytes.fromhex(self.pkey))
-        return pk.public_key.to_address()[2:]
 
     def _load(self) -> None:
         if self.name or self.net or self.pkey:
