@@ -2,7 +2,6 @@ import logging
 import sys
 
 from clint import resources
-from eth_keys import keys
 from slugify import slugify
 import docker
 
@@ -28,7 +27,6 @@ class Configuration:
         self.name = name
         self.net = net
         self.pkey = pkey or ''
-        self.id = None
         self.force_recreate = False
         if not docker_url:
             self.client = docker.from_env()
@@ -50,28 +48,12 @@ class Configuration:
             sys.exit('\n')
         self._compose()
 
-    def _get_address(self) -> str:
-        pk = keys.PrivateKey(bytes.fromhex(self.pkey))
-        return pk.public_key.to_address()[2:]
-
     def _load(self) -> None:
         if self.name or self.net or self.pkey:
             display.warning_ignoring_start_options(resources.user.read('name'))
-        self.id = resources.user.read('id')
         self.name = resources.user.read('name')
         self.net = resources.user.read('net')
         self.api = resources.user.read('api')
-        #######################################################################
-        # this is a dirty fix for retro compatiblity                          #
-        # can be removed in some future version                               #
-        # old `tmn` don't write the `id` or `net` option to disk              #
-        # screw with `tmn update`                                             #
-        # will ask to recreate as this is a breaking change                   #
-        #######################################################################
-        if not self.id or not self.net:
-            self.force_recreate = True
-            self.net = 'devnet'
-        #######################################################################
 
     def _write(self) -> None:
         if not self.name:
@@ -84,8 +66,6 @@ class Configuration:
             display.error_start_option_required('--pkey')
             sys.exit('\n')
         self._validate()
-        self.id = self._get_address()
-        resources.user.write('id', self.id)
         resources.user.write('name', self.name)
         resources.user.write('net', self.net)
         resources.user.write('api', self.api)
@@ -110,21 +90,6 @@ class Configuration:
                                '8545/tcp': 8545, '8546/tcp': 8546}
         else:
             tomochain_ports = {'30303/udp': 30303, '30303/tcp': 30303}
-        self.services['metrics'] = Service(
-            name='{}_metrics'.format(self.name),
-            hostname='{}'.format(self.id),
-            image='tomochain/telegraf:{}'.format(tag),
-            network=self.networks['tmn'].name,
-            volumes={
-                '/var/run/docker.sock': {
-                    'bind': '/var/run/docker.sock', 'mode': 'ro'
-                },
-                '/sys': {'bind': '/rootfs/sys', 'mode': 'ro'},
-                '/proc': {'bind': '/rootfs/proc', 'mode': 'ro'},
-                '/etc': {'bind': '/rootfs/etc', 'mode': 'ro'}
-            },
-            client=self.client
-        )
         self.services['tomochain'] = Service(
             name='{}_tomochain'.format(self.name),
             image='tomochain/node:{}'.format(
@@ -168,6 +133,5 @@ class Configuration:
             sys.exit('\n')
 
     def remove(self) -> None:
-        resources.user.delete('id')
         resources.user.delete('name')
         resources.user.delete('net')

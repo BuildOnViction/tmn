@@ -1,6 +1,5 @@
 language: python
 python:
-  - "3.5"
   - "3.6"
   - "3.7-dev"
 
@@ -15,9 +14,9 @@ install:
 
 script:
   - flake8 .
-  - coverage run --source tmn -m pytest -v
-  - coverage report
-  - coveralls
+  # - coverage run --source tmn -m pytest -v
+  # - coverage report
+  # - coveralls
 
 before_deploy:
   - poetry build
