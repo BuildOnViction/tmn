@@ -24,9 +24,9 @@ environments = {
             'BOOTNODES': (
                 'enode://4d3c2cc0ce7135c1778c6f1cfda623ab44b4b6db55289543d48ec'
                 'fde7d7111fd420c42174a9f2fea511a04cf6eac4ec69b4456bfaaae0e5bd2'
-                '36107d3172b013@52.221.28.223:30301,enode://298780104303fcdb37'
-                'a84c5702ebd9ec660971629f68a933fd91f7350c54eea0e294b0857f1fd2e'
-                '8dba2869fcc36b83e6de553c386cf4ff26f19672955d9f312@13.251.101.'
+                '36107d3172b013@52.221.28.223:30301,enode://ce1191bf9a634e7939'
+                '676d136816ad84941b079c03d6a96e64cca35852363012169055c6879c644'
+                'e821dc236a01d0499a1b7ff39e9518dbc00da87c7f1898604@13.251.101.'
                 '216:30301,enode://46dba3a8721c589bede3c134d755eb1a38ae7c5a4c6'
                 '9249b8317c55adc8d46a369f98b06514ecec4b4ff150712085176818d18f5'
                 '9a9e6311a52dbe68cff5b2ae@13.250.94.232:30301'
