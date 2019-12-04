@@ -4,15 +4,15 @@ environments = {
             'BOOTNODES': (
                 'enode://97f0ca95a653e3c44d5df2674e19e9324ea4bf4d47a46b1d8560f'
                 '3ed4ea328f725acec3fcfcb37eb11706cf07da669e9688b091f1543f89b24'
-                '25700a68bc8876@104.248.98.78:30301,enode://b72927f349f3a27b78'
+                '25700a68bc8876@3.212.20.0:30301,enode://b72927f349f3a27b78'
                 '9d0ca615ffe3526f361665b496c80e7cc19dace78bd94785fdadc270054ab'
                 '727dbb172d9e3113694600dd31b2558dd77ad85a869032dea@188.166.207'
                 '.189:30301,enode://c8f2f0643527d4efffb8cb10ef9b6da4310c5ac9f2'
                 'e988a7f85363e81d42f1793f64a9aa127dbaff56b1e8011f90fe9ff57fa02'
                 'a36f73220da5ff81d8b8df351@104.248.98.60:30301'
             ),
-            'NETSTATS_HOST': 'stats.tomochain.com',
-            'NETSTATS_PORT': '443',
+            'NETSTATS_HOST': 'wss://stats.tomochain.com',
+            'NETSTATS_PORT': '',
             'NETWORK_ID': '88',
             'WS_SECRET': (
                 'getty-site-pablo-auger-room-sos-blair-shin-whiz-delhi'
