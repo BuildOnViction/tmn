@@ -12,7 +12,7 @@ environments = {
                 'a36f73220da5ff81d8b8df351@104.248.98.60:30301'
             ),
             'NETSTATS_HOST': 'wss://stats.tomochain.com',
-            'NETSTATS_PORT': '',
+            'NETSTATS_PORT': '443',
             'NETWORK_ID': '88',
             'WS_SECRET': (
                 'getty-site-pablo-auger-room-sos-blair-shin-whiz-delhi'
