@@ -22,14 +22,9 @@ environments = {
     'testnet': {
         'tomochain': {
             'BOOTNODES': (
-                'enode://4d3c2cc0ce7135c1778c6f1cfda623ab44b4b6db55289543d48ec'
-                'fde7d7111fd420c42174a9f2fea511a04cf6eac4ec69b4456bfaaae0e5bd2'
-                '36107d3172b013@52.221.28.223:30301,enode://ce1191bf9a634e7939'
-                '676d136816ad84941b079c03d6a96e64cca35852363012169055c6879c644'
-                'e821dc236a01d0499a1b7ff39e9518dbc00da87c7f1898604@13.251.101.'
-                '216:30301,enode://46dba3a8721c589bede3c134d755eb1a38ae7c5a4c6'
-                '9249b8317c55adc8d46a369f98b06514ecec4b4ff150712085176818d18f5'
-                '9a9e6311a52dbe68cff5b2ae@13.250.94.232:30301'
+                'enode://ba966140e161ad416a7bd7c75dc695e0a41232723e2b19cbbf651'
+                '883ef5e8f2528801b17b9d63152814d219a58a4fcc3e3c877486e64057523'
+                'f6714092348efa@195.154.150.210:30301'
             ),
             'NETSTATS_HOST': 'stats.testnet.tomochain.com',
             'NETSTATS_PORT': '443',
