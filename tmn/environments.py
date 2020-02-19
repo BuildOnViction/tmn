@@ -30,7 +30,7 @@ environments = {
             'NETSTATS_PORT': '443',
             'NETWORK_ID': '89',
             'WS_SECRET': (
-                'anna-coal-flee-carrie-zip-hhhh-tarry-laue-felon-rhine'
+                '9tlu4EymcTrEzaqWpSxh3KSa926au8'
             )
         },
     },
