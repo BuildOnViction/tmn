@@ -69,8 +69,7 @@ class Service:
                     volumes=self.volumes,
                     ports=self.ports,
                     log_config={'type': self.log_driver,
-                                'config': self.log_opts},
-                    restart_policy={'Name': 'always'},
+                        'config': self.log_opts},
                     detach=True
                 )
                 return True
