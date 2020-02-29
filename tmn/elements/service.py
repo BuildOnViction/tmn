@@ -70,7 +70,7 @@ class Service:
                     ports=self.ports,
                     log_config={'type': self.log_driver,
                                 'config': self.log_opts},
-                    restart_policy={"Name": "always"},
+                    restart_policy={'Name': 'always'},
                     detach=True
                 )
                 return True
