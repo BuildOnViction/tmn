@@ -28,7 +28,7 @@ deploy:
     skip_cleanup: true
     on:
       tags: true
-      python: 3.6
+      python: 3.6.9
   - provider: pypi
     user: $PYPI_USERNAME
     password: $PYPI_PASSWORD
