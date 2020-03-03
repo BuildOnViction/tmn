@@ -18,8 +18,8 @@ script:
   # - coverage report
   # - coveralls
 
-before_deploy:
-  - poetry build
+    # before_deploy:
+    #  - poetry build 
 deploy:
   - provider: releases
     api_key: $GITHUB_TOKEN
