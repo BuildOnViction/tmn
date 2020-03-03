@@ -54,18 +54,6 @@ version = "7.0"
 
 [[package]]
 category = "main"
-description = "CliKit is a group of utilities to build beautiful and testable command line interfaces."
-name = "clikit"
-optional = false
-python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
-version = "0.3.2"
-
-[package.dependencies]
-pastel = ">=0.1.0,<0.2.0"
-pylev = ">=1.3,<2.0"
-
-[[package]]
-category = "main"
 description = "Python Command Line Interface Tools"
 name = "clint"
 optional = false
@@ -280,14 +268,6 @@ version = "2.1.1"
 
 [[package]]
 category = "main"
-description = "A pure Python Levenshtein implementation that's not freaking GPL'd."
-name = "pylev"
-optional = false
-python-versions = "*"
-version = "1.3.0"
-
-[[package]]
-category = "main"
 description = "Python for Window Extensions"
 marker = "sys_platform == \"win32\" and python_version < \"3.6\""
 name = "pypiwin32"
@@ -434,7 +414,7 @@ docs = ["sphinx", "jaraco.packaging (>=3.2)", "rst.linker (>=1.9)"]
 testing = ["jaraco.itertools", "func-timeout"]
 
 [metadata]
-content-hash = "57ce4f15aaa27c38b407bfd7233c2c5e304c91cbcc4b56fc7604ec8491c8b91c"
+content-hash = "0a803fcf8c6f7fc48de5aeb9f9bba57fea6bf9053ed0a75a64a097367ff9a38b"
 python-versions = "^3.5"
 
 [metadata.files]
@@ -460,10 +440,6 @@ chardet = [
 click = [
     {file = "Click-7.0-py2.py3-none-any.whl", hash = "sha256:2335065e6395b9e67ca716de5f7526736bfa6ceead690adf616d925bdc622b13"},
     {file = "Click-7.0.tar.gz", hash = "sha256:5b94b49521f6456670fdb30cd82a4eca9412788a93fa6dd6df72c94d5a8ff2d7"},
-]
-clikit = [
-    {file = "clikit-0.3.2-py2.py3-none-any.whl", hash = "sha256:229d259b9ec7adb6ce668aed70059ff79058b22794b958c178c50ece6ade5871"},
-    {file = "clikit-0.3.2.tar.gz", hash = "sha256:b5034efd4dadb65e71544f978c70628dc56df4b0b47b0e6a7e521347dfc07fdf"},
 ]
 clint = [
     {file = "clint-0.5.1.tar.gz", hash = "sha256:05224c32b1075563d0b16d0015faaf9da43aa214e4a2140e51f08789e7a4c5aa"},
@@ -567,10 +543,6 @@ pycodestyle = [
 pyflakes = [
     {file = "pyflakes-2.1.1-py2.py3-none-any.whl", hash = "sha256:17dbeb2e3f4d772725c777fabc446d5634d1038f234e77343108ce445ea69ce0"},
     {file = "pyflakes-2.1.1.tar.gz", hash = "sha256:d976835886f8c5b31d47970ed689944a0262b5f3afa00a5a7b4dc81e5449f8a2"},
-]
-pylev = [
-    {file = "pylev-1.3.0-py2.py3-none-any.whl", hash = "sha256:1d29a87beb45ebe1e821e7a3b10da2b6b2f4c79b43f482c2df1a1f748a6e114e"},
-    {file = "pylev-1.3.0.tar.gz", hash = "sha256:063910098161199b81e453025653ec53556c1be7165a9b7c50be2f4d57eae1c3"},
 ]
 pypiwin32 = [
     {file = "pypiwin32-219-cp27-none-win32.whl", hash = "sha256:5618522ad9c2b229d8a9a1c5175d135a397bf70d6db1d352adf0131aa5321258"},

@@ -16,7 +16,6 @@ authors = [
 python = "^3.5"
 docker = "^3.5.0"
 pastel = "^0.1.0"
-clikit = "^0.3.2"
 clint = "^0.5.1"
 python-slugify = "^1.2"
 click = "^7.0"
