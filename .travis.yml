@@ -14,7 +14,6 @@ install:
 
 script:
   - flake8 .
-  - poetry build
   # - coverage run --source tmn -m pytest -v
   # - coverage report
   # - coveralls

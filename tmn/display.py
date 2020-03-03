@@ -6,6 +6,8 @@ pastel.add_style('hg', 'green')
 pastel.add_style('hgb', 'green', options=['bold'])
 pastel.add_style('hy', 'yellow')
 pastel.add_style('hyb', 'yellow', options=['bold'])
+pastel.add_style('link', 'yellow', options=['underscore'])
+pastel.add_style('und', options=['underscore'])
 pastel.add_style('warning', 'yellow')
 pastel.add_style('error', 'red')
 
